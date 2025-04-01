@@ -1,0 +1,480 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+
+<script src="../../resources/js/grid/pager.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+
+<style>
+    #userRequestPager {
+        display:none;
+    }
+
+    .ui-state-default.ui-corner-top.ui-jqgrid-hdiv {
+        background: transparent !important;
+    }
+
+    .ui-state-default.ui-th-column.ui-th-ltr {
+        background : transparent !important;
+    }
+
+    .ui-jqgrid-jquery-ui td {
+        background-color : transparent !important
+    }
+
+    .ui-widget.ui-widget-content, .ui-state-default.ui-corner-top.ui-jqgrid-hdiv {
+        border : none !important;
+    }
+
+    .ui-jqgrid-btable tr.ui-state-hover {
+        background: var(--gray-05) !important;
+    }
+
+    .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+        background: var(--gray-05) !important;
+    }
+
+    .calendar-icon {
+        z-index: 1;
+    }
+</style>
+
+<main class="main">
+    <!-- Area map 위치 텍스트 -->
+    <div class="area-map active mr-4px">
+        <a href="#">
+            <img src="/resources/images/home-map.svg" class="icon14">
+            <span>
+                <spring:message code="common.menu.home"/>
+            </span>
+        </a>
+        <a href="#">
+            <img src="/resources/images/arrow-right-gray.svg" class="icon14">
+            <span>
+                <spring:message code="common.menu.user_request"/>
+            </span>
+        </a>
+    </div>
+    <!-- 대시보드 타이틀 -->
+    <div class="second-title">
+        <spring:message code="common.menu.user_request"/>
+    </div>
+
+    <!-- 주요 콘텐츠 시작 -->
+    <div class="second-container mt-18px">
+        <div class="content-row">
+            <!-- 좌측 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.userNm"/>
+                    </div>
+                    <div class="row-input">
+                        <input type="text" class="input-txt02 hold" id="userNm" placeholder="Please enter"
+                               oninput="limitLength(this, 30);">
+                    </div>
+                </div>
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.loginId"/>
+                    </div>
+                    <div class="row-input">
+                        <input type="text" class="input-txt02 hold" id="emailId" placeholder="Please enter"
+                               oninput="limitLength(this, 30);">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.phone"/>
+                    </div>
+                    <div class="row-input">
+                        <input type="text" class="input-txt02" id="mobile" placeholder="Please enter(ex.012-3456-7890)"
+                               oninput="limitLength(this, 30);">
+                    </div>
+                </div>
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.uid"/>
+                    </div>
+                    <div class="row-input">
+                        <input type="text" class="input-txt02 hold" id="userId" placeholder="Please enter"
+                               oninput="limitLength(this, 30);">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.sex"/>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-search" id="sx"><spring:message code="common.all"/><span><img class="icon20" alt=""
+                                                                              src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                        <div class="dropdown-content">
+                            <a onclick="$('#sx').text($(this).text())"><spring:message code="common.all"/></a>
+                            <a onclick="$('#sx').text($(this).text())"><spring:message code="common.sex.f"/></a>
+                            <a onclick="$('#sx').text($(this).text())"><spring:message code="common.sex.m"/></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap">
+                    <c:if test="${fn:length(inChargeList) > 0}">
+                        <div class="input-label01">
+                            <spring:message code="common.inCharge"/>
+                        </div>
+                        <div class="dropdown">
+                            <button class="dropdown-search" id="inChargeNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
+                                                                                          src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                            <div class="dropdown-content">
+                                <a data-inchargeid="All" onclick="$('#inChargeNm').text($(this).text())"><spring:message code="common.all"/></a>
+                                <c:forEach var="inCharge" items="${inChargeList}">
+                                    <a data-inchargeid="${inCharge.userId}" onclick="$('#inChargeNm').text($(this).text())">${inCharge.userNm}</a>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </c:if>
+                </div>
+            </div>
+
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.birthDt"/>
+                    </div>
+                    <div class="row-input">
+                        <input type="text" class="input-txt02 datePicker" id="brthDt" placeholder="Please enter"
+                               oninput="limitLength(this, 30);">
+                    </div>
+                </div>
+                <div class="row-wrap">
+                    <c:if test="${fn:length(groupList) > 0}">
+                        <div class="input-label01">
+                            <spring:message code="common.group"/>
+                        </div>
+                        <div class="dropdown">
+                            <button class="dropdown-search" id="grpNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
+                                                                                     src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                            <div class="dropdown-content">
+                                <a data-grpid="All" onclick="$('#grpNm').text($(this).text())"><spring:message code="common.all"/></a>
+                                <c:forEach var="group" items="${groupList}">
+                                    <a data-grpid="${group.grpId}" onclick="$('#grpNm').text($(this).text())">${group.grpNm}</a>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </c:if>
+                </div>
+            </div>
+
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.regDt"/>
+                    </div>
+                    <div class="row-input">
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="searchBgnDe"
+                                   placeholder="ALL" readonly>
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                                 onclick="openCalendar('datePicker1')" alt="달력 아이콘">
+                            <input type="date" id="datePicker1" class="hidden-date"
+                                   onchange="updateDate('datePicker1', 'searchBgnDe')">
+                        </div>
+                        <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="searchEndDe"
+                                   placeholder="ALL" readonly>
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                                 onclick="openCalendar('datePicker2')" alt="달력 아이콘">
+                            <input type="date" id="datePicker2" class="hidden-date"
+                                   onchange="updateDate('datePicker2', 'searchEndDe')">
+                        </div>
+                        <div class="day-button-wrap">
+                            <button class="data-select-btn periodBtn" data-period="all">All</button>
+                            <button class="data-select-btn periodBtn" data-period="today">Today</button>
+                            <button class="data-select-btn periodBtn" data-period="7-day">7day</button>
+                            <button class="data-select-btn periodBtn active" data-period="30-day">30day</button>
+                            <button class="data-select-btn periodBtn" data-period="90-day">90day</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code="common.serviceTp"/>
+                    </div>
+                    <div class="row-input">
+                        <div class="day-button-wrap02">
+                            <button class="data-select-btn alertBtns active" data-filter="all"><spring:message code="common.all"/></button>
+                            <button class="data-select-btn alertBtns" data-filter="N"><spring:message code="common.serviceTp.N"/></button>
+                            <button class="data-select-btn alertBtns" data-filter="A"><spring:message code="common.serviceTp.A"/></button>
+                            <button class="data-select-btn alertBtns" data-filter="T"><spring:message code="common.serviceTp.T"/></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-submit-ui mt-22px">
+        <div class="submit-ui-wrap">
+        </div>
+        <div class="submit-ui-wrap">
+            <button type="button" class="gray-submit-btn" id="reset" onclick="fnClear()">
+                <img src="/resources/images/reset-icon.svg" class="icon22">
+                <span><spring:message code="common.btn.reset"/></span>
+            </button>
+
+            <button type="button" class="point-submit-btn" id="search" onclick="fnSearch()">
+                <img src="/resources/images/search-icon.svg" class="icon22">
+                <span><spring:message code="common.btn.search"/></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="table-wrap mt-36px">
+        <div class="mt-16px table-data-wrap">
+            <p class="second-title-status">
+                <span class="bold-t-01" id="currentRowsCnt">0</span>
+                <spring:message code="common.outOf"/>
+                <span class="bold-t-01" id="totalResultsCnt">0</span>
+                <spring:message code="common.results"/>
+            </p>
+            <div class="table-option-wrap">
+                <div class="dropdown02">
+                    <button class="dropdown-search input-line-b"><spring:message code="common.viewItemList"/> <span><img class="icon20"
+                                                                                            alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                    <div class="dropdown-content">
+                        <a onclick="changeRowsCnt(100)"><spring:message code="common.viewResults" arguments="100" /></a>
+                        <a onclick="changeRowsCnt(50)"><spring:message code="common.viewResults" arguments="50" /></a>
+                        <a onclick="changeRowsCnt(10)"><spring:message code="common.viewResults" arguments="10" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-line01 mt-8px"></div>
+        <div class="main-table">
+            <div class="tableWrapper">
+                <table id="userRequestList"></table>
+                <div id="userRequestPager"></div>
+                <div id="customPager" class="page-group mb-22px mt-10px"></div>
+            </div>
+        </div>
+    </div>
+
+    <form name="excelForm" method="POST">
+        <input type="hidden" id="sortColumn" name="sortColumn" value="reqDt"/>
+        <input type="hidden" id="sord" name="sord" value="DESC"/>
+    </form>
+</main>
+
+<script type="text/javascript">
+    // Grid 하단 페이저 숫자
+    const pageSize = 10;
+    let currentPageGroup = 1;
+
+    // 기본 Items 개수
+    var rowNumsVal = 10;
+
+    function fnClear() {
+        $('#searchBgnDe').val('');
+        $('#searchEndDe').val('');
+        $('#userNm').val('');
+        $('#emailId').val('');
+        $('#userId').val('');
+        $('#mobile').val('');
+        $("#sx").text('All');
+        $('#brthDt').val('');
+        $('#inChargeNm').text('All');
+        $('#grpNm').text('All');
+        $('.alertBtns.active').removeClass('active');
+        $('.alertBtns')[0].classList.add('active');
+        $('.periodBtn')[3].click();
+    }
+
+    function setSearchParam() {
+        return {
+            searchBgnDe : $('#searchBgnDe').val()+' 00:00:00',
+            searchEndDe : $('#searchEndDe').val()+' 23:59:59',
+            userNm : $('#userNm').val(),
+            emailId : $('#emailId').val(),
+            userId : $('#userId').val(),
+            mobile : $('#mobile').val().replaceAll('-',''),
+            sx : $('#sx').text() != "All" ? $('#sx').text().slice(0,1) : "ALL",
+            brthDt : $('#brthDt').val(),
+            inChargeNm : $('#inChargeNm').text() != "All" ? $('#inChargeNm').text() : "",
+            grpNm : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
+            reqTp : $('.alertBtns.active').data('filter') != 'all' ? $('.alertBtns.active')
+                .map(function() {
+                    return "\"" + $(this).data('filter') + "\"";
+                })
+                .get()
+                .join(',') : "'N','A','T'"
+        };
+    }
+
+    function fnSearch(){
+        $('#userRequestList').jqGrid('setGridParam', {
+            url: 'selectUserRequest',
+            datatype: 'json',
+            postData : setSearchParam()
+        });
+        $('#userRequestList').trigger('reloadGrid', [{page:1, current:true}]);
+    }
+
+    $(document).ready(function() {
+        $('.datePicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            autoclose: true,
+            todayHighlight:true
+        });
+
+        $('#searchBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
+
+        $('#userRequestList').jqGrid({
+            url : '${contextPath}/tracking/selectUserRequest',
+            mtype : "POST",
+            datatype: "json",
+            jsonReader : {repeatitems: false},
+            postData: setSearchParam(),
+            colModel : [
+                { label: 'Requested Time', name: 'reqDt', width:200, sortable : true},
+                { label: 'Requested Type', name: 'reqTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
+                        if (cellValue === 'N') {
+                            return 'Nursing';
+                        } else if(cellValue === 'A'){
+                            return 'Ambulance';
+                        } else if(cellValue === 'T') {
+                            return 'TeleHealth';
+                        } else {
+                            cellValue;
+                        }
+                    }},
+                { label: 'UID', name: 'userId', width:300, sortable : true},
+                { label: 'User Name', name: 'userNm', width:130, sortable : false},
+                { label: 'Phone', name: 'mobile', width:130, sortable : false, formatter: function(cellValue, options, rowObject) {
+                        var cleaned = ('' + cellValue).replace(/\D/g, '');
+                        var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+                        if (match) {
+                            return match[1] + '-' + match[2] + '-' + match[3];
+                        }
+                        return cellValue;
+                    }},
+                { label: 'Date Of Birth', name: 'brthDt', width:130, sortable : false},
+                { label: 'Sex', name: 'sx', width:60, sortable : true, formatter: function(cellValue, options, rowObject) {
+                        if(cellValue === 'M') {
+                            return '<img src="/resources/images/man-icon.svg" class="icon24 img-c">'
+                        } else {
+                            return '<img src="/resources/images/girl-icon.svg" class="icon24 img-c">';
+                        }
+                    }},
+                { label: 'Group', name: 'grpNm', width:130, sortable : true},
+                { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
+                { label: 'Details', name: 'userId', width:80, sortable : false, formatter : function(cellValue, options, rowObject){
+                        return `<button type="button" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
+                    }},
+            ],
+            page: 1,
+            autowidth: true,
+            height: 'auto',
+            rowNum : rowNumsVal,
+            rowList:[10,50,100],
+            sortable : true,
+            sortname : 'reqDt',
+            sortorder : 'DESC',
+            shrinkToFit: false,
+            rownumbers: true,
+            loadonce : false,
+            pager : '#userRequestPager',
+            viewrecords: true,
+            loadComplete: function(data) {
+                $('#totalResultsCnt').text(data.records);
+                $('#currentRowsCnt').text(data.rows.length);
+                createCustomPager('userRequestList');
+                $(this).jqGrid('setLabel', 'rn', 'No.');
+            },
+            gridComplete: function() {
+                createCustomPager('userRequestList');
+                $(this).jqGrid('setLabel', 'rn', 'No.');
+            },
+            onSortCol: function (index, columnIndex, sortOrder) {
+                //alert(index);
+                $("#sortColumn").val(index);
+                $("#sord").val(sortOrder);
+            }
+        })
+    })
+
+    $(document).on('click', '.periodBtn', function(){
+        $('.periodBtn').removeClass('active');
+
+        $(this).addClass('active');
+
+        var period = $(this).data('period');
+
+        if(period === 'all') {
+            $('#searchBgnDe').val('');
+        } else if(period === 'today') {
+            $('#searchBgnDe').val(moment().format('YYYY-MM-DD'));
+            $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
+        } else {
+            var pDay = parseInt(period.replaceAll('-day',''));
+
+            $('#searchEndDe').val(moment().format('YYYY-MM-DD'));
+
+            var calcDt = moment().subtract(pDay, 'days').format('YYYY-MM-DD');
+            $('#searchBgnDe').val(calcDt);
+        }
+    })
+
+
+    $(document).on('click','.alertBtns', function(){
+        if($('.alertBtns.active').length === 1 && $('.alertBtns.active')[0] == this){
+            return;
+        }
+
+        if(this.dataset['filter'] === 'all') {
+            $('.alertBtns').removeClass('active');
+
+            $(this).addClass('active');
+        } else {
+            $('[data-filter="all"]').removeClass('active');
+            $(this).toggleClass('active');
+        }
+    })
+
+    <!-- 달력 스크립트 -->
+    // 달력 아이콘 클릭 시, date input 활성화
+    function openCalendar(dateInputId) {
+        document.getElementById(dateInputId).showPicker();
+    }
+
+    // 날짜 선택 시, 표시할 입력 필드 업데이트
+    function updateDate(dateInputId, displayId) {
+        const dateValue = document.getElementById(dateInputId).value;
+        document.getElementById(displayId).value = dateValue;
+    }
+
+    function changeRowsCnt(cnt) {
+        rowNumsVal = cnt;
+        $("#userRequestList").setGridParam({ rowNum: cnt });
+        fnSearch();
+    }
+
+    $('.input-txt02').keyup(function(e){
+        if(e.keyCode == '13'){
+            fnSearch();
+        }
+    });
+</script>

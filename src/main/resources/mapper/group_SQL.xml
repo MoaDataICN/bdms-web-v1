@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="group">
+	<select id="selectMaxDepth" resultType="String">
+		WITH RECURSIVE hierarchy AS (
+			SELECT GRP_ID, PGRP_ID, GRP_NM, 1 AS LEVEL_CNT
+			FROM t_wlk_mng_grp
+			WHERE PGRP_ID IS NULL
+
+			UNION ALL
+
+			SELECT gt.GRP_ID, gt.PGRP_ID, gt.GRP_NM, h.LEVEL_CNT + 1
+			FROM t_wlk_mng_grp gt
+				INNER JOIN hierarchy h ON gt.PGRP_ID = h.GRP_ID
+		)
+		SELECT MAX(LEVEL_CNT) AS MAX_DEPTH
+		FROM hierarchy
+	</select>
+
+	<select id="selectSectionList" resultType="groupVO">
+		SELECT * FROM T_WLK_MNG_GRP ORDER BY GRP_ID
+	</select>
+
+	<select id="selectChildList" resultType="groupVO" parameterType="String">
+		SELECT * FROM T_WLK_MNG_GRP WHERE PGRP_ID = #{grpId}
+	</select>
+
+	<delete id="deleteGroupsByIds" parameterType="java.util.List">
+		DELETE FROM T_WLK_MNG_GRP
+		WHERE GRP_ID IN (
+			WITH RECURSIVE grp_tree AS (
+				SELECT GRP_ID
+				FROM T_WLK_MNG_GRP
+				WHERE GRP_ID IN
+				<foreach item="id" collection="list" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+
+				UNION ALL
+
+				SELECT g.GRP_ID
+				FROM T_WLK_MNG_GRP g
+				INNER JOIN grp_tree gt ON g.PGRP_ID = gt.GRP_ID
+			)
+			SELECT GRP_ID FROM grp_tree
+		)
+	</delete>
+
+	<insert id="insertUpdateGroup" parameterType="groupVO">
+		INSERT INTO T_WLK_MNG_GRP
+			( GRP_ID , PGRP_ID , GRP_NM, REGIST_ID, REGIST_DT, UPT_ID, UPT_DT)
+		VALUES
+			( #{grpId}, #{pgrpId}, #{grpNm}, 'system', SYSDATE(), 'system', SYSDATE())
+		ON DUPLICATE KEY UPDATE
+		    GRP_NM = values(GRP_NM), UPT_ID = 'system', UPT_DT = SYSDATE()
+	</insert>
+
+	<select id="selectLowLevelGroups" parameterType="String" resultType="groupVO">
+		WITH RECURSIVE sub_groups AS (
+			SELECT GRP_ID
+			FROM T_WLK_MNG_GRP
+			WHERE GRP_ID = #{grpId}
+			UNION ALL
+			SELECT g.GRP_ID
+			FROM T_WLK_MNG_GRP g
+					 INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
+		)
+		select GRP.*
+		from sub_groups sg
+				 left outer join t_wlk_mng_grp grp on grp.GRP_ID = sg.GRP_ID
+	</select>
+
+	<select id="selectLowLevelAdmins" parameterType="String" resultType="userVO">
+		WITH RECURSIVE sub_groups AS (
+			SELECT GRP_ID
+			FROM T_WLK_MNG_GRP
+			WHERE GRP_ID = #{grpId}
+			UNION ALL
+			SELECT g.GRP_ID
+			FROM T_WLK_MNG_GRP g
+					 INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
+		)
+		select usr.*
+		from t_wlk_mng_user usr
+		where usr.GRP_ID in (select * from sub_groups where grp_id != #{grpId})
+	</select>
+</mapper>

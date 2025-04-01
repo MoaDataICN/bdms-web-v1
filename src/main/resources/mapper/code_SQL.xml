@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="code">
+	<!-- 상세 코드 항목 조회 -->
+	<select id="selectCodeList" parameterType="String" resultType="codeVO">
+		SELECT CODE, P_CODE, CODE_NAME, CODE_DESC, ORDER_NO
+		FROM t_wlk_MNG_CODE
+		WHERE P_CODE = #{pCode}
+       	 ORDER BY CODE_NAME
+	</select>
+	
+	<!-- 상세 코드 항목 조회 -->
+	<select id="selectDashboardCodeList" parameterType="dashVO" resultType="codeVO">
+		 SELECT USERGROUP_ID, CODE, CODE_NAME 
+		 FROM t_wlk_MNG_CODE A
+		 INNER JOIN (
+		 	SELECT C.USERGROUP_ID, B.MENU_ID, IF(MENU_NM='Node Details', 'Detail Network Node Dashboard Detail Server Node Dashboard' , MENU_NM)  AS MENU_NM
+		 	FROM t_wlk_MNG_MENU B
+		 	INNER JOIN  t_wlk_MNG_USERGROUP_MENU C ON B.MENU_ID=C.MENU_ID AND USERGROUP_ID = #{usergroupId}  
+		 ) AA ON P_CODE='DA00' AND AA.MENU_NM like CONCAT('%', A.CODE_NAME, '%')
+		 <where>
+		 	<if test='dashType != null and dashType != ""'>
+		 		CODE = #{dashType}
+		 	</if>
+		 </where>
+		ORDER BY A.ORDER_NO ASC
+	</select>
+</mapper>

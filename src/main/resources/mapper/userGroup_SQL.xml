@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userGroup">
+
+	<!-- 사용자 그룹 코드 목록 -->
+	<select id="selectUserGroupCodeList" resultType="userGroupVO">
+		SELECT USERGROUP_ID, USERGROUP_NM
+		FROM t_wlk_MNG_USERGROUP
+	</select>
+
+	<!-- 사용자 그룹 목록 -->
+	<select id="selectUserGroupList" parameterType="userGroupVO" resultType="userGroupVO">
+		SELECT  SQL_CALC_FOUND_ROWS
+				A.USERGROUP_ID, USERGROUP_NM, USER_COUNT, USERGROUP_DESC, USERGROUP_EMAIL, USERGROUP_PHONE, USERGROUP_BTN_YN, 
+				USERGROUP_CFG_YN, A.REGIST_ID, DATE_FORMAT(A.REGIST_DT, '%Y-%m-%d %T') AS REGIST_DT, A.MODIFY_ID, DATE_FORMAT(A.MODIFY_DT, '%Y-%m-%d %T') AS MODIFY_DT
+		FROM t_wlk_MNG_USERGROUP A
+		LEFT JOIN (
+			SELECT USERGROUP_ID, COUNT(USER_ID) AS USER_COUNT
+			FROM t_wlk_MNG_USER
+			GROUP BY USERGROUP_ID
+		) AA ON A.USERGROUP_ID = AA.USERGROUP_ID
+		<where>
+			<!-- <if test='searchField != null and searchField != ""'>
+				<if test='searchField == "USERGROUP_NM"'>
+					USERGROUP_NM LIKE UPPER(CONCAT('%', #{searchString}, '%'))
+				</if>
+			</if> -->
+			<if test='filtersMap != null'>
+				<foreach item="item" collection="filtersMap.rules" index="index">
+					<if test='filtersMap.groupOp == "AND"'>
+						AND
+					</if>
+					<if test='filtersMap.groupOp != "AND"'>
+						OR
+					</if>
+					<choose>
+						<when test='item.field == "usergroupNm"'>
+							UPPER(USERGROUP_NM)
+						</when>
+						<when test='item.field == "usergroupEmail"'>
+							UPPER(USERGROUP_EMAIL)
+						</when>
+						<when test='item.field == "usergroupPhone"'>
+							UPPER(USERGROUP_PHONE)
+						</when>
+						<when test='item.field == "usergroupBtnYn"'>
+							UPPER(USERGROUP_BTN_YN)
+						</when>
+						<when test='item.field == "usergroupCfgYn"'>
+							UPPER(USERGROUP_CFG_YN)
+						</when>
+						<when test='item.field == "usergroupDesc"'>
+							UPPER(USERGROUP_DESC)
+						</when>
+						<when test='item.field == "registId"'>
+							UPPER(REGIST_ID)
+						</when>
+						<when test='item.field == "registDt"'>
+							DATE_FORMAT(REGIST_DT, '%m/%d/%Y')
+						</when>
+						<when test='item.field == "modifyId"'>
+							MODIFY_ID
+						</when>
+						<when test='item.field == "modifyDt"'>
+							DATE_FORMAT(MODIFY_DT, '%m/%d/%Y')
+						</when>
+					</choose>	
+					<choose>
+						<when test='item.op == "eq"'>
+							<![CDATA[ = UPPER(TRIM(#{item.data}))]]>
+						</when>
+						<when test='item.op == "ne"'>
+							<![CDATA[ <> UPPER(TRIM(#{item.data}))]]>
+						</when>
+						<when test='item.op == "lt"'>
+							<![CDATA[ > TRIM(#{item.data})]]>
+						</when>
+						<when test='item.op == "le"'>
+							<![CDATA[ >= TRIM(#{item.data})]]>
+						</when>
+						<when test='item.op == "gt"'>
+							<![CDATA[ < TRIM(#{item.data})]]>
+						</when>
+						<when test='item.op == "ge"'>
+							<![CDATA[ <= TRIM(#{item.data})]]>
+						</when>
+						<when test='item.op == "cn"'>
+							LIKE UPPER(CONCAT('%', TRIM(#{item.data}), '%'))
+						</when>
+						<when test='item.op == "nc"'>
+							NOT LIKE UPPER(CONCAT('%', TRIM(#{item.data}), '%'))
+						</when>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+		ORDER BY 
+			<choose>
+				<when test='sortColumn == "usergroupNm"'>
+					USERGROUP_NM
+				</when>
+				<when test='sortColumn == "usergroupEmail"'>
+					USERGROUP_EMAIL
+				</when>
+				<when test='sortColumn == "usergroupPhone"'>
+					USERGROUP_PHONE
+				</when>
+				<when test='sortColumn == "usergroupBtnYn"'>
+					USERGROUP_BTN_YN
+				</when>
+				<when test='sortColumn == "usergroupCfgYn"'>
+					USERGROUP_CFG_YN
+				</when>
+				<when test='sortColumn == "usergroupDesc"'>
+					USERGROUP_DESC
+				</when>
+				<when test='sortColumn == "registId"'>
+					REGIST_ID
+				</when>
+				<when test='sortColumn == "registDt"'>
+					REGIST_DT
+				</when>
+				<when test='sortColumn == "modifyId"'>
+					MODIFY_ID
+				</when>
+				<when test='sortColumn == "modifyDt"'>
+					MODIFY_DT
+				</when>
+			</choose>	
+			<choose>
+				<when test='sord == "DESC" or sord == "desc"'>
+					 DESC
+				</when> 
+				<otherwise>
+					 ASC
+				</otherwise>
+			</choose>	
+		LIMIT #{rowNo}, #{rows}
+	</select>
+	
+	<!-- UserGroup 목록 total -->
+	<select id="selectTotalRecords" resultType="int">
+		SELECT FOUND_ROWS();
+	</select>
+	
+		<!-- 사용자 목록 - 사용자 그룹 아이디 -->
+	<select id="selectUserListByUserGroupId" parameterType="userVO" resultType="userVO">
+		SELECT  SQL_CALC_FOUND_ROWS
+				UID, USER_ID, USER_NM, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC
+		FROM t_wlk_MNG_USER
+		WHERE USERGROUP_ID = #{usergroupId}
+		<if test='filtersMap != null'>
+				AND ( 1=1
+			<foreach item="item" collection="filtersMap.rules" index="index">
+				<if test='filtersMap.groupOp == "AND"'>
+					AND
+				</if>
+				<if test='filtersMap.groupOp != "AND"'>
+					OR
+				</if>
+				<choose>
+					<when test='item.field == "userId"'>
+						UPPER(USER_ID)
+					</when>
+					<when test='item.field == "userNm"'>
+						UPPER(USER_NM)
+					</when>
+					<when test='item.field == "phoneNo"'>
+						PHONE_NO
+					</when>
+					<when test='item.field == "deptNm"'>
+						UPPER(DEPT_NM)
+					</when>
+					<when test='item.field == "emailAddr"'>
+						UPPER(EMAIL_ADDR)
+					</when>
+					<when test='item.field == "userType"'>
+						UPPER(USER_TYPE)
+					</when>
+					<when test='item.field == "useYn"'>
+						UPPER(USE_YN)
+					</when>
+					<when test='item.field == "lockYn"'>
+						UPPER(LOCK_YN)
+					</when>
+					<when test='item.field == "loginDt"'>
+						DATE_FORMAT(LOGIN_DT, '%m/%d/%Y')
+					</when>
+					<when test='item.field == "registDt"'>
+						DATE_FORMAT(REGIST_DT, '%m/%d/%Y')
+					</when>
+					<when test='item.field == "modifyDt"'>
+						DATE_FORMAT(MODIFY_DT, '%m/%d/%Y')
+					</when>
+				</choose>	
+				<choose>
+					<when test='item.op == "eq"'>
+						<![CDATA[ = UPPER(TRIM(#{item.data}))]]>
+					</when>
+					<when test='item.op == "ne"'>
+						<![CDATA[ <> UPPER(TRIM(#{item.data}))]]>
+					</when>
+					<when test='item.op == "lt"'>
+						<![CDATA[ > TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "le"'>
+						<![CDATA[ >= TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "gt"'>
+						<![CDATA[ < TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "ge"'>
+						<![CDATA[ <= TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "cn"'>
+						LIKE UPPER(CONCAT('%', TRIM(#{item.data}), '%'))
+					</when>
+					<when test='item.op == "nc"'>
+						NOT LIKE UPPER(CONCAT('%', TRIM(#{item.data}), '%'))
+					</when>
+				</choose>
+			</foreach>
+			)
+		</if>
+		ORDER BY 
+		<choose>
+			<when test='sortColumn == "userNm"'>
+				USER_NM
+			</when>
+			<otherwise>
+				USER_ID
+			</otherwise>
+		</choose>	
+		<choose>
+			<when test='sord == "DESC" or sord == "desc"'>
+				 DESC
+			</when> 
+			<otherwise>
+				 ASC
+			</otherwise>
+		</choose>	
+		<if test="rows != 0">
+			LIMIT #{rowNo}, #{rows}
+		</if>
+	</select>
+	
+	<!-- 사용자 목록 - 미등록사용자  -->
+	<select id="selectUserListByUnUserGroup" parameterType="userVO" resultType="userVO">
+		SELECT  SQL_CALC_FOUND_ROWS
+				UID, USER_ID, USER_NM, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC
+		FROM t_wlk_MNG_USER
+		WHERE USERGROUP_ID = '' OR USERGROUP_ID is null AND USER_TYPE != 'UT01'
+		<if test='filtersMap != null'>
+				AND ( 1=1
+			<foreach item="item" collection="filtersMap.rules" index="index">
+				<if test='filtersMap.groupOp == "AND"'>
+					AND
+				</if>
+				<if test='filtersMap.groupOp != "AND"'>
+					OR
+				</if>
+				<choose>
+					<when test='item.field == "userId"'>
+						UPPER(USER_ID)
+					</when>
+					<when test='item.field == "userNm"'>
+						UPPER(USER_NM)
+					</when>
+					<when test='item.field == "phoneNo"'>
+						PHONE_NO
+					</when>
+					<when test='item.field == "deptNm"'>
+						UPPER(DEPT_NM)
+					</when>
+					<when test='item.field == "emailAddr"'>
+						UPPER(EMAIL_ADDR)
+					</when>
+					<when test='item.field == "userType"'>
+						UPPER(USER_TYPE)
+					</when>
+					<when test='item.field == "useYn"'>
+						UPPER(USE_YN)
+					</when>
+					<when test='item.field == "lockYn"'>
+						UPPER(LOCK_YN)
+					</when>
+					<when test='item.field == "loginDt"'>
+						DATE_FORMAT(LOGIN_DT, '%m/%d/%Y')
+					</when>
+					<when test='item.field == "registDt"'>
+						DATE_FORMAT(REGIST_DT, '%m/%d/%Y')
+					</when>
+					<when test='item.field == "modifyDt"'>
+						DATE_FORMAT(MODIFY_DT, '%m/%d/%Y')
+					</when>
+				</choose>	
+				<choose>
+					<when test='item.op == "eq"'>
+						<![CDATA[ = UPPER(TRIM(#{item.data}))]]>
+					</when>
+					<when test='item.op == "ne"'>
+						<![CDATA[ <> UPPER(TRIM(#{item.data}))]]>
+					</when>
+					<when test='item.op == "lt"'>
+						<![CDATA[ > TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "le"'>
+						<![CDATA[ >= TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "gt"'>
+						<![CDATA[ < TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "ge"'>
+						<![CDATA[ <= TRIM(#{item.data})]]>
+					</when>
+					<when test='item.op == "cn"'>
+						LIKE UPPER(CONCAT('%', TRIM(#{item.data}), '%'))
+					</when>
+					<when test='item.op == "nc"'>
+						NOT LIKE UPPER(CONCAT('%', TRIM(#{item.data}), '%'))
+					</when>
+				</choose>
+			</foreach>
+			)
+		</if>
+		ORDER BY 
+		<choose>
+			<when test='sortColumn == "userNm"'>
+				USER_NM
+			</when>
+			<otherwise>
+				USER_ID
+			</otherwise>
+		</choose>	
+		<choose>
+			<when test='sord == "DESC" or sord == "desc"'>
+				 DESC
+			</when> 
+			<otherwise>
+				 ASC
+			</otherwise>
+		</choose>	
+		<if test="rows != 0">
+			LIMIT #{rowNo}, #{rows}
+		</if>
+	</select>
+	
+	<!-- 사용자 그룹 상세 -->
+	<select id="selectUserGroupInfo" parameterType="String" resultType="userGroupVO">
+		SELECT USERGROUP_ID, USERGROUP_NM, USERGROUP_EMAIL, USERGROUP_PHONE, USERGROUP_BTN_YN, 
+				USERGROUP_CFG_YN, USERGROUP_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT
+		FROM   t_wlk_MNG_USERGROUP
+		WHERE  USERGROUP_ID = #{usergroupId}
+	</select>
+	
+	<!-- 사용자 그룹 확인 -->
+	<select id="selectUserGroupIdCnt" parameterType="String" resultType="int">
+		SELECT COUNT(USERGROUP_NM) AS CNT
+		FROM   t_wlk_MNG_USERGROUP
+		WHERE  USERGROUP_NM = #{usergroupNm}
+	</select>
+	
+	<!-- 사용자 그룹 등록 -->
+	<insert id="insertUserGroup" parameterType="userGroupVO">
+		INSERT INTO t_wlk_MNG_USERGROUP
+		(
+			USERGROUP_ID, USERGROUP_NM, USERGROUP_EMAIL, USERGROUP_PHONE, USERGROUP_BTN_YN, 
+			USERGROUP_CFG_YN, USERGROUP_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT
+		)
+		VALUES
+		(
+			#{usergroupId}, #{usergroupNm}, #{usergroupEmail}, #{usergroupPhone}, #{usergroupBtnYn}, #{usergroupCfgYn}, 
+			#{usergroupDesc, jdbcType=VARCHAR}, #{registId}, NOW(), #{modifyId}, NOW()
+		)
+	</insert>
+	
+	<!-- 사용자 그룹 수정 -->
+	<update id="updateUserGroup" parameterType="userGroupVO">
+		UPDATE t_wlk_MNG_USERGROUP
+		SET
+			USERGROUP_NM	= #{usergroupNm}, 
+			USERGROUP_EMAIL	= #{usergroupEmail}, 
+			USERGROUP_PHONE	= #{usergroupPhone}, 
+			USERGROUP_BTN_YN= #{usergroupBtnYn}, 
+			USERGROUP_CFG_YN= #{usergroupCfgYn},
+			USERGROUP_DESC 		= #{usergroupDesc, jdbcType=VARCHAR},
+			MODIFY_ID		= #{modifyId},
+			MODIFY_DT		= NOW()
+		WHERE USERGROUP_ID = #{usergroupId}
+	</update>
+	
+	<!-- 사용자 그룹 메뉴 삭제 -->
+	<delete id="deleteUserGroupMenu" parameterType="String">
+		DELETE FROM t_wlk_MNG_USERGROUP_MENU
+		WHERE USERGROUP_ID = #{usergroupId}
+	</delete>
+	
+	<!-- 사용자 그룹 삭제 -->
+	<delete id="deleteUserGroup" parameterType="String">
+		DELETE FROM t_wlk_MNG_USERGROUP 
+		WHERE USERGROUP_ID != 'UGP_000000000000' AND USERGROUP_ID = #{usergroupId}
+	</delete>
+</mapper>

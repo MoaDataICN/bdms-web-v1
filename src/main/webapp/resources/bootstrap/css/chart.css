@@ -1,0 +1,58 @@
+
+.chart-line-path { fill: none; stroke:dimgrey; stroke-width: 3; }
+.chart-line-area { fill: url(#temperature-gradient); stroke-width: 3; }
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.focus circle {
+    fill: #F1F3F3;
+    stroke: #6F257F;
+    stroke-width: 5px;
+}
+
+
+.hover-line {
+    stroke: #6F257F;
+    stroke-width: 2px;
+    stroke-dasharray: 3,3;
+}
+
+
+.chart-line-axis { font-size: 12px; font-weight: 300; }
+.chart-line-axis .line { stroke: aquamarine; }
+.chart-line-axis .line2 { stroke: #0a6aa1; }
+
+.chart-line-axis .domain { stroke: #aaa; }
+.chart-line-axis text { fill: #aaa; }
+.chart-line-axis .dot { fill: dimgrey; stroke: dimgrey; }
+
+.chart-bar-axis { font-size: 12px; font-weight: 300; }
+.chart-bar-axis line, .chart-bar-axis path { stroke: #aaa; }
+/*.chart-bar-axis text { fill: #aaa; }*/
+
+.chart-pie-axis { font-size: 12px; font-weight: 300; }
+.chart-pie-axis text { fill: #fff; }
+
+.card { margin-bottom: 20px; }
+
+/* body { padding-top: 20px; } */
+
+
+#node-cpu-chart .bar { fill: #01CC0E; }
+#node-mem-chart .bar { fill: #00B3EF; }
+
+.x-axis line { stroke: #aaa; }
+.x-axis path { stroke: #aaa; }
+.x-axis text { fill: #aaa; }
+
+.y-axis line { stroke: #aaa; }
+.y-axis path { stroke: #aaa; }
+.y-axis text { fill: #aaa; }
+
+
+.back { fill: #fff; }
+
+.series-container { fill: #fff; fill-opacity: .20; }

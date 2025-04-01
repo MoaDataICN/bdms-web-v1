@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dashboard">
+	<select id="selectTodayStatus" parameterType="java.util.Map" resultType="java.util.Map">
+		<choose>
+			<when test="grpId != null and grpId != ''">
+				WITH RECURSIVE sub_groups AS (
+				-- 주어진 grpId를 포함한 모든 하위 그룹을 찾음
+				SELECT GRP_ID FROM T_WLK_MNG_GRP WHERE GRP_ID = #{grpId}
+				UNION ALL
+				SELECT g.GRP_ID
+				FROM T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg ON g.PGRP_ID = sg.GRP_ID
+				)
+				SELECT M.IN_CHARGE_ID AS IN_CHARGE_ID, ADMIN.USER_NM,
+				MAX(CASE WHEN A.USER_ID IS NOT NULL THEN 'Y' ELSE 'N' END) AS ALT_YN,
+				MAX(CASE WHEN R.USER_ID IS NOT NULL THEN 'Y' ELSE 'N' END) AS REQ_YN
+				FROM (
+				SELECT USER_ID FROM T_WLK_MNG_ALT WHERE DCT_DT >= #{today}
+				UNION
+				SELECT USER_ID FROM T_WLK_MNG_REQ WHERE REQ_DT >= #{today}
+				) T
+				JOIN T_WLK_MY M ON T.USER_ID = M.USER_ID
+				JOIN sub_groups SG ON M.GRP_ID = SG.GRP_ID
+				JOIN T_WLK_MNG_USER ADMIN ON M.IN_CHARGE_ID = ADMIN.USER_ID
+				LEFT JOIN T_WLK_MNG_ALT A ON M.USER_ID = A.USER_ID AND A.DCT_DT >= #{today}
+				LEFT JOIN T_WLK_MNG_REQ R ON M.USER_ID = R.USER_ID AND R.REQ_DT >= #{today}
+				GROUP BY M.IN_CHARGE_ID
+			</when>
+
+			<when test="inChargeId != null and inChargeId != ''">
+				SELECT M.USER_ID AS USER_ID, M.USER_NM AS USER_NM,
+					MAX(CASE WHEN A.USER_ID IS NOT NULL THEN 'Y' ELSE 'N' end) AS ALT_YN,
+					MAX(CASE WHEN R.USER_ID IS NOT NULL THEN 'Y' ELSE 'N' end) AS REQ_YN,
+					FILE.ATTCH_ID
+				FROM T_WLK_MY M
+				JOIN (
+					SELECT USER_ID FROM T_WLK_MNG_ALT WHERE DCT_DT >= #{today}
+					UNION
+					SELECT USER_ID FROM T_WLK_MNG_REQ WHERE REQ_DT >= #{today}
+				) T ON M.USER_ID = T.USER_ID
+					LEFT JOIN T_WLK_MNG_ALT A ON M.USER_ID = A.USER_ID AND A.DCT_DT >= #{today}
+					LEFT JOIN T_WLK_MNG_REQ R ON M.USER_ID = R.USER_ID AND R.REQ_DT >= #{today}
+					INNER JOIN T_WLK_PRFL PRFL ON M.USER_ID = PRFL.USER_ID
+					LEFT OUTER JOIN T_WLK_CMM_ATT_FILE FILE ON PRFL.ATTCH_MNG_ID = FILE.ATTCH_MNG_ID
+				WHERE M.IN_CHARGE_ID = #{inChargeId} AND (FILE.ATTCH_ST = 'Y' or FILE.ATTCH_ST is null)
+				GROUP BY T.USER_ID
+			</when>
+		</choose>
+	</select>
+</mapper>

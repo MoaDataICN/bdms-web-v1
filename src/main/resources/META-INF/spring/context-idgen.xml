@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+    <!--
+        - strategy: 아래에 정의된 MixPrefix 의 bean name 설정
+        - prefix: 아이디의 앞에 고정적으로 붙이고자 하는 설정값 지정
+        - cipers: prefix를 제외한 아이디의 길이 지정
+        - fillChar: 0을 대신하여 표현되는 문자
+        - CREATE TABLE hsmng_MNG_IDS (TABLE_NAME varchar(16) NOT NULL, NEXT_ID DECIMAL(30) NOT NULL, PRIMARY KEY (TABLE_NAME));
+    -->
+    <!-- DEVICE ID Generation Config-->
+    <bean name="deviceIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="deviceSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DEVICE_ID"/>
+    </bean>
+    <!-- DEVICE ID Generation Strategy Config -->
+    <bean name="deviceSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DVC_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DEVICE DISK ID Generation Config-->
+    <bean name="deviceDiskIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="deviceDiskSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DEVICE_DFS_ID"/>
+    </bean>
+    <!-- DEVICE DISK ID Generation Strategy Config -->
+    <bean name="deviceDiskSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DDC_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DEVICE INTERFACE ID Generation Config-->
+    <bean name="deviceInterfaceIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="deviceInterfaceSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DEVICE_IFS_ID"/>
+    </bean>
+    <!-- DEVICE INTERFACE ID Generation Strategy Config -->
+    <bean name="deviceInterfaceSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DIC_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DEVICE FAN ID Generation Config-->
+    <bean name="deviceFanIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="deviceFanSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DEVICE_FAN_ID"/>
+    </bean>
+    <!-- DEVICE FAN ID Generation Strategy Config -->
+    <bean name="deviceFanSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DFN_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DEVICE PWE ID Generation Config-->
+    <bean name="devicePwrIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="devicePwrSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DEVICE_PWR_ID"/>
+    </bean>
+    <!-- DEVICE PWE ID Generation Strategy Config -->
+    <bean name="devicePwrSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DPR_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DEVICE TEMP TEMP Generation Config-->
+    <bean name="deviceTempIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="deviceTempSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DEVICE_TEMP_ID"/>
+    </bean>
+    <!-- DEVICE TEMP ID Generation Strategy Config -->
+    <bean name="deviceTempSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DTP_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- NODE ID Generation Config-->
+    <bean name="nodeIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="nodeSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="NODE_ID"/>
+    </bean>
+    <!-- NODE Generation Strategy Config -->
+    <bean name="nodeSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="NODE_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- NODEGROUP ID Generation Config-->
+    <bean name="nodeGroupIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="nodeGroupSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="GROUP_ID"/>
+    </bean>
+    <!-- NODEGROUP ID Generation Strategy Config -->
+    <bean name="nodeGroupSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="NDG_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- User Group ID Generation Config -->
+    <bean name="userGroupIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="userGroupSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="USERGROUP_ID"/>
+    </bean>
+
+    <!-- User Group ID Generation Strategy Config -->
+    <bean name="userGroupSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="UGP_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- USER ID Generation Config-->
+    <bean name="userIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="userSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="UID"/>
+    </bean>
+    <!-- USER ID Generation Strategy Config -->
+    <bean name="userSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="USR_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- WIDGET ID Generation Config-->
+    <bean name="widgetIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="widgetSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="WIDGET_ID"/>
+    </bean>
+    <!-- WIDGET ID Generation Strategy Config -->
+    <bean name="widgetSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="WIG_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DASH ID Generation Config-->
+    <bean name="dashIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="dashSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="DASH_ID"/>
+    </bean>
+    <!-- DASH ID Generation Strategy Config -->
+    <bean name="dashSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="DSH_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DASH LAYOUT ID Generation Config-->
+    <bean name="layoutIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="layoutSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="LAYOUT_ID"/>
+    </bean>
+    <!-- DASH LAYOUT ID Generation Strategy Config -->
+    <bean name="layoutSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="LAY_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- CREDENTIAL ID Generation Config-->
+    <bean name="credentialIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="credentialSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="CREDENTIAL_ID"/>
+    </bean>
+    <!-- CREDENTIAL Generation Strategy Config -->
+    <bean name="credentialSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="CDT_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- PROPERTY ID Generation Config-->
+    <bean name="propertyIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="propertySeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="PROPERTY_ID"/>
+    </bean>
+    <!-- PROPERTY ID Generation Strategy Config -->
+    <bean name="propertySeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="PPT_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- CUSTOM COLLECTION CYCLE ID Generation Config-->
+    <bean name="customCollectionCycleIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="customCollectionCycleSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="CUST_COLL_CYC_ID"/>
+    </bean>
+    <!-- CUSTOM COLLECTION CYCLE ID Generation Strategy Config -->
+    <bean name="customCollectionCycleSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="CCC_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- SNMP ID Generation Config-->
+    <bean name="smtpIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="smtpSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="SMTP_ID"/>
+    </bean>
+    <!-- SNMP Generation Strategy Config -->
+    <bean name="smtpSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="SMTP_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- REPORT ID Generation Config-->
+    <bean name="reportIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="reportSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="REPORT_ID"/>
+    </bean>
+    <!-- REPORT ID Generation Strategy Config -->
+    <bean name="reportSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="RP_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- REPORT TEMP ID Generation Config-->
+    <bean name="reportTempIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="reportTempSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="REPORT_TEMP_ID"/>
+    </bean>
+    <!-- REPORT TEMP ID Generation Strategy Config -->
+    <bean name="reportTempSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="RP_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- ALERT ID Generation Config-->
+    <bean name="alertIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="alertSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="ALERT_ID"/>
+    </bean>
+    <!-- ALERT ID Generation Strategy Config -->
+    <bean name="alertSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="ALT_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- ACTION ID Generation Config-->
+    <bean name="actionIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="actionSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="ACTION_ID"/>
+    </bean>
+    <!-- ACTION ID Generation Strategy Config -->
+    <bean name="actionSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="ACT_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- CONDITION ID Generation Config-->
+    <bean name="conditionIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="conditionSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="CONDITION_ID"/>
+    </bean>
+    <!-- CONDITION ID Generation Strategy Config -->
+    <bean name="conditionSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="CON_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- FREQUENCY ID Generation Config-->
+    <bean name="frequencyIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="frequencySeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="FREQUENCY_ID"/>
+    </bean>
+    <!-- FREQUENCY ID Generation Strategy Config -->
+    <bean name="frequencySeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="FRE_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- FREQUENCY DATE ID Generation Config-->
+    <bean name="frequencyDateIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="frequencyDateSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="FRE_DATE_ID"/>
+    </bean>
+    <!-- FREQUENCY DATE ID Generation Strategy Config -->
+    <bean name="frequencyDateSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="FRD_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- FREQUENCY DATE TIME ID Generation Config-->
+    <bean name="frequencyDateTimeIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="frequencyDateTimeSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="hsmng_MNG_IDS"/>
+        <property name="tableName"	value="FRE_DT_ID"/>
+    </bean>
+    <!-- FREQUENCY DATE TIME ID Generation Strategy Config -->
+    <bean name="frequencyDateTimeSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="FDT_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- SCHEDULE ID Generation Config-->
+    <bean name="scheduleIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="scheduleSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="SCHEDULE_ID"/>
+    </bean>
+    <!-- SCHEDULE ID Generation Strategy Config -->
+    <bean name="scheduleSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="SCH_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- NODE DISCOVERY ID Generation Config-->
+    <bean name="nodeDiscoveryIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="nodeDiscoverySeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="DISCOVERY_ID"/>
+    </bean>
+    <!-- NODE DISCOVERY ID Generation Strategy Config -->
+    <bean name="nodeDiscoverySeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="NDC_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DISCOVERY IP RANGES ID Generation Config-->
+    <bean name="discoveryIpRangesIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="nodeDiscoveryIpRangesSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="IPRANGE_ID"/>
+    </bean>
+    <!-- DISCOVERY IP RANGES Generation Strategy Config -->
+    <bean name="nodeDiscoveryIpRangesSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="IPR_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- SUBNET ID Generation Config-->
+    <bean name="discoverySubnetIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="discoverySubnetSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="SUBNET_ID"/>
+    </bean>
+    <!-- SUBNET ID Generation Strategy Config -->
+    <bean name="discoverySubnetSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="SBN_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DISCOVERY INTERFACE KEYWORD FILTER ID Generation Config-->
+    <bean name="discoveryInterfaceKeywordFilterIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="discoveryInterfaceKeywordFilterSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="IF_K_FILTER_ID"/>
+    </bean>
+    <!-- DISCOVERY INTERFACE KEYWORD FILTER ID Generation Strategy Config -->
+    <bean name="discoveryInterfaceKeywordFilterSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="" />
+        <property name="cipers" value="0" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- DISCOVERY PLUGIN COMPONENT FILTER ID Generation Config-->
+    <bean name="discoveryPluginComponentFilterIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="discoveryPluginComponentFilterSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="P_C_FILTER_ID"/>
+    </bean>
+    <!-- DISCOVERY PLUGIN COMPONENT FILTER ID Generation Strategy Config -->
+    <bean name="discoveryPluginComponentFilterSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="" />
+        <property name="cipers" value="0" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <!-- WATCHDOG ID Generation Config-->
+    <bean name="watchdogIdGenService"
+          class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"
+          destroy-method="destroy">
+        <property name="dataSource"	ref="dataSource" />
+        <property name="strategy"	ref="watchdogIdSeq" />
+        <property name="blockSize"	value="1"/>
+        <property name="table"		value="APH_MNG_IDS"/>
+        <property name="tableName"	value="WATCHDOG_ID"/>
+    </bean>
+    <!-- WATCHDOG ID Generation Strategy Config -->
+    <bean name="watchdogIdSeq"
+          class="com.moadata.bdms.support.idgen.service.impl.strategy.IdGenStrategyImpl">
+        <property name="prefix" value="WHD_" />
+        <property name="cipers" value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+    <jdbc:embedded-database id="dataSource"/>
+</beans>
