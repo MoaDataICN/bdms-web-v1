@@ -2,7 +2,11 @@ package com.moadata.bdms.dashboard.controller;
 
 import com.moadata.bdms.common.elasticsearch.service.ESService;
 import com.moadata.bdms.dashboard.service.DashboardService;
+import com.moadata.bdms.group.service.GroupService;
+import com.moadata.bdms.model.vo.GroupVO;
+import com.moadata.bdms.model.vo.UserVO;
 import com.moadata.bdms.tracking.service.TrackingService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +30,18 @@ public class DashboardController {
     @Resource(name="dashboardService")
     private DashboardService dashboardService;
 
+    @Resource(name="groupService")
+    private GroupService groupService;
+
+    @Value("${admin.grpId}")
+    private String grpId;
+
+    @Value("${admin.grpLv}")
+    private String grpLv;
+
+    @Value("${admin.userId}")
+    private String userId;
+
     @GetMapping("/main")
     public String dashboardMain(Model model) {
 
@@ -34,12 +50,26 @@ public class DashboardController {
             고객과 바로 이어지는 관리자인 경우, IN_CHARGE_ID 를 넣음
             그에 대한 구분은 로그인 시, 사용자의 GRP_ID를 바탕으로 GRP 테이블을 조회, RANK를 기재해 둔다.
         */
-        String grpId = "G0010";
-        String inChargeId = "user01";
-        String today = "2025-03-24";
 
         Map<String, Object> param = new HashMap<>();
-        param.put("grpId", grpId);            // 상위 관리자인 경우의 테스트
+        if(grpLv != null && grpLv.equals("1")) {
+            // 상위 관리자인 경우
+            param.put("grpId", grpId);
+
+            List<GroupVO> groupList = groupService.selectLowLevelGroups(grpId);
+            List<UserVO> inChargeList = groupService.selectLowLevelAdmins(grpId);
+
+            model.addAttribute("groupList", groupList);
+            model.addAttribute("inChargeList", inChargeList);
+        } else {
+            // 일반 담당자인 경우
+            param.put("inChargeId", userId);
+
+            model.addAttribute("inChargeId", userId);
+        }
+
+        String today = "2025-03-24";
+
         //param.put("inChargeId", inChargeId);    // 일반 담당자인 경우의 테스트
         param.put("today", today);
 

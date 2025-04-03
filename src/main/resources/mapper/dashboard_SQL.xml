@@ -7,8 +7,9 @@
 		<choose>
 			<when test="grpId != null and grpId != ''">
 				WITH RECURSIVE sub_groups AS (
-				-- 주어진 grpId를 포함한 모든 하위 그룹을 찾음
-				SELECT GRP_ID FROM T_WLK_MNG_GRP WHERE GRP_ID = #{grpId}
+				SELECT GRP_ID
+				FROM T_WLK_MNG_GRP
+				WHERE GRP_ID = #{grpId}
 				UNION ALL
 				SELECT g.GRP_ID
 				FROM T_WLK_MNG_GRP g
@@ -18,15 +19,18 @@
 				MAX(CASE WHEN A.USER_ID IS NOT NULL THEN 'Y' ELSE 'N' END) AS ALT_YN,
 				MAX(CASE WHEN R.USER_ID IS NOT NULL THEN 'Y' ELSE 'N' END) AS REQ_YN
 				FROM (
-				SELECT USER_ID FROM T_WLK_MNG_ALT WHERE DCT_DT >= #{today}
+				SELECT USER_ID
+				FROM T_WLK_MNG_ALT
+				WHERE DCT_DT >= #{today}
 				UNION
-				SELECT USER_ID FROM T_WLK_MNG_REQ WHERE REQ_DT >= #{today}
-				) T
-				JOIN T_WLK_MY M ON T.USER_ID = M.USER_ID
-				JOIN sub_groups SG ON M.GRP_ID = SG.GRP_ID
+				SELECT USER_ID
+				FROM T_WLK_MNG_REQ
+				WHERE REQ_DT >= #{today}
+				) T JOIN T_WLK_MY M ON T.USER_ID = M.USER_ID
 				JOIN T_WLK_MNG_USER ADMIN ON M.IN_CHARGE_ID = ADMIN.USER_ID
 				LEFT JOIN T_WLK_MNG_ALT A ON M.USER_ID = A.USER_ID AND A.DCT_DT >= #{today}
 				LEFT JOIN T_WLK_MNG_REQ R ON M.USER_ID = R.USER_ID AND R.REQ_DT >= #{today}
+				where ADMIN.GRP_ID in (select * from SUB_GROUPS)
 				GROUP BY M.IN_CHARGE_ID
 			</when>
 

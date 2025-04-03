@@ -252,12 +252,12 @@
             </p>
             <div class="table-option-wrap">
                 <div class="dropdown02">
-                    <button class="dropdown-search input-line-b"><spring:message code="common.viewItemList"/> <span><img class="icon20"
+                    <button class="dropdown-search input-line-b" id="gridDropdownBtn"><spring:message code="common.viewResults" arguments="10" /> <span><img class="icon20"
                                                                                             alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
                     <div class="dropdown-content">
-                        <a onclick="changeRowsCnt(100)"><spring:message code="common.viewResults" arguments="100" /></a>
-                        <a onclick="changeRowsCnt(50)"><spring:message code="common.viewResults" arguments="50" /></a>
-                        <a onclick="changeRowsCnt(10)"><spring:message code="common.viewResults" arguments="10" /></a>
+                        <a data-cnt="100"><spring:message code="common.viewResults" arguments="100" /></a>
+                        <a data-cnt="50"><spring:message code="common.viewResults" arguments="50" /></a>
+                        <a data-cnt="10"><spring:message code="common.viewResults" arguments="10" /></a>
                     </div>
                 </div>
             </div>
@@ -279,6 +279,8 @@
 </main>
 
 <script type="text/javascript">
+    const inChargeId = '${inChargeId}';
+
     // Grid 하단 페이저 숫자
     const pageSize = 10;
     let currentPageGroup = 1;
@@ -304,6 +306,7 @@
 
     function setSearchParam() {
         return {
+            inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
             searchBgnDe : $('#searchBgnDe').val()+' 00:00:00',
             searchEndDe : $('#searchEndDe').val()+' 23:59:59',
             userNm : $('#userNm').val(),
@@ -466,11 +469,14 @@
         document.getElementById(displayId).value = dateValue;
     }
 
-    function changeRowsCnt(cnt) {
+    $('.table-wrap .dropdown-content a').click(function(){
+        let cnt = $(this).data('cnt');
+
         rowNumsVal = cnt;
-        $("#userRequestList").setGridParam({ rowNum: cnt });
+        $('#gridDropdownBtn').text($(this).text());
+        $("#healthAlertList").setGridParam({ rowNum: cnt });
         fnSearch();
-    }
+    })
 
     $('.input-txt02').keyup(function(e){
         if(e.keyCode == '13'){

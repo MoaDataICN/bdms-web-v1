@@ -86,7 +86,11 @@
                             <span class="circle-5px"></span>
                             <spring:message code="common.processed"/>
                         </div>
-                        <div class="data-stats" id="HA_1">${fn:length(healthAlertCntMap)}</div>
+                        <c:set var="alert_sum" value="0" />
+                        <c:forEach var="entry" items="${healthAlertCntMap}">
+                            <c:set var="alert_sum" value="${alert_sum + entry.value}" />
+                        </c:forEach>
+                        <div class="data-stats" id="HA_1">${alert_sum}</div>
                     </div>
                 </div>
             </div>
@@ -247,7 +251,15 @@
     <div class="client-wrap mt-30px">
         <div class="title-group">
             <div class="board-title03">
-                <spring:message code="board.subtitle.client"/>
+                <c:choose>
+                    <c:when test="${not empty statusList[0].IN_CHARGE_ID}">
+                        <spring:message code="board.subtitle.admin"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="board.subtitle.client"/>
+                    </c:otherwise>
+                </c:choose>
+
                 <p class="title-status"><spring:message code="board.comment.responsible" arguments="${fn:length(statusList)}" /></p>
             </div>
             <div class="client-label mr-12px">
@@ -523,301 +535,34 @@
 
         <!-- Today Health alerts status - 버튼 묶음-->
         <div class="alerts-table-ui mt-28px" >
-            <button type="button" class="round-gray-btn alertBtns active" data-filter="all">All</button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="A"><spring:message code="common.activity"/></button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="F"><spring:message code="common.fall"/></button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="H"><spring:message code="common.heartrate"/></button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="SL"><spring:message code="common.sleep"/></button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="B"><spring:message code="common.bloodoxygen"/></button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="T"><spring:message code="common.temperature"/></button>
-            <button type="button" class="round-gray-btn alertBtns" data-filter="ST"><spring:message code="common.stress"/></button>
+            <div class="buttonWrapper" style="width:100%; display:flex; gap: 6px;">
+                <button type="button" class="round-gray-btn alertBtns active" data-filter="all">All</button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="A"><spring:message code="common.activity"/></button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="F"><spring:message code="common.fall"/></button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="H"><spring:message code="common.heartrate"/></button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="SL"><spring:message code="common.sleep"/></button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="B"><spring:message code="common.bloodoxygen"/></button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="T"><spring:message code="common.temperature"/></button>
+                <button type="button" class="round-gray-btn alertBtns" data-filter="ST"><spring:message code="common.stress"/></button>
+            </div>
+            <div class="table-option-wrap">
+                <div class="dropdown02">
+                    <button class="dropdown-search input-line-b" id="gridDropdownBtn"><spring:message code="common.viewResults" arguments="10" /> <span><img class="icon20"
+                                                                                                                         alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                    <div class="dropdown-content">
+                        <a data-cnt="100"><spring:message code="common.viewResults" arguments="100" /></a>
+                        <a data-cnt="50"><spring:message code="common.viewResults" arguments="50" /></a>
+                        <a data-cnt="10"><spring:message code="common.viewResults" arguments="10" /></a>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <!-- Today health board Table -->
         <div class="table-wrap mt-14px" style="width:100%;">
             <table id="alertGrid" style="width:100%;"></table>
             <div id="alertGridPager"></div>
             <div id="customPager" class="page-group mb-22px mt-10px"></div>
-        </div>
-    </div>
-
-    <!-- 우측 슬라이드 팝업 -->
-    <!-- 반투명 배경 -->
-    <div class="slide-overlay" id="slide-overlay"></div>
-
-    <!-- 우측에서 슬라이드되는 팝업 -->
-    <div class="customer-popup" id="customerPopup">
-        <div class="popup-header">
-            <div class="second-title">
-                user requests
-            </div>
-            <button type="button" id="closePopup">
-                <img src="/resources/images/close-icon.svg" class="icon24">
-            </button>
-        </div>
-
-        <div class="slide-popup-container">
-            <div class="second-tap-menu mt-12px">
-                <button type="button" class="second-tap-btn active">All</button>
-                <button type="button" class="second-tap-btn">Health alrets</button>
-                <button type="button" class="second-tap-btn">Service request</button>
-                <button type="button" class="second-tap-btn">Input checkup data</button>
-                <button type="button" class="second-tap-btn">Checkup results</button>
-            </div>
-            <div class="second-container mt-18px">
-                <div class="content-row">
-                    <!-- 좌측 입력폼 그룹 -->
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                User Name
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02 hold" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Loing ID
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02 hold" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Phone
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                UID
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02 hold" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Sex
-                            </div>
-                            <div class="dropdown">
-                                <button class="dropdown-search">Man<span><img class="icon20" alt=""
-                                                                              src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                                <div class="dropdown-content">
-                                    <a href="#">Female</a>
-                                    <a href="#">Man</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                In charge
-                            </div>
-                            <div class="dropdown">
-                                <button class="dropdown-search">Select <span><img class="icon20" alt=""
-                                                                                  src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                                <div class="dropdown-content">
-                                    <a href="#">In charge Name</a>
-                                    <a href="#"></a>
-                                    <a href="#"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Date of birth
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Group
-                            </div>
-                            <div class="dropdown">
-                                <button class="dropdown-search">Select<span><img class="icon20" alt=""
-                                                                                 src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                                <div class="dropdown-content">
-                                    <a href="#">Group Name</a>
-                                    <a href="#"></a>
-                                    <a href="#"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Height(cm)
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01 hold">
-                                Registration
-                                date
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Weight(kg)
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Last access
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02 hold" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Address
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Account deletion
-                                request date
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02 hold" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Account status
-                            </div>
-                            <div class="dropdown">
-                                <button class="dropdown-search">Active <span><img class="icon20" alt=""
-                                                                                  src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                                <div class="dropdown-content">
-                                    <a href="#">Active</a>
-                                    <a href="#">Suspended</a>
-                                    <a href="#">Ready to delete</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Pending deletion
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02 hold mr-4px" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt04 hold mx-w250" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row-col-100 mb-16px">
-                        <div class="input-label01 mb-4px">
-                            Memo
-                        </div>
-                        <div class="wrap-form">
-                                    <textarea class="input-area" id="myTextarea"
-                                              placeholder="Please enter a note."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="row-md-100">
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Last edited
-                            </div>
-                            <div class="dropdown">
-                                <button class="dropdown-search">Active <span><img class="icon20" alt=""
-                                                                                  src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                                <div class="dropdown-content">
-                                    <a href="#">Active</a>
-                                    <a href="#">Suspended</a>
-                                    <a href="#">Ready to delete</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-wrap">
-                            <div class="input-label01">
-                                Edited by
-                            </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter"
-                                       oninput="limitLength(this, 30);">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="content-submit-ui mt-22px">
-                <div class="submit-ui-wrap">
-                    <button type="button" class="gray-submit-btn">
-                        <img src="/resources/images/reset-pass-icon.svg" class="icon22">
-                        <span>Reset Password</span>
-                    </button>
-                </div>
-                <div class="submit-ui-wrap">
-                    <button type="button" class="gray-submit-btn">
-                        <img src="/resources/images/reset-icon.svg" class="icon22">
-                        <span>Reset</span>
-                    </button>
-
-                    <button type="button" class="point-submit-btn">
-                        <img src="/resources/images/save-icon.svg" class="icon22">
-                        <span>Save Changes</span>
-                    </button>
-                </div>
-            </div>
-            <!-- 스페이스 빈공간 -->
-            <div class="space-20"></div>
         </div>
     </div>
 
@@ -864,9 +609,8 @@
     <!-- Chart S -->
 
     let healthAlerts = {
-        'Steps': <c:out value="${healthAlertCntMap.A}" default="0" />,
+        'Activify/Falls': <c:out value="${healthAlertCntMap.A + healthAlertCntMap.F}" default="0" />,
         'Heart Rate': <c:out value="${healthAlertCntMap.H}" default="0" />,
-        'Falls': <c:out value="${healthAlertCntMap.F}" default="0" />,
         'Sleep': <c:out value="${healthAlertCntMap.SL}" default="0" />,
         'Blood Oxygen': <c:out value="${healthAlertCntMap.B}" default="0" />,
         'Temperature': <c:out value="${healthAlertCntMap.T}" default="0" />,
@@ -976,6 +720,13 @@
     // 기본 Items 개수
     var rowNumsVal = 10;
 
+    var inChargeList = new Array();
+    <c:forEach items="${inChargeList}" var="item">
+        inChargeList.push("'${item.userId}'")
+    </c:forEach>
+
+    var inChargeId = "${inChargeId}";
+
     // JQGRID INIT
     $(document).ready(function () {
         var grid = $("#alertGrid").jqGrid({
@@ -1023,11 +774,17 @@
                         return cellValue;
                     }},
                 { label: 'Date Of Birth', name: 'brthDt', width:130, sortable : false},
-                { label: 'Sex', name: 'sx', width:80, sortable : true},
+                { label: 'Sex', name: 'sx', width:60, sortable : true, formatter: function(cellValue, options, rowObject) {
+                        if(cellValue === 'M') {
+                            return '<img src="/resources/images/man-icon.svg" class="icon24 img-c">'
+                        } else {
+                            return '<img src="/resources/images/girl-icon.svg" class="icon24 img-c">';
+                        }
+                    }},
                 { label: 'Group', name: 'grpNm', width:130, sortable : true},
                 { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
                 { label: 'Details', name: 'userId', width:100, sortable : false, formatter : function(cellValue, options, rowObject){
-                        return `<button type="button" onclick="openPopup()" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
+                        return `<button type="button" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
                     }},
             ],
             viewrecords: true,
@@ -1050,7 +807,9 @@
                 page: 1,
                 size: rowNumsVal,
                 searchBgnDe: today,
-                altTp : "'A','F','H','SL','B','T','ST'"
+                altTp : "'A','F','H','SL','B','T','ST'",
+                inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
+                inChargeIds : inChargeList.length > 0 ? '('+inChargeList.join()+')' : null,
             },
             loadComplete: function(data) {
                 createCustomPager('alertGrid');
@@ -1075,8 +834,11 @@
     }
 
     function setSearchParam() {
+        console.log(inChargeList);
         return {
             searchBgnDe : today,
+            inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
+            inChargeIds : inChargeList.length > 0 ? '('+inChargeList.join()+')' : null,
             altTp : $('.alertBtns.active').data('filter') != 'all' ? $('.alertBtns.active')
                 .map(function() {
                     return "\"" + $(this).data('filter') + "\"";
@@ -1087,13 +849,13 @@
     }
 
     <!-- Grid Filter Toggle -->
-    $(document).on('click','.alerts-table-ui button', function(){
-        if($('.alerts-table-ui button.active').length === 1 && $('.alerts-table-ui button.active')[0] == this){
+    $(document).on('click','.alerts-table-ui .buttonWrapper button', function(){
+        if($('.alerts-table-ui .buttonWrapper button.active').length === 1 && $('.alerts-table-ui .buttonWrapper button.active')[0] == this){
             return;
         }
 
         if(this.dataset['filter'] === 'all') {
-            $('.alerts-table-ui button').removeClass('active');
+            $('.alerts-table-ui .buttonWrapper button').removeClass('active');
 
             $(this).addClass('active');
         } else {
@@ -1104,19 +866,13 @@
         fnSearch();
     })
 
-    <!-- 우측에서 나타나는 슬라이드 팝업 -->
-    function openPopup() {
-        document.getElementById('customerPopup').classList.add('active');
-        document.getElementById('slide-overlay').classList.add('active');
-        document.body.classList.add('no-scroll');  // ✅ 본문 스크롤 막기
-    }
 
-    function closePopup() {
-        document.getElementById('customerPopup').classList.remove('active');
-        document.getElementById('slide-overlay').classList.remove('active');
-        document.body.classList.remove('no-scroll');  // ✅ 본문 스크롤 복구
-    }
+    $('.dropdown-content a').click(function(){
+        let cnt = $(this).data('cnt');
 
-    document.getElementById('closePopup').addEventListener('click', closePopup);
-    document.getElementById('slide-overlay').addEventListener('click', closePopup);
+        rowNumsVal = cnt;
+        $('#gridDropdownBtn').text($(this).text());
+        $("#alertGrid").setGridParam({ rowNum: cnt });
+        fnSearch();
+    })
 </script>

@@ -51,10 +51,13 @@ public class UserController extends BaseController {
 	
 	@Resource(name = "menuService")
 	private MenuService menuService;
-	
-//	@Resource(name = "historyInfoService")
-//	private HistoryInfoService historyInfoService;
-	
+
+	@RequestMapping(value="/userSearch", method = RequestMethod.GET)
+	public String userSearch(HttpServletRequest request, ModelMap model) {
+
+		return "user/userSearch";
+	}
+
 	/**
 	 * User list 페이지이동
 	 * 

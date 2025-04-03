@@ -39,13 +39,14 @@
 			) as IN_CHARGE_NM, my.IN_CHARGE_ID
 		from t_wlk_mng_req req
 			left outer join t_wlk_my my on req.user_id = my.user_id
-			inner join t_wlk_mng_grp grp on my.grp_id = grp.grp_id
+			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
+			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
 		where 1=1
-		<if test="inChargeId != null and inChargeId != ''">
+		<if test="inChargeIds != null and inChargeIds != ''">
 			-- 담당자에 맞는 조회
 		  		-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
 		  		-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-			AND my.IN_CHARGE_ID IN #{inChargeIds}
+			AND my.IN_CHARGE_ID IN ${inChargeIds}
 		</if>
 		<if test="searchBgnDe != null and searchBgnDe != ''">
 			AND req.REQ_DT <![CDATA[>=]]> #{searchBgnDe}
@@ -76,6 +77,9 @@
 		</if>
 		<if test="inChargeId != null and inChargeId != ''">
 			AND my.IN_CHARGE_ID = #{inChargeId}
+		</if>
+		<if test="inChargeNm != null and inChargeNm != ''">
+			AND admin.USER_NM = #{inChargeNm}
 		</if>
 		<if test="grpNm != null and grpNm != ''">
 			AND grp.GRP_NM LIKE CONCAT('%',#{grpNm},'%')
@@ -114,14 +118,15 @@
 	<select id="selectUserRequestCnt" parameterType="userRequestVO" resultType="int">
 		select count(req.REQ_ID)
 		from t_wlk_mng_req req
-		left outer join t_wlk_my my on req.user_id = my.user_id
-		inner join t_wlk_mng_grp grp on my.grp_id = grp.grp_id
+			left outer join t_wlk_my my on req.user_id = my.user_id
+			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
+			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
 		where 1=1
-		<if test="inChargeId != null and inChargeId != ''">
+		<if test="inChargeIds != null and inChargeIds != ''">
 			-- 담당자에 맞는 조회
 			-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
 			-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-			AND my.IN_CHARGE_ID IN #{inChargeIds}
+			AND my.IN_CHARGE_ID IN ${inChargeIds}
 		</if>
 		<if test="searchBgnDe != null and searchBgnDe != ''">
 			AND req.REQ_DT <![CDATA[>=]]> #{searchBgnDe}
@@ -152,6 +157,9 @@
 		</if>
 		<if test="inChargeId != null and inChargeId != ''">
 			AND my.IN_CHARGE_ID = #{inChargeId}
+		</if>
+		<if test="inChargeNm != null and inChargeNm != ''">
+			AND admin.USER_NM = #{inChargeNm}
 		</if>
 		<if test="grpNm != null and grpNm != ''">
 			AND grp.GRP_NM LIKE CONCAT('%',#{grpNm},'%')
@@ -194,14 +202,15 @@
 			WHERE ic.USER_ID = my.IN_CHARGE_ID
 			) as IN_CHARGE_NM, my.IN_CHARGE_ID
 		from t_wlk_mng_alt alt
-		left outer join t_wlk_my my on alt.user_id = my.user_id
-		inner join t_wlk_mng_grp grp on my.grp_id = grp.grp_id
+			left outer join t_wlk_my my on alt.user_id = my.user_id
+			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
+			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
 		where 1=1
-		<if test="inChargeId != null and inChargeId != ''">
+		<if test="inChargeIds != null and inChargeIds != ''">
 			-- 담당자에 맞는 조회
 			-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
 			-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-			AND my.IN_CHARGE_ID IN #{inChargeIds}
+			AND my.IN_CHARGE_ID IN ${inChargeIds}
 		</if>
 		<if test="searchBgnDe != null and searchBgnDe != ''">
 			AND alt.DCT_DT <![CDATA[>=]]> #{searchBgnDe}
@@ -232,6 +241,9 @@
 		</if>
 		<if test="inChargeId != null and inChargeId != ''">
 			AND my.IN_CHARGE_ID = #{inChargeId}
+		</if>
+		<if test="inChargeNm != null and inChargeNm != ''">
+			AND admin.USER_NM = #{inChargeNm}
 		</if>
 		<if test="grpNm != null and grpNm != ''">
 			AND grp.GRP_NM LIKE CONCAT('%',#{grpNm},'%')
@@ -271,14 +283,15 @@
 	<select id="selectHealthAlertCnt" parameterType="healthAlertVO" resultType="int">
 		select count(alt.TRK_ID)
 		from t_wlk_mng_alt alt
-		left outer join t_wlk_my my on alt.user_id = my.user_id
-		inner join t_wlk_mng_grp grp on my.grp_id = grp.grp_id
+			left outer join t_wlk_my my on alt.user_id = my.user_id
+			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
+			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
 		where 1=1
-		<if test="inChargeId != null and inChargeId != ''">
+		<if test="inChargeIds != null and inChargeIds != ''">
 			-- 담당자에 맞는 조회
 			-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
 			-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-			AND my.IN_CHARGE_ID IN #{inChargeIds}
+			AND my.IN_CHARGE_ID IN ${inChargeIds}
 		</if>
 		<if test="searchBgnDe != null and searchBgnDe != ''">
 			AND alt.DCT_DT <![CDATA[>=]]> #{searchBgnDe}
@@ -309,6 +322,9 @@
 		</if>
 		<if test="inChargeId != null and inChargeId != ''">
 			AND my.IN_CHARGE_ID = #{inChargeId}
+		</if>
+		<if test="inChargeNm != null and inChargeNm != ''">
+			AND admin.USER_NM = #{inChargeNm}
 		</if>
 		<if test="grpNm != null and grpNm != ''">
 			AND grp.GRP_NM LIKE CONCAT('%',#{grpNm},'%')
@@ -349,15 +365,16 @@
 		<choose>
 			<when test="grpId != null and grpId != ''">
 				WITH RECURSIVE sub_groups AS (
-				    SELECT GRP_ID FROM T_WLK_MNG_GRP WHERE GRP_ID = #{grpId}
-					UNION ALL
-					SELECT g.GRP_ID FROM T_WLK_MNG_GRP g
-					    INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
+				SELECT GRP_ID FROM T_WLK_MNG_GRP WHERE GRP_ID = #{grpId}
+				UNION ALL
+				SELECT g.GRP_ID FROM T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
 				)
 				select alt.ALT_TP, COUNT(*) as ALT_COUNT
 				from t_wlk_mng_alt alt
-					inner join t_wlk_my my on alt.user_id = my.user_id
-				WHERE ALT.DCT_DT >= #{today} AND my.GRP_ID IN (SELECT GRP_ID FROM sub_groups)
+				inner join t_wlk_my my on alt.user_id = my.user_id
+				inner join t_wlk_mng_user admin on my.IN_CHARGE_ID = admin.USER_ID
+				WHERE ALT.DCT_DT >= #{today} and admin.GRP_ID in (select * from sub_groups)
 			</when>
 			<when test="inChargeId != null and inChargeId != ''">
 				select alt.ALT_TP, COUNT(*) as ALT_COUNT
@@ -373,16 +390,16 @@
 		<choose>
 			<when test="grpId != null and grpId != ''">
 				WITH RECURSIVE sub_groups AS (
-					SELECT GRP_ID FROM T_WLK_MNG_GRP WHERE GRP_ID = #{grpId}
-					UNION ALL
-					SELECT g.GRP_ID FROM T_WLK_MNG_GRP g
-						INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
+				SELECT GRP_ID FROM T_WLK_MNG_GRP WHERE GRP_ID = #{grpId}
+				UNION ALL
+				SELECT g.GRP_ID FROM T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
 				)
-				select req.REQ_TP, req.REQ_STT, COUNT(*) AS REQ_COUNT
+				select req.REQ_TP, req.REQ_STT, COUNT(*) as REQ_COUNT
 				from t_wlk_mng_req req
-					inner join t_wlk_my my on req.user_id = my.user_id
-					inner join t_wlk_mng_grp grp on my.grp_id = grp.grp_id
-				WHERE REQ.REQ_DT >= #{today} AND my.GRP_ID IN (SELECT GRP_ID FROM sub_groups)
+				inner join t_wlk_my my on req.user_id = my.user_id
+				inner join t_wlk_mng_user admin on my.IN_CHARGE_ID = admin.USER_ID
+				WHERE REQ.REQ_DT >= #{today} and admin.GRP_ID in (select * from sub_groups)
 			</when>
 			<when test="inChargeId != null and inChargeId != ''">
 				select req.REQ_TP, req.REQ_STT, COUNT(*) AS REQ_COUNT
