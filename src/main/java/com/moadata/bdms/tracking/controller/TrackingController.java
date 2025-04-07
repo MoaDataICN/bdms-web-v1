@@ -6,6 +6,7 @@ import com.moadata.bdms.model.vo.HealthAlertVO;
 import com.moadata.bdms.model.vo.UserRequestVO;
 import com.moadata.bdms.model.vo.UserVO;
 import com.moadata.bdms.tracking.service.TrackingService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +26,19 @@ public class TrackingController {
     @Resource(name = "groupService")
     private GroupService groupService;
 
+    @Value("${admin.grpId}")
+    private String grpId;
+
+    @Value("${admin.grpLv}")
+    private String grpLv;
+
+    @Value("${admin.userId}")
+    private String userId;
+
     @GetMapping("/userRequests")
     public String userRequests(ModelMap model) {
         // 세션에 저장 된, 사용자의 정보를 바탕으로 조회를 수행
         // GRP_ID, GRP_LV 를 세션에 저장하며, 이를 바탕으로 조회 조건 및 레벨이 달라짐
-
-        String grpId = "G0010";
-        String grpLv = "1";
 
         if(grpLv != null && grpLv.equals("1")) {
             // 최상위 관리자인 경우
@@ -42,9 +49,7 @@ public class TrackingController {
             model.addAttribute("inChargeList", inChargeList);
 
         } else if(grpLv != null && grpLv.equals("2")) {
-            // 담당자인 경우
-            // 딱히? 넣어줄게 없겠지 ㅇㅇ
-            // 일단은 영역만 넣어둠
+            model.addAttribute("inChargeId", userId);
         }
 
         return "tracking/userRequests";
@@ -55,9 +60,6 @@ public class TrackingController {
         // 세션에 저장 된, 사용자의 정보를 바탕으로 조회를 수행
         // GRP_ID, GRP_LV 를 세션에 저장하며, 이를 바탕으로 조회 조건 및 레벨이 달라짐
 
-        String grpId = "G0010";
-        String grpLv = "1";
-
         if(grpLv != null && grpLv.equals("1")) {
             // 최상위 관리자인 경우
             List<GroupVO> groupList = groupService.selectLowLevelGroups(grpId);
@@ -67,9 +69,7 @@ public class TrackingController {
             model.addAttribute("inChargeList", inChargeList);
 
         } else if(grpLv != null && grpLv.equals("2")) {
-            // 담당자인 경우
-            // 딱히? 넣어줄게 없겠지 ㅇㅇ
-            // 일단은 영역만 넣어둠
+            model.addAttribute("inChargeId", userId);
         }
 
         return "tracking/healthAlerts";

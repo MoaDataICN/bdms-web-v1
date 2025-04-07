@@ -8,6 +8,7 @@
 		<version>2.7.18</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	<packaging>war</packaging>
 	<groupId>com.moadata</groupId>
 	<artifactId>bdms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -138,6 +139,13 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+
+		<!-- for deploy -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- JSTL -->

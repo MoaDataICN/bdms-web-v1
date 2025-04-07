@@ -26,6 +26,7 @@
             integrity="sha512-8Z5++K1rB3U+USaLKG6oO8uWWBhdYsM3hmdirnOEWp8h2B1aOikj5zBzlXs8QOrvY9OxEnD2QDkbSKKpfqcIWw=="
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="${contextPath}/resources/bootstrap/js/plugins/jqGrid/ui.jqgrid.css">
+    <script src="${contextPath}/resources/js/script.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/grid.locale-kr.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/jquery.jqgrid.min.js"></script>
     <script src="${contextPath}/resources/js/grid/pager.js"></script>

@@ -28,6 +28,8 @@ public class UserRequestVO extends BaseSearchObject {
 	private String emailId;
 	private String brthDt;
 	private String sx;
+
+	private String inChargeIds;
 	private String inChargeId;
 	private String inChargeNm;
 	private String grpId;

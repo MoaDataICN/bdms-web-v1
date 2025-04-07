@@ -1,7 +1,9 @@
 package com.moadata.bdms.group.service;
 
+import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.group.repository.GroupDao;
 import com.moadata.bdms.model.vo.GroupVO;
+import com.moadata.bdms.model.vo.UserRequestVO;
 import com.moadata.bdms.model.vo.UserVO;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -64,6 +66,18 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public List<UserVO> selectLowLevelAdmins(String grpId) {
-		return groupDao.selectLowLevelAdmins(grpId);
+		List<UserVO> adminsList = groupDao.selectLowLevelAdmins(grpId);
+
+		try {
+			if(adminsList.size() > 0) {
+				for(UserVO user : adminsList) {
+					user.setUserNm(EncryptUtil.decryptText(user.getUserNm()));
+				}
+			}
+			return adminsList;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
