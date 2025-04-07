@@ -12,12 +12,12 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 public class BDMSApplication extends SpringBootServletInitializer {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BDMSApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BDMSApplication.class, args);
+    }
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(BDMSApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(BDMSApplication.class);
+    }
 }
