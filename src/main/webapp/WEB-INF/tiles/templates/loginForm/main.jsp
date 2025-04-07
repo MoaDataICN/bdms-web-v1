@@ -37,16 +37,9 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
 
-
 </head>
 <body>
-    <header>
-        <!-- head -->
-        <tiles:insertAttribute name="header" />
-    </header>
     <div class="container">
-        <!-- sideMenu -->
-        <tiles:insertAttribute name="sideMenu" />
         <!-- body -->
         <tiles:insertAttribute name="body" />
     </div>

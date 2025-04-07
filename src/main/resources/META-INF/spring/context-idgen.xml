@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
     <!--
         - strategy: 아래에 정의된 MixPrefix 의 bean name 설정
@@ -9,6 +9,8 @@
         - fillChar: 0을 대신하여 표현되는 문자
         - CREATE TABLE hsmng_MNG_IDS (TABLE_NAME varchar(16) NOT NULL, NEXT_ID DECIMAL(30) NOT NULL, PRIMARY KEY (TABLE_NAME));
     -->
+    <util:properties id="config" location="classpath:/META-INF/spring/config.properties" />
+
     <!-- DEVICE ID Generation Config-->
     <bean name="deviceIdGenService"
           class="com.moadata.bdms.support.idgen.service.impl.TableIdGenService"

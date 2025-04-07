@@ -11,4 +11,9 @@
         <put-attribute name="body" value="/WEB-INF/tiles/templates/common/body.jsp" />
         <put-attribute name="footer" value="/WEB-INF/tiles/templates/common/footer.jsp" />
     </definition>
+
+    <definition name=".loginForm" template="/WEB-INF/tiles/templates/loginForm/main.jsp">
+        <put-attribute name="body" value="/WEB-INF/tiles/templates/common/body.jsp" />
+    </definition>
+
 </tiles-definitions>

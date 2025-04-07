@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="login">
+	<!-- 로그인 확인 -->
+	<!-- 원본 주석 처리 22.08.24
+	<select id="selectLoginInfo" parameterType="String" resultType="loginVO">
+		SELECT USER_ID, USER_PW, LOCK_YN, USE_YN
+		FROM   ICAP_MNG_USER
+		WHERE  USER_ID = #{userId}	
+	</select>
+	 -->
+	 <!-- 로그인 정보 쿼리 수정 22.08.24 비밀번호 실패 횟수, 로그인 날짜, 비밀번호 변경 날짜, 현재 날짜 추가 -->
+	 <select id="selectLoginInfo" parameterType="String" resultType="loginVO">
+		SELECT USER_ID, USER_PW, LOCK_YN, USE_YN, PW_FAIL_CNT, LOGIN_DT, PW_MODIFY_DT, NOW() AS TODAY, CONNECT_IP1, CONNECT_IP2, CONNECT_IP3
+		FROM   T_WLK_MNG_USER
+		WHERE  USER_ID = #{userId}	
+	</select>	
+	
+	<!-- 로그인 일자 갱신 -->
+	<update id="updateLoginDt" parameterType="String">
+		UPDATE T_WLK_MNG_USER
+		SET    LOGIN_DT = NOW()
+		WHERE  USER_ID = #{userId}
+	</update>
+	
+	<!-- 로그인  수정 -->
+	<update id="updateLoginUser" parameterType="LoginVO">
+		UPDATE T_WLK_MNG_USER
+		SET
+			PW_FAIL_CNT 	= #{pwFailCnt}
+		<if test='lockYn != null and lockYn !=""'>
+			, LOCK_YN 	= #{lockYn}
+		</if>
+		<if test='pwFailCnt == 0'>
+			, LOGIN_DT	= NOW()
+		</if>
+		WHERE USER_ID = #{userId}
+	</update>
+	
+    <!-- Update Lock User -->
+    <update id="updateLockUser" parameterType="LoginVO">
+		update T_WLK_MNG_USER
+		set LOCK_YN = 'Y'
+		<!-- ,MODIFY_DT = NOW() -->
+		where 1=1 
+		and datediff(now(), date_format(LOGIN_DT, '%Y-%m-%d')) > 90
+		and LOGIN_DT is not NULL
+	</update>
+	
+	<!-- 패스워드 5회 실패 시 10분간 로그인 차단 -->
+	<select id="selectLoginLockCkCnt" parameterType="String" resultType="Int">
+		SELECT count(*) AS ckCnt  
+		FROM T_WLK_MNG_USER
+		WHERE USER_ID = #{userId}
+		<![CDATA[
+		AND (LOGIN_DT + INTERVAL 10 MINUTE)  < now()
+		]]>		
+	</select>
+	
+	<!-- 로그인 유저 비밀번호 추가 22.08.29 -->
+	<update id="updateLoginUserPw" parameterType="LoginVO">
+		UPDATE T_WLK_MNG_USER
+		SET
+			USER_PW = #{userPw},
+			PW_FAIL_CNT = 0,
+			PW_MODIFY_DT = NOW()		
+		WHERE USER_ID = #{userId}
+	</update>
+</mapper>

@@ -5,6 +5,10 @@
 
 <tiles-definitions>
     <!-- 대시보드 페이지 body 설정 -->
+    <definition name="login/loginForm" extends=".loginForm">
+        <put-attribute name="body" value="/WEB-INF/views/login/loginForm.jsp" />
+    </definition>
+
     <definition name="*/*" extends=".main">
         <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
     </definition>
