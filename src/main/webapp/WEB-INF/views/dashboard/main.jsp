@@ -866,7 +866,6 @@
         fnSearch();
     })
 
-
     $('.dropdown-content a').click(function(){
         let cnt = $(this).data('cnt');
 
@@ -875,4 +874,10 @@
         $("#alertGrid").setGridParam({ rowNum: cnt });
         fnSearch();
     })
+
+    //logout 임다.
+    $(document).on('click','.logout_icon30', function(){
+        window.location.href='<c:url value="/login/logout"/>';
+    })
+
 </script>

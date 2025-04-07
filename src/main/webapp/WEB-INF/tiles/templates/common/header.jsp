@@ -22,7 +22,7 @@
             <img src="../../resources/images/user-icon.svg" class="icon30">
         </button>
         <button type="button" class="header-btn">
-            <img src="../../resources/images/logout-icon.svg" class="icon30">
+            <img src="../../resources/images/logout-icon.svg" class="logout_icon30">
         </button>
     </div>
 </header>
