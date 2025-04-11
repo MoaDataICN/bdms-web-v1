@@ -176,7 +176,7 @@ button {
     cursor: pointer;
     outline: none;
     -webkit-tap-highlight-color: transparent
-        /* 탭영역 터치시 영역 컬러 지정 */
+    /* 탭영역 터치시 영역 컬러 지정 */
 }
 
 button::-moz-focus-inner {
@@ -877,6 +877,10 @@ label {
     height: 8px;
     border-radius: 50%;
     background-color: var(--point-color-02);
+}
+
+.red-point-color{
+    color: var(--point-color-02);
 }
 
 .alerted-circle {
@@ -1786,7 +1790,7 @@ table {
     .row-md-100{
         gap: 0;
     }
-   
+
 }
 
 @media (max-width: 900px) {

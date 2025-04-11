@@ -70,4 +70,10 @@ public class UserVO extends BaseSearchObject {
 	private String exportTotalHeader; //엑셀 헤더 (집계용)
 	private String pwd;
 	private String checkPwd;
+	private String lstLoginDt;
+	private String tpNm;
+
+	/* Group, 권한 관련 */
+	private String grpId;
+	private String grpLv;
 }

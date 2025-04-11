@@ -32,5 +32,5 @@ public class LoginDao extends BaseAbstractDao {
 	//로그인 유저 비밀번호 변경 추가 22.08.29
 	public void updateLoginUserPw(LoginVO login) {
 		update("login.updateLoginUserPw", login);
-	}	
+	}
 }

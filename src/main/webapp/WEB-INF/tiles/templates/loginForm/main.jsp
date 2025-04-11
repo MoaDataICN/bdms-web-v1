@@ -26,16 +26,15 @@
             integrity="sha512-8Z5++K1rB3U+USaLKG6oO8uWWBhdYsM3hmdirnOEWp8h2B1aOikj5zBzlXs8QOrvY9OxEnD2QDkbSKKpfqcIWw=="
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="${contextPath}/resources/bootstrap/js/plugins/jqGrid/ui.jqgrid.css">
+    <link rel="stylesheet" href="${contextPath}/resources/bootstrap/js/plugins/jquery_confirm/jquery_confirm.css">
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/grid.locale-kr.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/jquery.jqgrid.min.js"></script>
     <script src="${contextPath}/resources/js/grid/pager.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
-    <!-- jquery-confirm.js -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+    <script src="${contextPath}/resources/bootstrap/js/plugins/jquery_confirm/jquery_confirm.js"></script><!-- Confirm -->
+    <script src="${contextPath}/resources/bootstrap/js/jquery.serialize-object.js"></script><!-- Confirm -->
 
 </head>
 <body>

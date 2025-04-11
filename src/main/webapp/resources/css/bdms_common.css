@@ -49,11 +49,6 @@
     width: 30px;
 }
 
-.logout_icon30 {
-    height: 30px;
-    width: 30px;
-}
-
 .icon32 {
     height: 32px;
     width: 32px;
@@ -833,7 +828,7 @@ a {
     color: #333;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent
-        /* 탭영역 터치시 영역 컬러 지정 */
+    /* 탭영역 터치시 영역 컬러 지정 */
 }
 
 a:active,
@@ -962,6 +957,25 @@ textarea {
     font-weight: 600;
     line-height: 16px;
     letter-spacing: -0.28px;
+}
+
+.dropdown .dropdown-content{
+    text-align: left;
+}
+
+.admin-wrap{
+    padding: 20px 20px;
+}
+
+.input-label02 {
+    min-width: 150px;
+    max-width: 150px;
+    color: var(--gray-23);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: -0.28px;
+    text-align: left;
 }
 
 
