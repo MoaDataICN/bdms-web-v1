@@ -14,7 +14,7 @@ import com.moadata.bdms.common.exception.ProcessException;
 public final class EncryptUtil {
     public static final String ENCRYPT_ALGORITHM = "AES";
     
-    public static final String ENCRYPT_KEY = "Moadata";
+    public static final String ENCRYPT_KEY = "Mediwalk";
     
     private EncryptUtil() {
         throw new AssertionError();

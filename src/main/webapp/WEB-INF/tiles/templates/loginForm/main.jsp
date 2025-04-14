@@ -16,10 +16,10 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../../resources/css/bdms_common.css">
-    <link rel="stylesheet" href="../../resources/css/bdms_style.css">
-    <link rel="stylesheet" href="../../resources/css/bdms_color.css">
-    <link rel="stylesheet" href="../../resources/css/jqgrid_custom.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/bdms_common.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/bdms_style.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/bdms_color.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/jqgrid_custom.css">
 
     <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js"
@@ -36,9 +36,15 @@
     <script src="${contextPath}/resources/bootstrap/js/plugins/jquery_confirm/jquery_confirm.js"></script><!-- Confirm -->
     <script src="${contextPath}/resources/bootstrap/js/jquery.serialize-object.js"></script><!-- Confirm -->
 
+    <style>
+        .jc-bs3-container {
+            justify-content:center !important;
+            background-color : unset !important;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="login_container">
         <!-- body -->
         <tiles:insertAttribute name="body" />
     </div>

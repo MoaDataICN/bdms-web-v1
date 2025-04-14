@@ -12,6 +12,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,19 +28,17 @@ public class TrackingController {
     @Resource(name = "groupService")
     private GroupService groupService;
 
-    @Value("${admin.grpId}")
-    private String grpId;
-
-    @Value("${admin.grpLv}")
-    private String grpLv;
-
-    @Value("${admin.userId}")
-    private String userId;
-
     @GetMapping("/userRequests")
-    public String userRequests(ModelMap model) {
+    public String userRequests(ModelMap model, HttpServletRequest request) {
         // 세션에 저장 된, 사용자의 정보를 바탕으로 조회를 수행
         // GRP_ID, GRP_LV 를 세션에 저장하며, 이를 바탕으로 조회 조건 및 레벨이 달라짐
+
+        HttpSession session = request.getSession(false);
+        UserVO user = (UserVO) session.getAttribute("user");
+
+        String grpId = user.getGrpId();
+        String grpLv = user.getGrpLv();
+        String userId = user.getUserId();
 
         if(grpLv != null && grpLv.equals("1")) {
             // 최상위 관리자인 경우
@@ -56,9 +56,16 @@ public class TrackingController {
     }
 
     @GetMapping("/healthAlerts")
-    public String healthAlerts(ModelMap model) {
+    public String healthAlerts(ModelMap model, HttpServletRequest request) {
         // 세션에 저장 된, 사용자의 정보를 바탕으로 조회를 수행
         // GRP_ID, GRP_LV 를 세션에 저장하며, 이를 바탕으로 조회 조건 및 레벨이 달라짐
+
+        HttpSession session = request.getSession(false);
+        UserVO user = (UserVO) session.getAttribute("user");
+
+        String grpId = user.getGrpId();
+        String grpLv = user.getGrpLv();
+        String userId = user.getUserId();
 
         if(grpLv != null && grpLv.equals("1")) {
             // 최상위 관리자인 경우

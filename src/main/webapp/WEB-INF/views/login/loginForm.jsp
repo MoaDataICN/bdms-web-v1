@@ -32,12 +32,13 @@ var pwCkUserId = '<%=(String)session.getAttribute("pwCkUserId")%>';
 			
 			$("#loginForm")[0].submit();
 		}
-	};		
+	};
 
 
 	$(document).ready(function() {
 		<c:if test="${!empty errorMessage}">
 		$.alert('${fn:replace(fn:escapeXml(errorMessage), LF, '<br />')}');
+		$('#loginBtn').before(`<div class="login-message mt-4px">ID or password is wrong.</div>`)
 		</c:if>
 		<c:if test="${!empty param.error}">
 			<c:choose>
@@ -97,61 +98,49 @@ var pwCkUserId = '<%=(String)session.getAttribute("pwCkUserId")%>';
 		    }
 		});
 		
-};	
+};
 
+function limitLength(element, maxLength) {
+	if (element.value.length > maxLength) {
+		element.value = element.value.slice(0, maxLength); // 길이 제한 초과 시 잘라내기
+	}
+}
 </script>
-<div class="console-login">
-	<div class="login-form">
-		<div class="mb-5">
-	        <img id="logo_img" src="/resources/images/logo_incheonAP.png" alt="logo">
-		</div>
-		<div class="login-form-inner">
-			<div class="login-title">
-				<h2>로그인</h2>
-				<p>아이디 / 비밀번호를 입력하시고 로그인 하십시오.</p>
+
+<div class="login-left-panel">
+	<img src="/resources/images/logo-black.png" class="login-logo">
+	<div class="login-subtitle mt-14px">
+		Welcome! This is the medical support system.
+	</div>
+	<form name="loginForm" id="loginForm" class="full-panel-form" data-toggle="validator" role="form" action="<c:url value='/login/login'/>" method="post" onsubmit="return false">
+		<div class="row-input2 mt-42px">
+			<input type="text" id="userId" name="userId"class="input-txt05" placeholder="Enter Member ID" oninput="limitLength(this, 12);" required>
+			<div class="img-left">
+				<img src="/resources/images/login-mail-icon.svg" class="icon24">
+				<div class="h-line"></div>
 			</div>
-			<form name="loginForm" id="loginForm" class="full-panel-form" data-toggle="validator" role="form" action="<c:url value='/login/login'/>" method="post" onsubmit="return false">
-				<div class="console-form-body">
-					<div class="row">
-						<div class="col-lg-12 col-md-12">
-							<div class="form-group  has-feedback">
-								<label>아이디</label>
-								<div class="input-group">
-									<div class="input-group-prepend"><span class="input-group-text user_id"><i class="fa fa-user"></i></span></div>
-									<input type="text" id="userId" name="userId" class="form-control" placeholder="ID" required>
-								</div>
-								<div class="help-block with-errors"></div>
-							</div>
-						</div>
-						<div class="col-lg-12 col-md-12">
-							<div class="form-group  has-feedback">
-								<label class="flex">비밀번호</label>
-								<div class="input-group">
-									<div class="input-group-prepend"><span class="input-group-text user_pw"><i class="fa fa-key"></i></span></div>
-									<input type="password" id="userPw" name="userPw" class="form-control" placeholder="Password" required>
-								</div>
-								<div class="help-block with-errors"></div>
-							</div>
-						</div>
-					</div>
-						<div class="con-separator con-separator--border-dashed con-separator--space-md"></div>
-						<div class="row">
-						<div class="col-lg-12 col-md-12">
-							<div class="flex">
-								<p>사용자 등록을 요청하시겠습니까?  <a href="<c:url value="/login/loginUserRegisterForm"/>" title="">Signup</a></p>
-								<button class="btn btn-primary btn-outline ml-auto" type="submit" onclick="goLogin()">Login</button>
-							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="idSaveCheck">
-								<label class="custom-control-label" for="idSaveCheck">아이디 저장</label>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
 		</div>
-	</div>	
-</div><!-- Console Login -->
+		<div class="row-input2 mt-20px">
+			<input type="password" id="userPw" name="userPw" class="input-txt05" placeholder="Enter Password" oninput="limitLength(this, 12);" required>
+			<div class="img-left">
+				<img src="/resources/images/login-lock-icon.svg" class="icon24">
+				<div class="h-line"></div>
+			</div>
+		</div>
+		<button type="button" type="submit" id="loginBtn" class="point-login-btn mt-34px" onclick="goLogin()">LOGIN</button>
+	</form>
+
+
+
+	<div class="login-w-line mt-42px"></div>
+	<div class="login-copyright mt-20px">Copyright © 2025 MOAdata. All rights reserved.</div>
+</div>
+<img src="/resources/images/login-left-img.png" class="login-bg-img">
+
+<div class="login-right-panel">
+	<img src="/resources/images/login-img.png">
+</div>
+
 <!---------------- node modal ------------------>
 
 <div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">

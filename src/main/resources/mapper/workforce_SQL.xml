@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="workforce">
+	<select id="selectMaxWrkfrcId" resultType="String">
+		SELECT (CASE WHEN IFNULL(MAX(WRKFRC_ID),0) = '0'
+						 then (CONCAT('WF' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD('1',5,'0'), '')))
+					 ELSE (CONCAT('WF' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD(SUBSTR(MAX(WRKFRC_ID), 12, 5)+1, 5, '0'), '')))
+			END ) WRKFRC_ID
+		FROM T_WLK_MNG_WRKFRC
+		WHERE WRKFRC_ID LIKE CONCAT('WF' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '%')
+	</select>
+
+	<select id="selectWorkforceList" parameterType="workforceVO" resultType="workforceVO">
+		select SQL_CALC_FOUND_ROWS
+		    WRKFRC.*, GRP.GRP_NM
+		from T_WLK_MNG_WRKFRC WRKFRC
+			LEFT OUTER JOIN T_WLK_MNG_GRP GRP ON GRP.GRP_ID = WRKFRC.GRP_ID
+		WHERE 1=1
+		<if test="wrkfrcNmbr != null and wrkfrcNmbr != ''">
+			AND WRKFRC.WRKFRC_NMBR LIKE CONCAT('%',#{wrkfrcNmbr},'%')
+		</if>
+		<if test="wrkfrcNm != null and wrkfrcNm != ''">
+			AND WRKFRC.WRKFRC_NM = #{wrkfrcNm}
+		</if>
+		<if test="wrkfrcMobile != null and wrkfrcMobile != ''">
+			AND WRKFRC.WRKFRC_MOBILE = #{wrkfrcMobile}
+		</if>
+		<if test="wrkfrcBrthDt != null and wrkfrcBrthDt != ''">
+			AND WRKFRC.WRKFRC_BRTH_DT = #{wrkfrcBrthDt}
+		</if>
+		<if test="svcTp != null and svcTp != ''">
+			AND WRKFRC.SVC_TP IN (${svcTp})
+		</if>
+		<if test="grpId != null and grpId != ''">
+			AND WRKFRC.GRP_ID = #{grpId}
+		</if>
+		<if test="grpNm != null and grpNm != ''">
+			AND GRP.GRP_NM = #{grpNm}
+		</if>
+		<if test="wrkfrcSx != null and wrkfrcSx != '' and wrkfrcSx != 'ALL'">
+			AND WRKFRC.WRKFRC_SX = #{wrkfrcSx}
+		</if>
+		ORDER BY
+		<choose>
+			<when test='sidx == "wrkfrcNmbr"'>
+				WRKFRC.WRKFRC_NMBR
+			</when>
+			<when test='sidx == "wrkfrcSx"'>
+				WRKFRC.WRKFRC_SX
+			</when>
+			<when test='sidx == "grpNm"'>
+				grp.GRP_NM
+			</when>
+			<when test='sidx == "svcTp"'>
+				WRKFRC.SVC_TP
+			</when>
+			<otherwise>
+				WRKFRC.REGIST_DT
+			</otherwise>
+		</choose>
+		<choose>
+			<when test='sord == "DESC" or sord == "desc"'>
+				DESC
+			</when>
+			<otherwise>
+				ASC
+			</otherwise>
+		</choose>
+		LIMIT #{rowNo}, #{rows}
+	</select>
+
+	<select id="selectWorkforceCnt" parameterType="workforceVO" resultType="int">
+		SELECT FOUND_ROWS()
+	</select>
+
+	<insert id="insertWorkforce" parameterType="workforceVO">
+		INSERT INTO T_WLK_MNG_WRKFRC (WRKFRC_ID, WRKFRC_NM,WRKFRC_NMBR, WRKFRC_MOBILE, WRKFRC_SX, WRKFRC_BRTH_DT, SVC_TP, GRP_ID, MEMO, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID )
+		VALUES (#{wrkfrcId}, #{wrkfrcNm}, #{wrkfrcNmbr}, #{wrkfrcMobile}, #{wrkfrcSx}, #{wrkfrcBrthDt}, #{svcTp}, #{grpId}, #{memo}, SYSDATE(), #{userId}, SYSDATE(), #{userId})
+	</insert>
+
+	<update id="updateWorkforce" parameterType="workforceVO">
+		UPDATE T_WLK_MNG_WRKFRC SET
+		    WRKFRC_NM = #{wrkfrcNm},
+		    WRKFRC_NMBR = #{wrkfrcNmbr},
+		    WRKFRC_MOBILE = #{wrkfrcMobile},
+		    WRKFRC_SX = #{wrkfrcSx},
+		    WRKFRC_BRTH_DT = #{wrkfrcBrthDt},
+		    SVC_TP = #{svcTp},
+		    GRP_ID = #{grpId},
+		    MEMO = #{memo},
+		    UPT_DT = SYSDATE(),
+		    UPT_ID = #{userId}
+		WHERE WRKFRC_ID = #{wrkfrcId}
+	</update>
+
+	<select id="selectWorkforceById" parameterType="String" resultType="workforceVO">
+		select * from T_WLK_MNG_WRKFRC WHERE WRKFRC_ID = #{wrkfrcId}
+	</select>
+</mapper>

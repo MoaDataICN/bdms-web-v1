@@ -39,7 +39,11 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
-        
+
+        if (requestURI.startsWith("/resources/")) {
+            return true;
+        }
+
         if(log.isDebugEnabled()) {
             //log.debug("======================================          START         ======================================");
             log.debug("Request URI \t:  " + requestURI);

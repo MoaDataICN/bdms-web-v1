@@ -45,11 +45,9 @@ public class MenuPreparer implements ViewPreparer {
 			map.put("usergroupId", userGroupId);*/
 			//사용자 uid로 변경 22.09.02
 			String uid = "";
-			//UserVO user = (UserVO) RequestContextHolder.currentRequestAttributes().getAttribute("user", RequestAttributes.SCOPE_SESSION);
-			UserVO user = new UserVO();
-			user.setUid("USR_000000000001");
+			UserVO user = (UserVO) RequestContextHolder.currentRequestAttributes().getAttribute("user", RequestAttributes.SCOPE_SESSION);
 			if(user != null) {
-				uid = user.getUid();
+				uid = user.getUsergroupId();
 			}
 			map.put("usergroupId", uid);
 			
@@ -59,9 +57,8 @@ public class MenuPreparer implements ViewPreparer {
 		}
 		attributeContext.putAttribute("menuPathList", new Attribute(menuPath), true);
 		request.setAttribute("menuPathList", menuPath);
-		//UserVO user = (UserVO) RequestContextHolder.currentRequestAttributes().getAttribute("user", RequestAttributes.SCOPE_SESSION);
-		UserVO user = new UserVO();
-		user.setUid("USR_000000000001");
+		UserVO user = (UserVO) RequestContextHolder.currentRequestAttributes().getAttribute("user", RequestAttributes.SCOPE_SESSION);
+
 		List<?> menu = null;
 		if(user != null) {
 			/*
@@ -75,7 +72,7 @@ public class MenuPreparer implements ViewPreparer {
 				//유저권한에서 유저 uid로 변경 추후 확인 22.08.23
 				menu = menuService.selectMenuListByGroup(user.getUid());
 			}		*/	
-			menu = menuService.selectMenuListByGroup(user.getUid());
+			menu = menuService.selectMenuListByGroup(user.getUsergroupId());
 		}
 		attributeContext.putAttribute("menuList", new Attribute(menu), true);
 		request.setAttribute("menuList", menu);

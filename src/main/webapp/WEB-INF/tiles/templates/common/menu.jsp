@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ include file="../../../commons/taglibs.jsp"%>
-
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Locale" %>
 <!-- 사이드메뉴 영역-->
 <aside class="sidebar">
     <div class="menu-btn">
@@ -11,9 +13,33 @@
             <img src="../../resources/images/user-img.jpg" alt="user-img">
         </div>
         <div class="user-details">
-            <p class="side-name-text"><spring:message code="side.user.greet" arguments="Hong Gil-dong" /></p>
-            <p class="side-address-text">logged in on November 12,
-                2023 (Sunday) at 12:12:10.</p>
+            <p class="side-name-text"><spring:message code="side.user.greet" arguments="${sessionScope.user.userNm}" /></p>
+            <%
+                Object userObj = session.getAttribute("user");
+
+                String formattedDate = "";
+
+                if(userObj != null) {
+                    try {
+                        String dateString = (String) org.apache.commons.beanutils.PropertyUtils.getProperty(userObj, "loginDt");
+
+                        // 문자열 -> Date 객체로 파싱
+                        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date = inputFormat.parse(dateString);
+
+                        // 원하는 포맷으로 변환
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("'logged in on' MMMM d, yyyy (EEEE) 'at' HH:mm:ss.", Locale.ENGLISH);
+                        formattedDate = outputFormat.format(date);
+                    }catch (Exception e) {
+                        formattedDate = "Invalid login date";
+                        e.printStackTrace();
+                    }
+                } else {
+                    formattedDate = "User is not logged in";
+                }
+            %>
+
+            <p class="side-address-text"><%= formattedDate %></p>
         </div>
     </div>
     <div class="nav mt-44px">

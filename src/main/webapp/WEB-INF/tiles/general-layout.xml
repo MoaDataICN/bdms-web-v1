@@ -16,4 +16,10 @@
         <put-attribute name="body" value="/WEB-INF/tiles/templates/common/body.jsp" />
     </definition>
 
+    <!-- 팝업 -->
+    <definition name=".popup" template="/WEB-INF/tiles/templates/popup/main.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/templates/popup/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/tiles/templates/popup/body.jsp" />
+    </definition>
+
 </tiles-definitions>

@@ -198,6 +198,10 @@
     margin: 0 8px;
 }
 
+.mb-0px {
+    margin-bottom: 0 !important;
+}
+
 .mb-2px {
     margin-bottom: 2px
 }
@@ -413,6 +417,10 @@
     margin-top: 33px;
 }
 
+.mt-34px {
+    margin-top: 34px;
+}
+
 .mt-36px {
     margin-top: 36px;
 }
@@ -516,6 +524,83 @@
 }
 
 /* 버튼 */
+.point-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 12px;
+    background: var(--point-color-04);
+    border: 1px solid var(--point-color-04);
+
+    color: var(--bg-white);
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 18px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    height: 48px;
+    width: 100%;
+    max-width: 380px;
+}
+
+.point-login-btn.hold {
+    background: var(--gray-21);
+    border: 1px solid var(--gray-21);
+    pointer-events: none; /* 마우스 이벤트 차단 */
+}
+
+.point-login-btn:hover {
+    background-color: var(--point-color-01);
+}
+
+.chart-tap-group {
+    position: absolute;
+    display: flex;
+    right: 26px;
+    top: 26px;
+    gap: 2px;
+}
+
+.chart-tap-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    border: 1px solid var(--gray-21);
+    background: var(--gray-28);
+    min-width: 58px;
+
+    color: var(--gray-29);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: -0.24px;
+    transition: all ease 0.3s;
+}
+
+.chart-tap-btn:hover{
+    color: var(--color-white);
+    border: 1px solid var(--point-color-01);
+    background: var(--bg-color-08);
+}
+
+.chart-tap-btn.left {
+    border-radius: 20px 0 0 20px;
+}
+
+.chart-tap-btn.right {
+    border-radius: 0 20px 20px 0;
+}
+
+.chart-tap-btn.active{
+    color: var(--color-white);
+    border: 1px solid var(--point-color-01);
+    background: var(--bg-color-08);
+}
+
+
 .data-select-btn {
     display: flex;
     align-items: center;
@@ -534,7 +619,7 @@
     transition: all 0.2s;
 }
 
-.data-select-btn:hover{
+.data-select-btn:hover {
     background: var(--gray-20);
     border: 1px solid var(--gray-18);
 }
@@ -630,7 +715,7 @@
     border-radius: 6px;
     border: 1px solid var(--gray-27);
     background: var(--gray-28);
-    padding: 2px 10px;
+    padding: 2px 8px;
     height: 26px;
     display: inline-block;
     color: var(--gray-26);
@@ -642,6 +727,20 @@
     vertical-align: middle;
     line-height: 1;
     transition: all 0.2s;
+}
+
+.detail-btn.active {
+    border: 1px solid var(--point-color-01);
+    background: var(--bg-color-08);
+    color: var(--color-white);
+    letter-spacing: -0.02px;
+}
+
+.detail-btn.active:hover {
+    border: 1px solid var(--point-color-01);
+    background: var(--point-color-04);
+    color: var(--color-white);
+    letter-spacing: -0.02px;
 }
 
 .detail-btn span {
@@ -712,7 +811,7 @@
     background-color: var(--point-color-04);
 }
 
-.hold-submit-btn{
+.hold-submit-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -731,7 +830,7 @@
 }
 
 
-.red-submit-btn{
+.red-submit-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -748,7 +847,7 @@
     transition: all 0.2s;
 }
 
-.red-submit-btn:hover{
+.red-submit-btn:hover {
     background-color: #cf393b;
 }
 
@@ -828,7 +927,7 @@ a {
     color: #333;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent
-    /* 탭영역 터치시 영역 컬러 지정 */
+        /* 탭영역 터치시 영역 컬러 지정 */
 }
 
 a:active,
@@ -949,6 +1048,14 @@ textarea {
     border-color: #EA151D;
 }
 
+.input-txt05:focus {
+    border-color: var(--point-color-01);
+}
+
+.input-txt05:focus.error {
+    border-color: #EA151D;
+}
+
 .input-label01 {
     min-width: 150px;
     max-width: 150px;
@@ -959,11 +1066,11 @@ textarea {
     letter-spacing: -0.28px;
 }
 
-.dropdown .dropdown-content{
+.dropdown .dropdown-content {
     text-align: left;
 }
 
-.admin-wrap{
+.admin-wrap {
     padding: 20px 20px;
 }
 
@@ -993,6 +1100,19 @@ textarea {
     box-sizing: border-box;
     letter-spacing: 0.001px;
     border-radius: 6px;
+}
+
+.input-txt05 {
+    width: 100%;
+    max-width: 380px;
+    height: 48px;
+    color: var(--gray-11);
+    font-size: 15px;
+    background: #F3F9FF;
+    border: 1px solid #92A0B2;
+    box-sizing: border-box;
+    letter-spacing: 0.001px;
+    border-radius: 12px;
 }
 
 .mx-w250 {

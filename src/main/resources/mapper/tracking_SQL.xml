@@ -32,7 +32,8 @@
 	</insert>
 
 	<select id="selectUserRequest" parameterType="userRequestVO" resultType="userRequestVO">
-		select req.USER_ID, req.REQ_TP, req.REQ_STT, req.REQ_DT, my.USER_NM, my.MOBILE, my.EMAIL_ID, my.BRTH_DT, my.SX, my.GRP_ID, grp.GRP_NM,
+		select SQL_CALC_FOUND_ROWS
+			req.USER_ID, req.REQ_TP, req.REQ_STT, req.REQ_DT, my.USER_NM, my.MOBILE, my.EMAIL_ID, my.BRTH_DT, my.SX, my.GRP_ID, grp.GRP_NM,
 			(SELECT ic.USER_NM
 			FROM T_WLK_MNG_USER ic
 			WHERE ic.USER_ID = my.IN_CHARGE_ID
@@ -116,87 +117,12 @@
 		LIMIT #{rowNo}, #{rows}
 	</select>
 	<select id="selectUserRequestCnt" parameterType="userRequestVO" resultType="int">
-		select count(req.REQ_ID)
-		from t_wlk_mng_req req
-			left outer join t_wlk_my my on req.user_id = my.user_id
-			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
-			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
-		where 1=1
-		<if test="inChargeIds != null and inChargeIds != ''">
-			-- 담당자에 맞는 조회
-			-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
-			-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-			AND my.IN_CHARGE_ID IN ${inChargeIds}
-		</if>
-		<if test="searchBgnDe != null and searchBgnDe != ''">
-			AND req.REQ_DT <![CDATA[>=]]> #{searchBgnDe}
-		</if>
-		<if test="searchEndDe != null and searchEndDe != ''">
-			AND req.REQ_DT <![CDATA[<=]]> #{searchEndDe}
-		</if>
-		<if test="reqTp != null and reqTp != ''">
-			AND req.REQ_TP IN (${reqTp})
-		</if>
-		<if test="userNm != null and userNm != ''">
-			AND my.USER_NM = #{userNm}
-		</if>
-		<if test="emailId != null and emailId != ''">
-			AND my.EMAIL_ID LIKE CONCAT('%',#{emailId},'%')
-		</if>
-		<if test="userId != null and userId != ''">
-			AND my.USER_ID LIKE CONCAT('%',#{userId},'%')
-		</if>
-		<if test="mobile != null and mobile != ''">
-			AND my.MOBILE = #{mobile}
-		</if>
-		<if test="sx != null and sx != '' and sx != 'ALL'">
-			AND my.SX = #{sx}
-		</if>
-		<if test="brthDt != null and brthDt != ''">
-			AND my.BRTH_DT = #{brthDt}
-		</if>
-		<if test="inChargeId != null and inChargeId != ''">
-			AND my.IN_CHARGE_ID = #{inChargeId}
-		</if>
-		<if test="inChargeNm != null and inChargeNm != ''">
-			AND admin.USER_NM = #{inChargeNm}
-		</if>
-		<if test="grpNm != null and grpNm != ''">
-			AND grp.GRP_NM LIKE CONCAT('%',#{grpNm},'%')
-		</if>
-		ORDER BY
-		<choose>
-			<when test='sidx == "reqDt"'>
-				req.REQ_DT
-			</when>
-			<when test='sidx == "reqTp"'>
-				req.REQ_TP
-			</when>
-			<when test='sidx == "userId"'>
-				my.USER_ID
-			</when>
-			<when test='sidx == "sx"'>
-				my.SX
-			</when>
-			<when test='sidx == "grpNm"'>
-				grp.GRP_NM
-			</when>
-			<otherwise>
-				req.REQ_DT
-			</otherwise>
-		</choose>
-		<choose>
-			<when test='sord == "DESC" or sord == "desc"'>
-				DESC
-			</when>
-			<otherwise>
-				ASC
-			</otherwise>
-		</choose>
+		SELECT FOUND_ROWS()
 	</select>
 
 	<select id="selectHealthAlert" parameterType="healthAlertVO" resultType="healthAlertVO">
-		select alt.USER_ID, alt.ALT_TP, alt.ALT_RMRK, alt.DCT_DT, my.USER_NM, my.MOBILE, my.EMAIL_ID, my.BRTH_DT, my.SX, my.GRP_ID, grp.GRP_NM,
+		select SQL_CALC_FOUND_ROWS
+			alt.USER_ID, alt.ALT_TP, alt.ALT_RMRK, alt.DCT_DT, my.USER_NM, my.MOBILE, my.EMAIL_ID, my.BRTH_DT, my.SX, my.GRP_ID, grp.GRP_NM,
 			(SELECT ic.USER_NM
 			FROM T_WLK_MNG_USER ic
 			WHERE ic.USER_ID = my.IN_CHARGE_ID
@@ -281,83 +207,7 @@
 	</select>
 
 	<select id="selectHealthAlertCnt" parameterType="healthAlertVO" resultType="int">
-		select count(alt.TRK_ID)
-		from t_wlk_mng_alt alt
-			left outer join t_wlk_my my on alt.user_id = my.user_id
-			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
-			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
-		where 1=1
-		<if test="inChargeIds != null and inChargeIds != ''">
-			-- 담당자에 맞는 조회
-			-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
-			-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-			AND my.IN_CHARGE_ID IN ${inChargeIds}
-		</if>
-		<if test="searchBgnDe != null and searchBgnDe != ''">
-			AND alt.DCT_DT <![CDATA[>=]]> #{searchBgnDe}
-		</if>
-		<if test="searchEndDe != null and searchEndDe != ''">
-			AND alt.DCT_DT <![CDATA[<=]]> #{searchEndDe}
-		</if>
-		<if test="altTp != null and altTp != ''">
-			AND alt.ALT_TP IN (${altTp})
-		</if>
-		<if test="userNm != null and userNm != ''">
-			AND my.USER_NM = #{userNm}
-		</if>
-		<if test="emailId != null and emailId != ''">
-			AND my.EMAIL_ID LIKE CONCAT('%',#{emailId},'%')
-		</if>
-		<if test="userId != null and userId != ''">
-			AND my.USER_ID LIKE CONCAT('%',#{userId},'%')
-		</if>
-		<if test="mobile != null and mobile != ''">
-			AND my.MOBILE = #{mobile}
-		</if>
-		<if test="sx != null and sx != '' and sx != 'ALL'">
-			AND my.SX = #{sx}
-		</if>
-		<if test="brthDt != null and brthDt != ''">
-			AND my.BRTH_DT = #{brthDt}
-		</if>
-		<if test="inChargeId != null and inChargeId != ''">
-			AND my.IN_CHARGE_ID = #{inChargeId}
-		</if>
-		<if test="inChargeNm != null and inChargeNm != ''">
-			AND admin.USER_NM = #{inChargeNm}
-		</if>
-		<if test="grpNm != null and grpNm != ''">
-			AND grp.GRP_NM LIKE CONCAT('%',#{grpNm},'%')
-		</if>
-		ORDER BY
-		<choose>
-			<when test='sidx == "dctDt"'>
-				alt.DCT_DT
-			</when>
-			<when test='sidx == "altTp"'>
-				alt.ALT_TP
-			</when>
-			<when test='sidx == "userId"'>
-				my.USER_ID
-			</when>
-			<when test='sidx == "sx"'>
-				my.SX
-			</when>
-			<when test='sidx == "grpNm"'>
-				grp.GRP_NM
-			</when>
-			<otherwise>
-				alt.DCT_DT
-			</otherwise>
-		</choose>
-		<choose>
-			<when test='sord == "DESC" or sord == "desc"'>
-				DESC
-			</when>
-			<otherwise>
-				ASC
-			</otherwise>
-		</choose>
+		SELECT FOUND_ROWS()
 	</select>
 
 	<select id="selectTodayHealthAlertCnt" resultType="java.util.Map" parameterType="java.util.Map">
@@ -370,20 +220,20 @@
 				SELECT g.GRP_ID FROM T_WLK_MNG_GRP g
 				INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
 				)
-				select alt.ALT_TP, COUNT(*) as ALT_COUNT
+				select alt.ALT_TP, alt.ALT_STT, COUNT(*) as ALT_COUNT
 				from t_wlk_mng_alt alt
 				inner join t_wlk_my my on alt.user_id = my.user_id
 				inner join t_wlk_mng_user admin on my.IN_CHARGE_ID = admin.USER_ID
 				WHERE ALT.DCT_DT >= #{today} and admin.GRP_ID in (select * from sub_groups)
 			</when>
 			<when test="inChargeId != null and inChargeId != ''">
-				select alt.ALT_TP, COUNT(*) as ALT_COUNT
+				select alt.ALT_TP, alt.ALT_STT, COUNT(*) as ALT_COUNT
 				from t_wlk_mng_alt alt
 					inner join t_wlk_my my on alt.user_id = my.user_id
 				WHERE ALT.DCT_DT >= #{today} AND my.IN_CHARGE_ID = #{inChargeId}
 			</when>
 		</choose>
-		group by ALT_TP
+		group by ALT_TP, ALT_STT
 	</select>
 
 	<select id="selectTodayUserRequestCnt" resultType="java.util.Map" parameterType="java.util.Map">
@@ -405,7 +255,6 @@
 				select req.REQ_TP, req.REQ_STT, COUNT(*) AS REQ_COUNT
 				from t_wlk_mng_req req
 					inner join t_wlk_my my on req.user_id = my.user_id
-					inner join t_wlk_mng_grp grp on my.grp_id = grp.grp_id
 				WHERE REQ.REQ_DT >= #{today} AND my.IN_CHARGE_ID = #{inChargeId}
 			</when>
 		</choose>

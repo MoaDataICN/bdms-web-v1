@@ -72,13 +72,27 @@
                 <div class="data-title01" id="HA_total">
                     0
                 </div>
+                <c:set var="alert_sum_0" value="0" />
+                <c:set var="alert_sum_1" value="0" />
+
+                <c:forEach var="entry" items="${healthAlertCntMap}">
+                    <c:set var="innerMap" value="${entry.value}" />
+
+                    <c:if test="${innerMap['0'] != null}">
+                        <c:set var="alert_sum_0" value="${alert_sum_0 + innerMap['0']}" />
+                    </c:if>
+
+                    <c:if test="${innerMap['1'] != null}">
+                        <c:set var="alert_sum_1" value="${alert_sum_1 + innerMap['1']}" />
+                    </c:if>
+                </c:forEach>
                 <div class="data-group">
                     <div class="data-detail">
                         <div class="data-title02">
                             <span class="circle-5px"></span>
                             <spring:message code="common.unprocessed"/>
                         </div>
-                        <div class="data-stats" id="HA_0">0</div>
+                        <div class="data-stats" id="HA_0">${alert_sum_0}</div>
                     </div>
                     <div class="w-line01 mt-10px mb-10px"></div>
                     <div class="data-detail">
@@ -86,11 +100,7 @@
                             <span class="circle-5px"></span>
                             <spring:message code="common.processed"/>
                         </div>
-                        <c:set var="alert_sum" value="0" />
-                        <c:forEach var="entry" items="${healthAlertCntMap}">
-                            <c:set var="alert_sum" value="${alert_sum + entry.value}" />
-                        </c:forEach>
-                        <div class="data-stats" id="HA_1">${alert_sum}</div>
+                        <div class="data-stats" id="HA_1">${alert_sum_1}</div>
                     </div>
                 </div>
             </div>
@@ -292,20 +302,23 @@
                                         <div class="alerted-circle"></div>
                                     </div>
                                 </c:if>
-                                <div class="client-photo">
-                                    <!-- 클라이언트 사진 들어가는 곳-->
-                                    <c:choose>
-                                        <c:when test="${not empty member.ATTCH_ID && member.ATTCH_ID ne ''}">
-                                            <img src="/api/image?attchId=${member.ATTCH_ID}" class="icon48 client-photo-round">
-                                        </c:when>
-                                        <c:otherwise>
 
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                                <div class="client-name">
-                                    ${member.USER_NM}
-                                </div>
+                                    <!-- 클라이언트 사진 들어가는 곳-->
+                                <c:choose>
+                                    <c:when test="${not empty member.ATTCH_ID && member.ATTCH_ID ne ''}">
+                                        <div class="client-photo">
+                                            <img src="/api/image?attchId=${member.ATTCH_ID}" class="icon48 client-photo-round">
+                                        </div>
+                                        <div class="client-name">
+                                                ${member.USER_NM}
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="client-name" style="height: 48px;">
+                                            ${member.USER_NM}
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </a>
                     </c:forEach>
@@ -433,7 +446,7 @@
             <div class="board-title03">
                 <spring:message code="board.subtitle.alert"/>
             </div>
-            <p class="title-status mr-12px"><spring:message code="board.comment.description" arguments="${healthAlertCntMap.A+healthAlertCntMap.F+healthAlertCntMap.H+healthAlertCntMap.SL+healthAlertCntMap.B+healthAlertCntMap.T+healthAlertCntMap.ST}" /></p>
+            <p class="title-status mr-12px"><spring:message code="board.comment.description" arguments="${alert_sum_0 + alert_sum_1}" /></p>
         </div>
 
         <div class="alerts-grid mt-12px">
@@ -456,7 +469,7 @@
                             <spring:message code="common.activity"/>
                         </div>
                         <div class="alerts-item-text02">
-                            ${healthAlertCntMap.A + healthAlertCntMap.F}
+                            ${healthAlertCntMap.A["0"] + healthAlertCntMap.A["1"] + healthAlertCntMap.F["0"] + healthAlertCntMap.F["1"]}
                         </div>
                     </div>
                 </div>
@@ -470,7 +483,7 @@
                             <spring:message code="common.heartrate"/>
                         </div>
                         <div class="alerts-item-text02">
-                            <c:out value="${healthAlertCntMap.H}" default="0"></c:out>
+                            <c:out value="${healthAlertCntMap.H['0'] + healthAlertCntMap.H['1']}" default="0"></c:out>
                         </div>
                     </div>
                 </div>
@@ -484,7 +497,7 @@
                             <spring:message code="common.sleep"/>
                         </div>
                         <div class="alerts-item-text02">
-                            <c:out value="${healthAlertCntMap.SL}" default="0"></c:out>
+                            <c:out value="${healthAlertCntMap.SL['0'] + healthAlertCntMap.SL['1']}" default="0"></c:out>
                         </div>
                     </div>
                 </div>
@@ -498,7 +511,7 @@
                             <spring:message code="common.bloodoxygen"/>
                         </div>
                         <div class="alerts-item-text02">
-                            <c:out value="${healthAlertCntMap.B}" default="0"></c:out>
+                            <c:out value="${healthAlertCntMap.B['0'] + healthAlertCntMap.B['1']}" default="0"></c:out>
                         </div>
                     </div>
                 </div>
@@ -512,7 +525,7 @@
                             <spring:message code="common.temperature"/>
                         </div>
                         <div class="alerts-item-text02">
-                            <c:out value="${healthAlertCntMap.T}" default="0"></c:out>
+                            <c:out value="${healthAlertCntMap.T['0'] + healthAlertCntMap.T['1']}" default="0"></c:out>
                         </div>
                     </div>
                 </div>
@@ -526,7 +539,7 @@
                             <spring:message code="common.stress"/>
                         </div>
                         <div class="alerts-item-text02">
-                            <c:out value="${healthAlertCntMap.ST}" default="0"></c:out>
+                            <c:out value="${healthAlertCntMap.ST['0'] + healthAlertCntMap.ST['1']}" default="0"></c:out>
                         </div>
                     </div>
                 </div>
@@ -572,8 +585,7 @@
 
 <script type="text/javascript">
 
-    //const today = moment().format('YYYY-MM-DD');
-    const today = '2025-03-24';
+    const today = moment().format('YYYY-MM-DD');
 
     <!-- Alert & Service Summation S -->
     function calc(targetEl, val) {
@@ -609,13 +621,38 @@
     <!-- Chart S -->
 
     let healthAlerts = {
-        'Activify/Falls': <c:out value="${healthAlertCntMap.A + healthAlertCntMap.F}" default="0" />,
-        'Heart Rate': <c:out value="${healthAlertCntMap.H}" default="0" />,
-        'Sleep': <c:out value="${healthAlertCntMap.SL}" default="0" />,
-        'Blood Oxygen': <c:out value="${healthAlertCntMap.B}" default="0" />,
-        'Temperature': <c:out value="${healthAlertCntMap.T}" default="0" />,
-        'Stress': <c:out value="${healthAlertCntMap.ST}" default="0" />,
-    }
+        'Activify/Falls': <c:out value="${
+        (healthAlertCntMap.A['0'] != null ? healthAlertCntMap.A['0'] : 0) +
+        (healthAlertCntMap.A['1'] != null ? healthAlertCntMap.A['1'] : 0) +
+        (healthAlertCntMap.F['0'] != null ? healthAlertCntMap.F['0'] : 0) +
+        (healthAlertCntMap.F['1'] != null ? healthAlertCntMap.F['1'] : 0)
+    }" default="0" />,
+
+        'Heart Rate': <c:out value="${
+        (healthAlertCntMap.H['0'] != null ? healthAlertCntMap.H['0'] : 0) +
+        (healthAlertCntMap.H['1'] != null ? healthAlertCntMap.H['1'] : 0)
+    }" default="0" />,
+
+        'Sleep': <c:out value="${
+        (healthAlertCntMap.SL['0'] != null ? healthAlertCntMap.SL['0'] : 0) +
+        (healthAlertCntMap.SL['1'] != null ? healthAlertCntMap.SL['1'] : 0)
+    }" default="0" />,
+
+        'Blood Oxygen': <c:out value="${
+        (healthAlertCntMap.B['0'] != null ? healthAlertCntMap.B['0'] : 0) +
+        (healthAlertCntMap.B['1'] != null ? healthAlertCntMap.B['1'] : 0)
+    }" default="0" />,
+
+        'Temperature': <c:out value="${
+        (healthAlertCntMap.T['0'] != null ? healthAlertCntMap.T['0'] : 0) +
+        (healthAlertCntMap.T['1'] != null ? healthAlertCntMap.T['1'] : 0)
+    }" default="0" />,
+
+        'Stress': <c:out value="${
+        (healthAlertCntMap.ST['0'] != null ? healthAlertCntMap.ST['0'] : 0) +
+        (healthAlertCntMap.ST['1'] != null ? healthAlertCntMap.ST['1'] : 0)
+    }" default="0" />
+    };
 
     let sum = 0;
 
@@ -692,7 +729,8 @@
                         weight: 'bold'
                     },
                     formatter: (value, ctx) => {
-                        return value;
+
+                        return value != 0 ? value : '';
                     }
                 },
                 shadowCirclePlugin: {
@@ -834,7 +872,6 @@
     }
 
     function setSearchParam() {
-        console.log(inChargeList);
         return {
             searchBgnDe : today,
             inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
@@ -876,8 +913,8 @@
     })
 
     //logout 임다.
-    $(document).on('click','.logout_icon30', function(){
-        window.location.href='<c:url value="/login/logout"/>';
-    })
+    <%--$(document).on('click','.logout_icon30', function(){--%>
+    <%--    window.location.href='<c:url value="/login/logout"/>';--%>
+    <%--})--%>
 
 </script>

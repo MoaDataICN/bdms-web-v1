@@ -176,7 +176,7 @@ button {
     cursor: pointer;
     outline: none;
     -webkit-tap-highlight-color: transparent
-    /* 탭영역 터치시 영역 컬러 지정 */
+        /* 탭영역 터치시 영역 컬러 지정 */
 }
 
 button::-moz-focus-inner {
@@ -620,13 +620,13 @@ label {
     background-color: var(--bg-color-07);
 }
 
-.text-b{
+.text-b {
     font-weight: 800;
     color: var(--gray-14);
 }
 
 
-.point-gray-01{
+.point-gray-01 {
     color: var(--gray-21);
     background-color: var(--gray-18);
     border: 1px solid var(--gray-18);
@@ -751,6 +751,10 @@ label {
     line-height: 16px;
     letter-spacing: -0.28px;
     text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
 }
 
 .second-title-status {
@@ -759,6 +763,10 @@ label {
     font-weight: 500;
     line-height: 16px;
     letter-spacing: -0.28px;
+    /* white-space: nowrap;
+    overflow: hidden;   
+    text-overflow: ellipsis;
+    max-width: 60%; */
 }
 
 .bold-t-01 {
@@ -879,7 +887,7 @@ label {
     background-color: var(--point-color-02);
 }
 
-.red-point-color{
+.red-point-color {
     color: var(--point-color-02);
 }
 
@@ -956,6 +964,7 @@ label {
 }
 
 .alerts-chart {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -971,6 +980,20 @@ label {
     width: 100%
 }
 
+.alerts-grid03 {
+    display: grid;
+    grid-template-columns: 70% auto;
+    gap: 16px;
+}
+
+.alerts-grid04 {
+    display: grid;
+    grid-template-columns: repeat(1, 3fr);
+    gap: 16px;
+    width: 100%
+}
+
+
 .alerts-item {
     display: flex;
     gap: 4px;
@@ -979,6 +1002,7 @@ label {
     border-radius: 20px;
     background: var(--bg-white);
     width: 100%;
+    min-height: 98px;
 }
 
 .alerts-chart-size {
@@ -1241,7 +1265,7 @@ table {
     text-transform: capitalize;
 }
 
-.second-tap-menu{
+.second-tap-menu {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -1259,12 +1283,12 @@ table {
     position: relative;
 }
 
-.row{
+.row {
     display: flex;
     flex-wrap: wrap;
 }
 
-.row-md-100{
+.row-md-100 {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -1282,7 +1306,7 @@ table {
     padding: 0 4px;
 }
 
-.row-col-100{
+.row-col-100 {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -1293,45 +1317,97 @@ table {
     flex: 0 0 100%;
 }
 
-.row-wrap{
+.row-wrap {
     display: flex;
     align-items: center;
     flex: 1;
     margin-bottom: 16px;
 }
 
-.row-input{
+.row-input {
     display: flex;
     align-items: center;
     flex: 1;
     flex-wrap: wrap;
 }
 
-.content-submit-ui{
+.row-input2 input[type=text],
+input[type=password],
+input[type=submit],
+input[type=search],
+input[type=number],
+input[type=email],
+input[type=password],
+textarea {
+    -webkit-appearance: none;
+    writing-mode: horizontal-tb !important;
+    padding-block: 1px;
+    padding-inline: 60px;
+    box-sizing: border-box;
+    padding-inline-end: 50px;
+}
+
+.row-input2 {
+    position: relative;
+}
+
+.row-input2 .img-left {
+    position: absolute;
+    left: 32px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.h-line {
+    width: 1px;
+    height: 30px;
+    background-color: #92A0B2;
+}
+
+.login-w-line {
+    width: 100%;
+    max-width: 380px;
+    background-color: #d6dee7;
+    height: 1px;
+}
+
+.login-copyright {
+    color: #b4b7bb;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: -0.22px;
+}
+
+
+.content-submit-ui {
     display: flex;
     justify-content: space-between;
 }
 
-.submit-ui-wrap{
+.submit-ui-wrap {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.day-button-wrap{
+.day-button-wrap {
     display: flex;
     flex-wrap: wrap;
     padding: 4px;
     gap: 4px;
 }
 
-.day-button-wrap02{
+.day-button-wrap02 {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
 }
 
-.img-none{
+.img-none {
     padding: 0 4px;
 }
 
@@ -1342,6 +1418,7 @@ table {
     align-items: center;
     gap: 20px;
 }
+
 .date-input-wrapper {
     position: relative;
     display: flex;
@@ -1352,6 +1429,7 @@ table {
     padding: 10px 12px;
     background: #703434;
 }
+
 .date-input {
     position: relative;
     background: var(--bg-white);
@@ -1364,7 +1442,7 @@ table {
     background: transparent;
 }
 
-.calendar-icon{
+.calendar-icon {
     position: absolute;
     top: 50%;
     right: 0;
@@ -1373,7 +1451,7 @@ table {
     z-index: 2;
 }
 
-.p-r{
+.p-r {
     position: relative;
 }
 
@@ -1382,6 +1460,7 @@ table {
     opacity: 0;
     pointer-events: none;
 }
+
 /*================== Dropdown 관련 ======================*/
 
 .dropdown-button {
@@ -1397,6 +1476,7 @@ table {
     align-self: center;
     line-height: 2.0;
 }
+
 .dropdown-search {
     background-color: var(--bg-white);
     padding: 10px 0.6rem;
@@ -1417,13 +1497,14 @@ table {
 .dropdown-search:hover {
     border-color: var(--point-color-01);
 }
-.dropdown-search span{
+
+.dropdown-search span {
     display: flex;
     justify-content: center;
     align-self: center;
 }
 
-.input-line-b{
+.input-line-b {
     border: 1px solid var(--gray-27);
     height: 36px;
     padding: 8px 0.6rem;
@@ -1435,7 +1516,7 @@ table {
     display: block;
 }
 
-.table-option-wrap{
+.table-option-wrap {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1449,15 +1530,17 @@ table {
     max-width: 500px;
 }
 
-.tbl_h th img{
+.tbl_h th img {
     text-align: center;
     vertical-align: text-top;
     white-space: nowrap;
 }
 
-.tbl_h th button{
-    text-align: center; /* 가로 정렬 */
-    vertical-align: middle; /* 세로 정렬 */
+.tbl_h th button {
+    text-align: center;
+    /* 가로 정렬 */
+    vertical-align: middle;
+    /* 세로 정렬 */
     white-space: nowrap;
 }
 
@@ -1477,11 +1560,12 @@ table {
     max-width: 500px;
     padding: 5px;
     border-radius: 0.4rem;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
     transition: all 0.2s;
     z-index: 2;
 
 }
+
 .dropdown-content a {
     color: black;
     padding: 8px;
@@ -1490,16 +1574,19 @@ table {
     transition: all 300ms ease;
     font-weight: 500;
 }
+
 .dropdown-content a:hover {
     background-color: var(--bg-color-04);
     color: #272727;
     border-radius: 0.4rem;
     transition: all 300ms ease;
 }
+
 .badges .dropdown .dropdown-button {
     display: flex;
 }
-.badges .dropdown .dropdown-button span{
+
+.badges .dropdown .dropdown-button span {
     display: flex;
     justify-content: center;
     align-self: center;
@@ -1527,7 +1614,7 @@ table {
     transition: all 300ms ease;
 }
 
-.table-data-wrap{
+.table-data-wrap {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1536,7 +1623,7 @@ table {
 /*  팝업  */
 
 /*================== 일반 popup =========================*/
-.popup-modal{
+.popup-modal {
     opacity: 1;
     position: fixed;
     top: 0;
@@ -1545,14 +1632,15 @@ table {
     right: 0;
     text-align: center;
     overflow-y: auto;
-    background-color: rgba(0,0,0,.4);
+    background-color: rgba(0, 0, 0, .4);
     z-index: 5;
     transition: opacity .3s;
     content: " ";
     display: inline-block;
     vertical-align: middle;
 }
-.popup-show{
+
+.popup-show {
     padding: 26px;
     text-align: center;
     border-radius: 12px;
@@ -1577,7 +1665,7 @@ table {
     justify-content: space-between;
 }
 
-.popup-text{
+.popup-text {
     font-size: 14px;
     position: relative;
     float: none;
@@ -1588,14 +1676,14 @@ table {
     margin: 0;
     padding: 0 10px;
     font-weight: 500;
-    color: rgba(0,0,0,.64);
+    color: rgba(0, 0, 0, .64);
     overflow-wrap: break-word;
     box-sizing: border-box;
     letter-spacing: 0.01rem;
     margin-top: 26px;
 }
 
-.popup-show h1{
+.popup-show h1 {
     font-size: 20px;
     font-weight: 700;
     line-height: normal;
@@ -1604,18 +1692,18 @@ table {
     display: inline-block;
     margin: 0;
     padding: 0 10px;
-    color: rgba(0,0,0,.64);
+    color: rgba(0, 0, 0, .64);
     overflow-wrap: break-word;
     box-sizing: border-box;
     margin-top: 1rem;
 }
 
-.popup-footer{
+.popup-footer {
     display: flex;
     justify-content: space-between;
 }
 
-.popup-close{
+.popup-close {
     display: block;
     position: absolute;
     top: 12px;
@@ -1624,16 +1712,17 @@ table {
     cursor: pointer;
 }
 
-.popup-close img{
+.popup-close img {
     width: 2.5rem;
     filter: invert(54%) sepia(29%) saturate(15%) hue-rotate(57deg) brightness(99%) contrast(92%);
     transition: all 300ms ease;
 }
-.popup-close img:hover{
+
+.popup-close img:hover {
     filter: invert(0%) sepia(100%) saturate(0%) hue-rotate(135deg) brightness(92%) contrast(102%);
 }
 
-.popup-text .form-group{
+.popup-text .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 1.5rem;
@@ -1641,15 +1730,18 @@ table {
     padding: 2rem;
     border-radius: 0.7rem;
 }
-.popup-text .form-group .input-form{
+
+.popup-text .form-group .input-form {
     display: flex;
     width: 95%;
     align-self: center;
 }
-.popup-text .form-group .input-form input{
+
+.popup-text .form-group .input-form input {
     background: #ffffff;
 }
-.popup-text .form-group .input-form label{
+
+.popup-text .form-group .input-form label {
     width: 15%;
     min-width: 10rem;
     align-self: center;
@@ -1659,18 +1751,19 @@ table {
     font-size: 1.05rem;
 }
 
-.fx-c{
+.fx-c {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.btn-group{
+.btn-group {
     display: flex;
     gap: 8px;
     margin-top: 16px;
 }
-.popup-title{
+
+.popup-title {
     color: var(--gray-06);
     text-align: center;
     font-size: 20px;
@@ -1682,7 +1775,7 @@ table {
 
 /* ----------- 우측 슬라이드 팝업 ------------*/
 
-.slide-popup-container{
+.slide-popup-container {
     padding: 20px;
     overflow-x: auto;
 }
@@ -1704,7 +1797,8 @@ table {
     top: 0;
     right: 0;
     width: 65%;
-    max-width: 1400px; /* 최대 너비 설정 */
+    max-width: 1400px;
+    /* 최대 너비 설정 */
     height: 100%;
     background-color: var(--bg-color-02);
     box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
@@ -1769,6 +1863,74 @@ table {
     overflow: auto;
 }
 
+.login_container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #EBF2FB;
+}
+
+.login-left-panel {
+    position: relative;
+    display: flex;
+    flex: 1;
+    padding: 30px 0 30px 9%;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    z-index: 1;
+}
+
+.login-bg-img {
+    position: absolute;
+    top: 63%;
+    left: 0;
+    width: 25%;
+    height: auto;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+.login-right-panel {
+    position: relative;
+    flex: 1.8;
+    overflow: visible;
+}
+
+.login-right-panel img {
+    position: absolute;
+    top: -6%;
+    right: 0;
+    width: 115%;
+    height: auto;
+    object-fit: cover;
+}
+
+.login-logo {
+    width: 194px;
+    height: 34px;
+}
+
+.login-subtitle {
+    color: #899DBA;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: -0.14px;
+    text-transform: capitalize;
+}
+
+.login-message{
+    color: var(--point-color-02);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: -0.22px;
+    height: 12px;
+}
+
+
 @media (max-width: 1100px) {
     .row-col-50 {
         flex: 0 0 100%;
@@ -1779,7 +1941,7 @@ table {
         margin-bottom: 16px;
     } */
 
-    .row-wrap{
+    .row-wrap {
         flex: 0 0 100%;
     }
 
@@ -1787,36 +1949,63 @@ table {
         margin-bottom: 16px;
     }
 
-    .row-md-100{
+    .row-md-100 {
         gap: 0;
     }
 
 }
 
 @media (max-width: 900px) {
-    .row-wrap{
-        flex-direction: column;
-        align-items:start;
+    .login_container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .content-submit-ui button span{
+
+    .login-left-panel {
+        position: relative;
+        display: flex;
+        flex: 1;
+        padding: 30px;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        z-index: 1;
+        align-items: center;
+    }
+
+    .login-right-panel{
+        display: none;
+    }
+
+    .row-wrap {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .content-submit-ui button span {
         display: none;
     }
 
     .content-submit-ui button {
         padding: 6px 10px;
     }
-    .row-input{
+
+    .row-input {
         width: 100%;
         gap: 6px;
     }
-    .input-label01{
+
+    .input-label01 {
         margin-bottom: 4px;
     }
+
     .input-label01 {
         min-width: 150px;
         max-width: none;
     }
-    .img-none{
+
+    .img-none {
         display: none;
     }
 }

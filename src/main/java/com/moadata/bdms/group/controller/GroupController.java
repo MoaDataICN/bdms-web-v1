@@ -120,4 +120,15 @@ public class GroupController extends BaseController {
 
 		return result;
 	}
+
+	@RequestMapping(value="/popup/groupSelectPopup", method = RequestMethod.POST)
+	public String groupSelectPopup(ModelMap model, @RequestBody List<GroupVO> groupList) {
+		try {
+			model.addAttribute("groupList", groupList);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return "popup/groupSelectPopup";
+	}
 }

@@ -474,7 +474,7 @@
 
         rowNumsVal = cnt;
         $('#gridDropdownBtn').text($(this).text());
-        $("#healthAlertList").setGridParam({ rowNum: cnt });
+        $("#userRequestList").setGridParam({ rowNum: cnt });
         fnSearch();
     })
 

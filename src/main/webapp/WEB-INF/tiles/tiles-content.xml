@@ -9,6 +9,10 @@
         <put-attribute name="body" value="/WEB-INF/views/login/loginForm.jsp" />
     </definition>
 
+    <definition name="popup/*" extends=".popup">
+        <put-attribute name="body" value="/WEB-INF/views/popup/{1}.jsp" />
+    </definition>
+
     <definition name="*/*" extends=".main">
         <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
     </definition>
