@@ -51,7 +51,6 @@ public class GroupServiceImpl implements GroupService {
 			groupDao.deleteGroupsByIds(toDelete);
 		}
 
-		// 5. 추가 및 수정 처리
 		for (GroupVO child : groupList) {
 			if (child.getGrpId() != null) {
 				groupDao.insertUpdateGroup(child);
@@ -66,18 +65,6 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public List<UserVO> selectLowLevelAdmins(String grpId) {
-		List<UserVO> adminsList = groupDao.selectLowLevelAdmins(grpId);
-
-		try {
-			if(adminsList.size() > 0) {
-				for(UserVO user : adminsList) {
-					user.setUserNm(EncryptUtil.decryptText(user.getUserNm()));
-				}
-			}
-			return adminsList;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return groupDao.selectLowLevelAdmins(grpId);
 	}
 }

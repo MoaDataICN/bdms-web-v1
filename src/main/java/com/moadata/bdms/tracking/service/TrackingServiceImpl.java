@@ -32,10 +32,6 @@ public class TrackingServiceImpl implements TrackingService {
 				userRequestVO.setUserNm(EncryptUtil.encryptText(userRequestVO.getUserNm()));
 			}
 
-			if(userRequestVO.getInChargeNm() != null && !userRequestVO.getInChargeNm().isEmpty()) {
-				userRequestVO.setInChargeNm(EncryptUtil.encryptText(userRequestVO.getInChargeNm()));
-			}
-
 			List<UserRequestVO> userRequestList = trackingDao.selectUserRequest(userRequestVO);
 
 			if(userRequestList.size() > 0) {
@@ -43,7 +39,6 @@ public class TrackingServiceImpl implements TrackingService {
 					userRequest.setUserNm(EncryptUtil.decryptText(userRequest.getUserNm()));
 					userRequest.setBrthDt(EncryptUtil.decryptText(userRequest.getBrthDt()));
 					userRequest.setMobile(EncryptUtil.decryptText(userRequest.getMobile()));
-					userRequest.setInChargeNm(EncryptUtil.decryptText(userRequest.getInChargeNm()));
 				}
 			}
 
@@ -68,10 +63,6 @@ public class TrackingServiceImpl implements TrackingService {
 				healthAlertVO.setUserNm(EncryptUtil.encryptText(healthAlertVO.getUserNm()));
 			}
 
-			if(healthAlertVO.getInChargeNm() != null && !healthAlertVO.getInChargeNm().isEmpty()) {
-				healthAlertVO.setInChargeNm(EncryptUtil.encryptText(healthAlertVO.getInChargeNm()));
-			}
-
 			List<HealthAlertVO> healthAlertList = trackingDao.selectHealthAlert(healthAlertVO);
 
 			if(healthAlertList.size() > 0) {
@@ -79,7 +70,6 @@ public class TrackingServiceImpl implements TrackingService {
 					healthAlert.setUserNm(EncryptUtil.decryptText(healthAlert.getUserNm()));
 					healthAlert.setBrthDt(EncryptUtil.decryptText(healthAlert.getBrthDt()));
 					healthAlert.setMobile(EncryptUtil.decryptText(healthAlert.getMobile()));
-					healthAlert.setInChargeNm(EncryptUtil.decryptText(healthAlert.getInChargeNm()));
 				}
 			}
 

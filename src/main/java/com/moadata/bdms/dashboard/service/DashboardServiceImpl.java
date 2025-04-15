@@ -18,7 +18,7 @@ public class DashboardServiceImpl implements DashboardService {
         try {
             List<Map<String, Object>> list = dashboardDao.selectTodayStatus(param);
 
-            if (list.size() > 0) {
+            if (list.size() > 0 && param.get("inChargeId") != null) {
                 for (Map<String, Object> item : list) {
                     item.put("USER_NM", EncryptUtil.decryptText((String) item.get("USER_NM")));
                 }

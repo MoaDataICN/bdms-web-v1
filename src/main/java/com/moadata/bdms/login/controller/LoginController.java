@@ -344,7 +344,7 @@ public class LoginController extends BaseController {
 		}
 
 		// 로그인 일자 갱신
-		//loginService.updateLoginDt(loginUser.getUserId());		
+		//loginService.updateLoginDt(loginUser.getUserId());
 		loginVO.setPwFailCnt(0);
 		loginService.updateLoginUser(loginVO);
 		
@@ -354,9 +354,9 @@ public class LoginController extends BaseController {
 		
 		// 사용자 상세 정보 조회 
 		UserVO user = userService.selectUserInfo(loginUser.getUserId());
-		user.setPhoneNo(EncryptUtil.decryptText(user.getPhoneNo()));
-		user.setUserNm(EncryptUtil.decryptText(user.getUserNm()));
-		user.setEmailAddr(EncryptUtil.decryptText(user.getEmailAddr()));		
+		//user.setPhoneNo(EncryptUtil.decryptText(user.getPhoneNo()));
+		//user.setUserNm(EncryptUtil.decryptText(user.getUserNm()));
+		//user.setEmailAddr(EncryptUtil.decryptText(user.getEmailAddr()));
 		session.setAttribute("user", user);
 		
 		// 사용자 그룹 정보		
