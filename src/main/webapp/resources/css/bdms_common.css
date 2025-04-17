@@ -1282,6 +1282,10 @@ textarea {
     max-width: 190px;
 }
 
+.input-txt04.hold {
+    background: var(--gray-17);
+}
+
 .input-area {
     border: 1px solid var(--gray-10);
     border-radius: 8px;
@@ -1303,10 +1307,22 @@ textarea:focus {
     border-color: var(--point-color-01);
 }
 
+.space-50 {
+    height: 50px;
+}
+
+.space-40 {
+    height: 40px;
+}
+
 .space-30 {
     height: 30px;
 }
 
 .space-20 {
     height: 20px;
+}
+
+.hidden {
+  display: none !important;
 }
