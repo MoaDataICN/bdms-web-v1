@@ -1,9 +1,13 @@
 package com.moadata.bdms.user.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.util.*;
 import javax.annotation.Resource;
+
+import com.moadata.bdms.model.vo.CheckupVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -15,6 +19,7 @@ import com.moadata.bdms.model.vo.UserVO;
 import com.moadata.bdms.support.idgen.service.IdGenService;
 import com.moadata.bdms.support.menu.service.MenuService;
 import com.moadata.bdms.user.repository.UserDao;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * User Service 구현
@@ -256,5 +261,49 @@ public class UserServiceImpl implements UserService {
 			user.setModifyId(user.getUserId());
 		}
 		userDao.updateUserInfo(user);
+	}
+
+	@Override
+	public Map<String, Object> getImportMapForBDMS(MultipartFile file, String loginId){
+
+		Map<String, Object> map = new HashMap<>();
+		boolean isError = false;
+		String errorMessage = null;
+
+		List<List<String>> csvList = new ArrayList<List<String>>();
+
+		try {
+			File nFile = new File(file.getOriginalFilename());
+			//file.transferTo(nFile);
+			nFile.createNewFile();
+			FileOutputStream fos = new FileOutputStream(nFile);
+			fos.write(file.getBytes());
+			fos.close();
+
+			BufferedReader br = new BufferedReader(new FileReader(nFile));
+			String line;
+			while ((line = br.readLine())!= null) {
+				List<String> aLine = new ArrayList<String>();
+				String[] lineArr = line.split(",");
+				aLine = Arrays.asList(lineArr);
+				csvList.add(aLine);
+			}
+			map.put("isError", isError);
+			map.put("resultList", csvList);
+			map.put("errorMessage", errorMessage);
+			return map;
+		}catch(Exception e) {
+			e.printStackTrace();
+			isError = true;
+			map.put("isError", isError);
+			map.put("resultList", null);
+			map.put("errorMessage", "Excel Import failed。");
+			return map;
+		}
+	}
+
+	@Override
+	public void insertCheckUp(CheckupVO checkupVO) throws Exception {
+		userDao.insertCheckUp(checkupVO);
 	}
 }

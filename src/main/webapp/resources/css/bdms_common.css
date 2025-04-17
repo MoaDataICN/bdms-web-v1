@@ -84,6 +84,17 @@
     width: 60px;
 }
 
+.icon64 {
+    height: 64px;
+    width: 64px;
+}
+
+.icon80 {
+    height: 80px;
+    width: 80px;
+}
+
+
 .ml-1px {
     margin-left: 1px;
 }
@@ -524,6 +535,82 @@
 }
 
 /* 버튼 */
+
+.sex-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    border-radius: 8px;
+    height: 38px;
+    background: var(--gray-17);
+    border: 1px solid var(--gray-21);
+    color: var(--gray-24);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    gap: 2px;
+    min-width: 100px;
+}
+
+.sex-btn.active{
+    background: var(--bg-color-04);
+    border: 1px solid var(--bg-color-04);
+}
+
+.sex-btn-f{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    border-radius: 8px;
+    height: 38px;
+    background: var(--gray-17);
+    border: 1px solid var(--gray-21);
+    color: var(--gray-24);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    gap: 2px;
+    min-width: 100px;
+}
+
+.sex-btn-f.active{
+    background: var(--bg-color-04);
+    border: 1px solid var(--bg-color-04);
+}
+
+
+
+.drag-btn {
+    border-radius: 10px;
+    background: var(--point-color-01);
+    border: 1px solid var(--point-color-01);
+    color: var(--bg-white);
+    padding: 10px 20px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 150px;
+    transition: all ease 0.2s;
+}
+
+.drag-btn:hover {
+    border: 1px solid var(--gray-25);
+    background: var(--bg-white);
+    color: var(--gray-11);
+}
+
+
 .point-login-btn {
     display: flex;
     align-items: center;
@@ -548,7 +635,8 @@
 .point-login-btn.hold {
     background: var(--gray-21);
     border: 1px solid var(--gray-21);
-    pointer-events: none; /* 마우스 이벤트 차단 */
+    pointer-events: none;
+    /* 마우스 이벤트 차단 */
 }
 
 .point-login-btn:hover {
@@ -580,7 +668,7 @@
     transition: all ease 0.3s;
 }
 
-.chart-tap-btn:hover{
+.chart-tap-btn:hover {
     color: var(--color-white);
     border: 1px solid var(--point-color-01);
     background: var(--bg-color-08);
@@ -594,7 +682,7 @@
     border-radius: 0 20px 20px 0;
 }
 
-.chart-tap-btn.active{
+.chart-tap-btn.active {
     color: var(--color-white);
     border: 1px solid var(--point-color-01);
     background: var(--bg-color-08);
@@ -617,6 +705,29 @@
     letter-spacing: -0.28px;
     min-width: 60px;
     transition: all 0.2s;
+}
+
+.add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    border-radius: 8px;
+    background: var(--point-color-01);
+    border: 1px solid var(--point-color-01);
+    height: 30px;
+
+    color: var(--color-white);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    gap: 2px;
+}
+
+.add-btn:hover{
+    background-color: var(--point-color-04);
 }
 
 .data-select-btn:hover {
@@ -1020,6 +1131,16 @@ textarea {
     padding-inline-end: 0;
 }
 
+.f-x-c {
+    flex-direction: column;
+    align-items: flex-start !important;
+}
+
+.f-x{
+    display: flex;
+    align-items: center;
+}
+
 .input-txt:read-only {
     color: #999999;
 }
@@ -1085,9 +1206,24 @@ textarea {
     text-align: left;
 }
 
+.input-label03 {
+    color: var(--gray-23);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: -0.28px;
+}
+
 
 
 /* 텍스트area/input 영역*/
+
+.input-img-wrap {
+    position: relative;
+    width: auto;
+    width: 100%;
+    max-width: 500px;
+}
 
 .input-txt02 {
     width: 100%;
@@ -1100,6 +1236,15 @@ textarea {
     box-sizing: border-box;
     letter-spacing: 0.001px;
     border-radius: 6px;
+}
+
+.input-text-del {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .input-txt05 {

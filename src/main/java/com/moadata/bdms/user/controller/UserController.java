@@ -1,5 +1,8 @@
 package com.moadata.bdms.user.controller;
 
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.common.util.StringUtil;
+import com.moadata.bdms.model.vo.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,14 +28,12 @@ import com.moadata.bdms.common.base.controller.BaseController;
 import com.moadata.bdms.common.exception.ProcessException;
 //import com.moadata.hsmng.common.intercepter.Auth;
 //import com.moadata.hsmng.history.service.HistoryInfoService;
-import com.moadata.bdms.model.vo.CodeVO;
-import com.moadata.bdms.model.vo.MenuVO;
-import com.moadata.bdms.model.vo.UserGroupVO;
-import com.moadata.bdms.model.vo.UserVO;
 import com.moadata.bdms.support.code.service.CodeService;
 import com.moadata.bdms.support.menu.service.MenuService;
 import com.moadata.bdms.user.service.UserService;
 import com.moadata.bdms.userGroup.service.UserGroupService;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * User
@@ -52,6 +56,12 @@ public class UserController extends BaseController {
 	@Resource(name = "menuService")
 	private MenuService menuService;
 
+	@Value("${file.save.dir.linux}")
+	private String linuxPreOpenFilePath;
+
+	@Value("${file.save.dir.windows}")
+	private String windowPreOpenFilePath;
+
 	@RequestMapping(value="/userSearch", method = RequestMethod.GET)
 	public String userSearch(HttpServletRequest request, ModelMap model) {
 
@@ -63,7 +73,6 @@ public class UserController extends BaseController {
 	 * 
 	 * @return
 	 */
-	//@Auth
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public String mvUser(HttpServletRequest request,ModelMap model) {
 		
@@ -643,5 +652,138 @@ public class UserController extends BaseController {
 		map.put("isError", isError);
 		map.put("message", message);
 		return map;
+	}
+
+	/**
+	 * Check Up Excel Import
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getChckUpExcelImport", method = RequestMethod.POST)
+	public  Map<String, Object> getChckUpExcelImport(MultipartHttpServletRequest request) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		MultipartFile mf = request.getFile("file[0]");
+		UserVO vo = (UserVO) getRequestAttribute("user");
+		map = userService.getImportMapForBDMS(mf, vo.getUserId());
+		return map;
+	}
+
+	@RequestMapping(value="/checkUp", method = RequestMethod.GET)
+	public String checkUp(HttpServletRequest request, ModelMap model) {
+		return "user/checkUp";
+	}
+
+	/**
+	 * CheckUp data 등록
+	 *
+	 * @param checkup
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/checkupAdd", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> checkupAdd(@ModelAttribute("checkup") CheckupVO checkup)throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		boolean isError = false;
+		String message = "";
+		UserVO vo = (UserVO) getRequestAttribute("user");
+		try {
+
+			    checkup.setAdminId(vo.getUserId());
+			    userService.insertCheckUp(checkup);
+
+				//이력 추가.
+				Map<String,String> param = new HashMap<String,String>();
+				param.put("hisType", "HT16");
+				param.put("batchId", "");
+				param.put("prssType", "HS06");
+				param.put("hisEndDt", "");
+				param.put("prssUsrId", vo.getUserId());
+				String tempMsg = "Administrator " + vo.getUserId() + " - " + "{0}" + " was a success";
+				param.put("msgEtc", tempMsg);
+
+				//historyInfoService.commInsertHistory(param,"");
+				message = "Added.";
+
+		} catch(Exception e) {
+			LOGGER.error(e.toString());
+			isError = true;
+			map.put("message", e.getMessage());
+			//이력 추가.
+			Map<String,String> param = new HashMap<String,String>();
+			param.put("hisType", "HT16");
+			param.put("batchId", "");
+			param.put("prssType", "HS06");
+			param.put("hisEndDt", "");
+			param.put("prssUsrId", vo.getUserId());
+			String tempMsg = "Administrator " + vo.getUserId() + " - " + "{0}" + " failed.";
+			param.put("msgEtc", tempMsg);
+			//historyInfoService.commInsertHistory(param,"");
+		}
+
+		map.put("isError", isError);
+		map.put("message", message);
+		return map;
+	}
+
+	/**
+	 * downform Data Make
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/downform", produces="application/json;charset=UTF-8")
+	public void downform(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		try {
+			String os = System.getProperty("os.name").toLowerCase();
+			String path = "";
+
+			System.out.println("###################################");
+			System.out.println("###################### downform OS : " + os);
+			System.out.println("###################################");
+
+			if (os.contains("window")) {
+				path = windowPreOpenFilePath;
+			}else{
+				path = linuxPreOpenFilePath;
+			}
+
+			File dFile = new File(path, "twalk_downData.csv");
+			int fSize = (int)dFile.length();
+
+			if (fSize > 0) {
+				String encodedFilename = URLEncoder.encode("twalk_downData.csv", "UTF-8");
+				response.setContentType("text/csv; charset=utf-8");
+				response.setHeader("filename", encodedFilename);
+				response.setContentLength(fSize);
+
+				BufferedInputStream in = null;
+				BufferedOutputStream out = null;
+
+				in  = new BufferedInputStream(new FileInputStream(dFile));
+				out = new BufferedOutputStream(response.getOutputStream());
+
+				try {
+					byte[] buffer = new byte[4096];
+					int bytesRead = 0;
+
+					while ((bytesRead = in.read(buffer)) != -1) {
+						out.write(buffer, 0, bytesRead);
+					}
+					out.flush();
+				} finally {
+					in.close();
+					out.close();
+				}
+			} else {
+				throw new FileNotFoundException("파일이 없습니다.");
+			}
+		} catch (Exception e) {
+			LOGGER.info(e.getMessage());
+		}
 	}
 }

@@ -1,7 +1,11 @@
 package com.moadata.bdms.user.repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.moadata.bdms.model.vo.CheckupVO;
 import org.springframework.stereotype.Repository;
 
 //import com.moadata.hsmng.common.annotation.PrivacySrch;
@@ -73,5 +77,138 @@ public class UserDao extends BaseAbstractDao {
     
     public void updateUserInfo(UserVO user) {
 		update("user.updateUserInfo", user);
+	}
+
+	public void insertCheckUp(CheckupVO checkupVO){
+		List<Map> checkUpList = new ArrayList<>();
+		String reportId = "";
+
+		Map<String, Object> tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "11000000"); //1
+		tmpmap.put("msmt", checkupVO.getHght());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "12000000"); //2
+		tmpmap.put("msmt", checkupVO.getWght());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "13000000"); //3
+		tmpmap.put("msmt", checkupVO.getWst());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "17100000"); //4
+		tmpmap.put("msmt", checkupVO.getSbp());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "17200000");  //5
+		tmpmap.put("msmt", checkupVO.getDbp());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "52000000");  //6
+		tmpmap.put("msmt", checkupVO.getFbs());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "53000000");  //7
+		tmpmap.put("msmt", checkupVO.getHba1c());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "41000000");  //8
+		tmpmap.put("msmt", checkupVO.getTc());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "42000000");  //9
+		tmpmap.put("msmt", checkupVO.getHdl());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "43000000");  //10
+		tmpmap.put("msmt", checkupVO.getLdl());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "44000000");  //11
+		tmpmap.put("msmt", checkupVO.getTrgly());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "22000000");  //12
+		tmpmap.put("msmt", checkupVO.getSc());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "23000000");  //13
+		tmpmap.put("msmt", checkupVO.getGfr());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "24000000");  //14
+		tmpmap.put("msmt", checkupVO.getUrAcd());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "25000000");  //15
+		tmpmap.put("msmt", checkupVO.getBun());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "32000000");  //16
+		tmpmap.put("msmt", checkupVO.getAlt());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "31000000");  //17
+		tmpmap.put("msmt", checkupVO.getAst());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "33000000");  //18
+		tmpmap.put("msmt", checkupVO.getGtp());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "34000000");  //19
+		tmpmap.put("msmt", checkupVO.getTprtn());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "35000000");  //20
+		tmpmap.put("msmt", checkupVO.getBlrbn());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "36000000");  //21
+		tmpmap.put("msmt", checkupVO.getAlp());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "91000000");  //checkup result
+		tmpmap.put("msmt", checkupVO.getChckResult());
+		checkUpList.add(tmpmap);
+
+		tmpmap = new HashMap<>();
+		tmpmap.put("metaDataCode", "92000000");  //Comment
+		tmpmap.put("msmt", checkupVO.getComment());
+		checkUpList.add(tmpmap);
+
+		reportId = (String)selectOne("user.selectMaxSeqReportItem");
+		for(int i=0; i < checkUpList.size(); i++) {
+			checkUpList.get(i).put("reportId", reportId);
+			checkUpList.get(i).put("cmmt", "");
+			checkUpList.get(i).put("usrId", checkupVO.getUserId());
+		}
+
+		checkupVO.setReportId(reportId);
+		update("user.updateWlkMy", checkupVO);
+		insert("user.insertChckReport", checkupVO);
+		insert("user.insertCheckUp", checkUpList);
+		insert("user.insertMyBody", checkupVO);
 	}
 }

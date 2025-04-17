@@ -1,8 +1,11 @@
 package com.moadata.bdms.user.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.moadata.bdms.model.vo.CheckupVO;
 import com.moadata.bdms.model.vo.UserVO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * User Service Interface
@@ -111,4 +114,10 @@ public interface UserService {
 	 * @param user
 	 */
 	public void updateUserInfo(UserVO user);
+
+	public Map<String, Object> getImportMapForBDMS(MultipartFile file, String loginId);
+
+	public void insertCheckUp(CheckupVO checkupVO) throws Exception;
+
+
 }

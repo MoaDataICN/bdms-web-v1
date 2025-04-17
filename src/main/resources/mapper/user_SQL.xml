@@ -236,4 +236,43 @@
 			MODIFY_DT	= NOW()			
 		WHERE USER_ID = #{userId}
 	</update>
+
+	<select id="selectMaxSeqReportItem" resultType="String">
+		SELECT IF(ISNULL(MAX(REPORT_ID)),
+				  CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD('1',5,'0')),
+				  CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD(SUBSTRING(MAX(REPORT_ID), 11, 5)+1, 5, '0'))) REPORT_ID
+		FROM T_WLK_REPORT
+		WHERE REPORT_ID  LIKE CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), '%')
+	</select>
+
+	<!-- CheckUp 데이타 등록 -->
+	<insert id="insertCheckUp" parameterType="java.util.List">
+		INSERT INTO T_WLK_REPORT_Item (report_id, meta_data_code, value, text, regist_dt, regist_id, upt_dt, upt_id) VALUES
+		<foreach collection="list" item="item" open="" close="" separator=",">
+			(#{item.reportId}, #{item.metaDataCode}, #{item.msmt}, #{item.cmmt}, now(), #{item.adminId}, now(), #{item.adminId})
+		</foreach>
+	</insert>
+
+	<!-- CheckUp Report 데이타 등록 -->
+	<insert id="insertChckReport" parameterType="checkupVO">
+		INSERT INTO t_wlk_report
+		(report_id, user_id, chck_date, report_item_group, chck_kind, chck_hspt, chck_judge, regist_dt, regist_id, upt_dt, upt_id)
+		VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckCt},#{chckDctr}, now(), #{adminId}, now(), #{adminId})
+	</insert>
+
+	<!-- CheckUp 정보로 my데이타 수정 -->
+	<update id="updateWlkMy" parameterType="checkupVO">
+        UPDATE t_wlk_my
+        SET SX        = #{gender},
+			BRTH_DT   = #{brthDt}
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<!-- 허리둘레, 키, 몸무게 Body에 저장 -->
+	<insert id="insertMyBody" parameterType="checkupVO">
+		INSERT INTO t_walk.t_wlk_td_body
+		(USER_ID, CR_DT, WEIGHT, HEIGHT, WAISTLINE_INCH, WAISTLINE_CM, MEMO, PUBLIC_YN, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID)
+		VALUES(#{userId}, now(), #{wght}, #{hght} , cast((cast(#{wst} as unsigned) / 2.54) as  varchar(10)), #{wst},'checkup','Y', now(), #{adminId}, now(), #{adminId})
+	</insert>
+
 </mapper>

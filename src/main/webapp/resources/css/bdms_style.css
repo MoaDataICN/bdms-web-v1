@@ -537,6 +537,7 @@ label {
 }
 
 .main {
+    position: relative;
     padding: 20px 32px;
     width: 100%;
 }
@@ -888,7 +889,7 @@ label {
 }
 
 .red-point-color {
-    color: var(--point-color-02);
+    color: var(--point-color-02) !important;
 }
 
 .alerted-circle {
@@ -1265,6 +1266,18 @@ table {
     text-transform: capitalize;
 }
 
+.second-title02 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray-03);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: -0.4px;
+    text-transform: capitalize;
+}
+
 .second-tap-menu {
     display: flex;
     flex-wrap: wrap;
@@ -1322,6 +1335,14 @@ table {
     align-items: center;
     flex: 1;
     margin-bottom: 16px;
+}
+
+.row-wrap02 {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 16px;
+
 }
 
 .row-input {
@@ -1448,7 +1469,6 @@ textarea {
     right: 0;
     transform: translate(-50%, -50%);
     cursor: pointer;
-    z-index: 2;
 }
 
 .p-r {
@@ -1773,11 +1793,17 @@ textarea {
     text-transform: capitalize;
 }
 
+.gender-btn-group{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 /* ----------- 우측 슬라이드 팝업 ------------*/
 
 .slide-popup-container {
     padding: 20px;
-    overflow-x: auto;
+    /* overflow-x: auto; */
 }
 
 .slide-open-btn {
@@ -1921,13 +1947,83 @@ textarea {
     text-transform: capitalize;
 }
 
-.login-message{
+.login-message {
     color: var(--point-color-02);
     font-size: 12px;
     font-weight: 500;
     line-height: 14px;
     letter-spacing: -0.22px;
     height: 12px;
+}
+
+#drop-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--gray-19);
+    border-radius: 18px;
+    width: 100%;
+    padding: 30px 40px;
+    background: #f6fafd;
+    flex-direction: column;
+}
+
+.drop-text {
+    color: var(--gray-13);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 26px;
+    letter-spacing: -0.32px;
+}
+
+.drop-text02 {
+    color: var(--gray-27);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: -0.32px;
+}
+
+.drop-text-point {
+    color: var(--point-color-02);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: -0.32px;
+    padding: 4px 0;
+}
+
+.push-wrap {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+}
+
+.push-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-width: 300px;
+    height: 42px;
+    color: var(--gray-14);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-10);
+    background: var(--bg-white);
+    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.10);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: -0.2px;
+    text-transform: capitalize;
+}
+
+.push-message.point{
+    font-weight: 600;
+    color: var(--color-white);
+    border: 1px solid var(--point-color-02);
+    background: var(--point-color-02);
 }
 
 
@@ -1953,10 +2049,15 @@ textarea {
         gap: 0;
     }
 
+    .row-wrap02 {
+        flex: 0 0 100%;
+    }
+
+
 }
 
 @media (max-width: 900px) {
-    .login_container{
+    .login_container {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1974,7 +2075,7 @@ textarea {
         align-items: center;
     }
 
-    .login-right-panel{
+    .login-right-panel {
         display: none;
     }
 
