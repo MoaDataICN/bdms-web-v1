@@ -9,7 +9,7 @@
                 <spring:message code='resetPwStartPopup.title'/>
             </div>
 
-            <div class="popup-text" >
+            <div class="popup-text">
                 <spring:message code='resetPwStartPopup.content'/>
             </div>
 

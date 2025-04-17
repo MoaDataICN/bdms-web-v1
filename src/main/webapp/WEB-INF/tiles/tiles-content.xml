@@ -11,11 +11,8 @@
     <definition name="user/userDtlHealthAlerts" template="/WEB-INF/views/user/userDtlHealthAlerts.jsp" />
     <!-- Service Requests 탭 -->
     <definition name="user/userDtlServiceRequests" template="/WEB-INF/views/user/userDtlServiceRequests.jsp" />
-    <!-- Input Checkup Data 탭
+    <!-- Input Checkup Data 탭 -->
     <definition name="user/userDtlInputCheckupData" template="/WEB-INF/views/user/userDtlInputCheckupData.jsp" />
-    Checkup Results 탭
-    <definition name="user/userDtlCheckupResults" template="/WEB-INF/views/user/userDtlCheckupResults.jsp" />
-    -->
 
     <definition name="user/resetPwStartPopup" template="/WEB-INF/views/user/resetPwStartPopup.jsp"/>
     <definition name="user/resetPwConfirmPopup" template="/WEB-INF/views/user/resetPwConfirmPopup.jsp"/>

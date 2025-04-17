@@ -166,13 +166,14 @@ public class UserController extends BaseController {
 
 		System.out.println("reqId : " + reqId);
 		UserDtlGeneralVO userDtlGeneralVO = userService.selectUserDtlGeneral(reqId);
+		System.out.println(userService.selectUserDtlGeneral(reqId).toString());
+
+		model.addAttribute("reqId", reqId);
+		model.addAttribute("userDtlGeneral", userDtlGeneralVO);
 
 		switch (tab) {
             case "general":
                 System.out.println("tab : general");
-                System.out.println(userService.selectUserDtlGeneral(reqId).toString());
-
-                model.addAttribute("userDtlGeneral", userDtlGeneralVO);
 
 				/**
 				String adminGrpLv = grpLv;  // 로그인한 관리자 grpLv
@@ -223,54 +224,88 @@ public class UserController extends BaseController {
                 return "user/userDtlGeneral";
             case "health-alerts":
                 System.out.println("tab : health-alerts");
-				System.out.println(userService.selectUserDtlGeneral(reqId).toString());
 
-				model.addAttribute("userDtlGeneral", userDtlGeneralVO);
-
-				Map<String, Object> param = new HashMap<>();
-//				param.put("today", LocalDate.now().toString());  // 오늘 날짜 (필요 시 yyyy-MM-dd 포맷으로 맞춰줘)
-				param.put("today", "2025-03-24");
+				Map<String, Object> param1 = new HashMap<>();
+//				param1.put("today", LocalDate.now().toString());  // 오늘 날짜 (필요 시 yyyy-MM-dd 포맷으로 맞춰줘)
+				param1.put("today", "2025-03-24");
 
 				if (grpLv != null && grpLv.equals("1")) {
-					param.put("grpId", grpId);
+					param1.put("grpId", grpId);
 				} else {
-					param.put("inChargeId", userId);
+					param1.put("inChargeId", userId);
 				}
 
 				// health alerts count
-				List<Map<String, Object>> healthAlertCntList = trackingService.selectTodayHealthAlertCnt(param);
-				Map<String, Long> healthAlertCntMap = new HashMap<>();
-				for(Map<String, Object> row : healthAlertCntList) {
+				List<Map<String, Object>> healthAlertCntList1 = trackingService.selectTodayHealthAlertCnt(param1);
+				Map<String, Long> healthAlertCntMap1 = new HashMap<>();
+				for(Map<String, Object> row : healthAlertCntList1) {
 					String altTp = (String)row.get("ALT_TP");
 					Long altCount = ((Number)row.get("ALT_COUNT")).longValue();
-					healthAlertCntMap.put(altTp, altCount);
+					healthAlertCntMap1.put(altTp, altCount);
 				}
 
 				// user request count (Ambulance, Nurse 등)
-				List<Map<String, Object>> userRequestCntList = trackingService.selectTodayUserRequestCnt(param);
-				Map<String, Map<String, Long>> userRequestCntMap = new HashMap<>();
+				List<Map<String, Object>> userRequestCntList = trackingService.selectTodayUserRequestCnt(param1);
+				Map<String, Map<String, Long>> userRequestCntMap1 = new HashMap<>();
 				for(Map<String, Object> row : userRequestCntList) {
 					String reqTp = (String)row.get("REQ_TP");
 					String reqStt = (String)row.get("REQ_STT");
 					Long reqCount = ((Number)row.get("REQ_COUNT")).longValue();
 
-					userRequestCntMap.putIfAbsent(reqTp, new HashMap<>());
-					userRequestCntMap.get(reqTp).put(reqStt, reqCount);
+					userRequestCntMap1.putIfAbsent(reqTp, new HashMap<>());
+					userRequestCntMap1.get(reqTp).put(reqStt, reqCount);
 				}
 
-				model.addAttribute("healthAlertCntMap", healthAlertCntMap);
-				model.addAttribute("userRequestCntMap", userRequestCntMap);
+				model.addAttribute("healthAlertCntMap", healthAlertCntMap1);
+				model.addAttribute("userRequestCntMap", userRequestCntMap1);
 
 				return "user/userDtlHealthAlerts";
 			case "service-requests":
 				System.out.println("tab : service-requests");
+
+				Map<String, Object> param2 = new HashMap<>();
+//				param2.put("today", LocalDate.now().toString());  // 오늘 날짜 (필요 시 yyyy-MM-dd 포맷으로 맞춰줘)
+				param2.put("today", "2025-03-24");
+
+				if (grpLv != null && grpLv.equals("1")) {
+					param2.put("grpId", grpId);
+				} else {
+					param2.put("inChargeId", userId);
+				}
+
+				// health alerts count
+				List<Map<String, Object>> healthAlertCntList2 = trackingService.selectTodayHealthAlertCnt(param2);
+				Map<String, Long> healthAlertCntMap2 = new HashMap<>();
+				for(Map<String, Object> row : healthAlertCntList2) {
+					String altTp = (String)row.get("ALT_TP");
+					Long altCount = ((Number)row.get("ALT_COUNT")).longValue();
+					healthAlertCntMap2.put(altTp, altCount);
+				}
+
+				// user request count (Ambulance, Nurse 등)
+				List<Map<String, Object>> userRequestCntList2 = trackingService.selectTodayUserRequestCnt(param2);
+				Map<String, Map<String, Long>> userRequestCntMap2 = new HashMap<>();
+				for(Map<String, Object> row : userRequestCntList2) {
+					String reqTp = (String)row.get("REQ_TP");
+					String reqStt = (String)row.get("REQ_STT");
+					Long reqCount = ((Number)row.get("REQ_COUNT")).longValue();
+
+					userRequestCntMap2.putIfAbsent(reqTp, new HashMap<>());
+					userRequestCntMap2.get(reqTp).put(reqStt, reqCount);
+				}
+
+				model.addAttribute("healthAlertCntMap", healthAlertCntMap2);
+				model.addAttribute("userRequestCntMap", userRequestCntMap2);
+
 				return "user/userDtlServiceRequests";
 			case "input-checkup-data":
 				System.out.println("tab : input-checkup-data");
+
 				return "user/userDtlInputCheckupData";
             default:
                 System.out.println("tab : general");
-                return "user/userDtlGeneral";
+
+				return "user/userDtlGeneral";
         }
 	}
 

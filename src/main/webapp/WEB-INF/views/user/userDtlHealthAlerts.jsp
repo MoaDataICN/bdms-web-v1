@@ -13,15 +13,20 @@
     <button type="button" class="second-tap-btn" data-tab="input-checkup-data"><spring:message code='common.tapMenu.inputCheckupData'/></button>
 </div>
 
+
+
+<div class="temp-block-wrap">  <!-- temp-block-wrap S -->
+
+
     <!-- Today's health alerts staus 묶음 -->
     <div class="alerts-wrap mt-30px">
         <div class="mt-16px table-data-wrap">
             <p class="second-title-status">(${userDtlGeneral.userId}) ${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
-            <p class="title-status mr-12px"><spring:message code="board.comment.description" arguments="${healthAlertCntMap.A+healthAlertCntMap.F+healthAlertCntMap.H+healthAlertCntMap.SL+healthAlertCntMap.B+healthAlertCntMap.T+healthAlertCntMap.ST}" /></p>
+            <p class="title-status mr-12px"><spring:message code="healthAlertsTap.description" arguments="${healthAlertCntMap.A+healthAlertCntMap.F+healthAlertCntMap.H+healthAlertCntMap.SL+healthAlertCntMap.B+healthAlertCntMap.T+healthAlertCntMap.ST}" /></p>
         </div>
 
         <div class="alerts-grid mt-12px">
-            <!-- Today's health-chart-->
+            <!-- Today's health-chart -->
             <div class="alerts-chart" style="overflow:visible !important">
                 <!--
                 <img src="../../resources/images/board-alerts-chart.png" class="mt-12px alerts-chart-size">
@@ -41,7 +46,7 @@
                     </div>
                     <div class="alerts-text-group">
                         <div class="alerts-item-text01">
-                            <spring:message code="common.activity"/>
+                            <spring:message code="common.activity"/> / <spring:message code="common.fall"/>
                         </div>
                         <div class="alerts-item-text02" id="healthAlerts_cntAF">
                             ${healthAlertCntMap.A + healthAlertCntMap.F}
@@ -160,7 +165,7 @@
                             Alert type
                         </div>
                         <div class="row-input">
-                            <div class="day-button-wrap02" id="healthAlerts_AltTp">
+                            <div class="day-button-wrap02" id="healthAlerts_altTp">
                                 <button class="data-select-btn active" data-filter="alertTpAll">All</button>
                                 <button class="data-select-btn" data-filter="AF">Activity/Falls</button>
                                 <button class="data-select-btn" data-filter="H">Heart rate</button>
@@ -192,12 +197,248 @@
             </div>
         </div>
 
-        <!-- Today health board Table -->
+        <!-- Today health board Table
         <div class="table-wrap mt-14px" style="width:100%;">
             <table id="healthAlerts_alertGrid" style="width:100%;"></table>
             <div id="healthAlerts_alertGridPager"></div>
             <div id="healthAlerts_customPager" class="page-group mb-22px mt-10px"></div>
         </div>
+        -->
+
+
+
+<!-- Today health board Table -->
+<div class="table-wrap mt-30px">
+    <div class="main-table mt-10px">
+        <table class="tbl_h">
+            <colgroup>
+                <col style="width:5%">
+                <col style="width:10%">
+                <col>
+                <col style="width:30%">
+                <col>
+                <col>
+                <col style="width:6%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>no.
+                        <button type="button">
+                            <img src="/resources/images/arrow-top-bottom.svg" class="icon16">
+                        </button>
+                    </th>
+                    <th>detected time
+                        <button type="button">
+                            <img src="/resources/images/arrow-top-bottom.svg" class="icon16">
+                        </button>
+                    </th>
+                    <th>alerts type
+                        <button type="button">
+                            <img src="/resources/images/arrow-top-bottom.svg" class="icon16">
+                        </button>
+                    </th>
+                    <th>
+                        alert reason
+                        <button type="button">
+                            <img src="/resources/images/arrow-top-bottom.svg" class="icon16">
+                        </button>
+                    </th>
+                    <th>group
+                        <button type="button">
+                            <img src="/resources/images/arrow-top-bottom.svg" class="icon16">
+                        </button>
+                    </th>
+                    <th>in charge
+                        <button type="button">
+                            <img src="/resources/images/arrow-top-bottom.svg" class="icon16">
+                        </button>
+                    </th>
+                    <th>check</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="left">10</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn"><span>confirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">9</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn"><span>confirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">8</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn"><span>confirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">7</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn"><span>confirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">6</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn active"><span>unconfirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">5</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn"><span>confirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">4</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn active"><span>unconfirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">3</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn active"><span>unconfirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">2</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn active"><span>unconfirmed</span></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">1</td>
+                    <td class="left">2025-04-01 15:24:32</td>
+                    <td class="left">Sleep</td>
+                    <td class="left">A fall has been detected. It could be multiple falls.</td>
+                    <td class="left">power b</td>
+                    <td class="left">james girl</td>
+                    <td class="left">
+                        <button type="button" class="detail-btn active"><span>unconfirmed</span></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지 넘버링-->
+    <div class="page-group mb-22px mt-10px">
+        <a href="#">
+            <div class="page-num-box">
+                <img src="/resources/images/arrow-num-left.svg" class="icon16">
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box active">
+                1
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                2
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                3
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                4
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                5
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                6
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                7
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                8
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                9
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                10
+            </div>
+        </a>
+        <a href="#">
+            <div class="page-num-box">
+                <img src="/resources/images/arrow-num-right.svg" class="icon16">
+            </div>
+        </a>
+    </div>
+</div>
+
     </div>
 
 <div class="space-30"></div>
+
+
+</div>  <!-- temp-block-wrap E -->

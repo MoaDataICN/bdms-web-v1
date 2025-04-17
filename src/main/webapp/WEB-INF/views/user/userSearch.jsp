@@ -10,10 +10,19 @@
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bdms_common.css">
+
 <script src="../../resources/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="../../resources/js/chart/doughnutChart.js"></script>
+
+<script src="/resources/js/jquery-ui.js"></script>
+<script src="/resources/js/dropzone-min.js"></script>
+<link rel="stylesheet" href="/resources/css/dropzone.css" type="text/css" />
+<link rel="stylesheet" href="/resources/css/jquery-ui.css">
+<link rel="stylesheet" href="/resources/css/bdms_common.css">
+<link rel="stylesheet" href="/resources/css/bdms_style.css">
+<link rel="stylesheet" href="/resources/css/bdms_color.css">
 
 <style>
     #userRequestPager {
@@ -47,6 +56,12 @@
     .calendar-icon {
         z-index: 1;
     }
+
+    .dz-button {
+        cursor: pointer;
+        pointer-events: auto; /* 꼭 있어야 클릭 가능 */
+    }
+
 </style>
 
 <main class="main">
@@ -348,7 +363,7 @@
         select: "<spring:message code='common.select'/>"
     };
 
-    let reqId = "";
+    let reqId = "${reqId}";
     let userDtlGeneral = {};
 
     let calculatedWdDt = "";  // 변경 될 삭제 예정일
@@ -735,9 +750,8 @@
             body: new URLSearchParams({ reqId })  // form-urlencoded 형식으로 전송
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error("HTTP Error!");
-            }
+            if (!response.ok) throw new Error("❌ Error : open-slide-btn");
+
             return response.text();  // JSP 렌더링 결과가 HTML이니까
         })
         .then(html => {
@@ -751,8 +765,17 @@
             updateDeletionDateInfo();
         })
         .catch(error => {
-            console.error('슬라이드 상세 요청 에러 : ', error);
-            alert('상세 정보를 불러오지 못했습니다.');
+            $.alert({
+                title: '오류',
+                content: '탭 내용을 불러오는데 실패했습니다.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    확인: {
+                        btnClass: 'btn-red'
+                    }
+                }
+            });
         });
     });
 
@@ -868,16 +891,51 @@ $(document).on("click", "#resetApprovalBtn", function () {
     .then(response => response.json())
     .then(({ success, message }) => {
         if (success) {
-            alert("비밀번호가 성공적으로 초기화되었습니다.");
+            $.confirm({
+                title: '성공',
+                content: '비밀번호가 성공적으로 초기화되었습니다.',
+                type: 'green',
+                typeAnimated: true,
+                buttons: {
+                    확인: {
+                        btnClass: 'btn-green',
+                        action: function(){
+                            // 확인 눌렀을 때 실행할 동작 (필요 시)
+                        }
+                    }
+                }
+            });
+
             $("#resetPwConfirmPopup").fadeOut();
             $(".reset-pw-popup-container").empty();
         } else {
-            alert(message || "비밀번호 초기화에 실패했습니다.");
+            $.confirm({
+                title: '오류',
+                content: message || '비밀번호 초기화에 실패했습니다.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    확인: {
+                        btnClass: 'btn-red',
+                        action: function(){}
+                    }
+                }
+            });
         }
     })
     .catch(error => {
-        console.error("비밀번호 초기화 중 오류 발생 : " + error);
-        alert("서버 오류가 발생했습니다.");
+        $.confirm({
+            title: '오류',
+            content: message || '비밀번호 초기화 중 오류가 발생했습니다.',
+            type: 'red',
+            typeAnimated: true,
+            buttons: {
+                확인: {
+                    btnClass: 'btn-red',
+                    action: function(){}
+                }
+            }
+        });
     });
 });
 
@@ -973,7 +1031,7 @@ $(document).on("click", "#resetApprovalBtn", function () {
         const $button = $dropdown.find('button.dropdown-search');
         const selectedText = $(this).text().trim();
 
-        console.log("🔽 드롭다운 클릭됨 : " + selectedText);  // ✅ 클릭된 항목 로그 찍기
+        console.log("🔽 드롭다운 클릭됨 : " + selectedText);
 
         // 텍스트 노드 교체
         $button.contents().filter(function () {
@@ -1117,15 +1175,47 @@ $(document).on("click", "#resetApprovalBtn", function () {
 
                     break;
                 case "fail":
-                    alert(message || "비밀번호가 일치하지 않습니다.");
+                    $.confirm({
+                        title: '오류',
+                        content: message || '비밀번호가 일치하지 않습니다.',
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            확인: {
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
                     break;
                 default:
-                    alert("서버 오류가 발생했습니다.");
+                    $.confirm({
+                        title: '오류',
+                        content: message || '서버 오류가 발생했습니다.',
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            확인: {
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
             }
         })
         .catch(error => {
-            console.error("❌ 비밀번호 확인 요청 중 에러 발생:", error);
-            alert("네트워크 오류가 발생했습니다.");
+            $.confirm({
+                title: '오류',
+                content: message || '네트워크 오류가 발생했습니다.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    확인: {
+                        btnClass: 'btn-red',
+                        action: function(){}
+                    }
+                }
+            });
         });
     });
 
@@ -1142,15 +1232,27 @@ $(document).on("click", "#resetApprovalBtn", function () {
             body: new URLSearchParams(updateData)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error("HTTP Error!");
-            }
+            if (!response.ok) throw new Error("❌ Error : /user/updateGeneral");
 
             return response.json();
         })
         .then(response => {
             console.log("✅ 사용자 정보 수정 결과 : " + response);
-            alert("사용자 정보가 수정되었습니다.");
+
+            $.confirm({
+                title: '성공',
+                content: '사용자 정보가 수정되었습니다.',
+                type: 'green',
+                typeAnimated: true,
+                buttons: {
+                    확인: {
+                        btnClass: 'btn-green',
+                        action: function(){
+                            // 확인 눌렀을 때 실행할 동작 (필요 시)
+                        }
+                    }
+                }
+            });
 
             // 버튼 상태 복원
             $("#saveChangesBtn")
@@ -1159,8 +1261,20 @@ $(document).on("click", "#resetApprovalBtn", function () {
                 .prop("disabled", true);
         })
         .catch(error => {
-            console.error("사용자 정보 수정 중 에러 : " + error);
-            alert("수정 중 오류가 발생했습니다.");
+            $.confirm({
+                title: '오류',
+                content: message || '사용자 정보 수정 중 오류가 발생했습니다.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    확인: {
+                        btnClass: 'btn-red',
+                        action: function(){
+                            console.error(error);
+                        }
+                    }
+                }
+            });
         });
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1186,16 +1300,6 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-var HA_total = Number($('#HA_0').text()) + Number($('#HA_1').text());
-var A_total = Number($('#A_0').text()) + Number($('#A_1').text());
-var N_total = Number($('#N_0').text()) + Number($('#N_1').text());
-var T_total = Number($('#T_0').text()) + Number($('#T_1').text());
-
-calc('HA_total', HA_total);
-calc('A_total', A_total);
-calc('N_total', N_total);
-calc('T_total', T_total);
-
 // Alert & Service Summation E
 
 let sum = 0;
@@ -1212,7 +1316,6 @@ function drawHealthAlertChart() {
         console.warn("Canvas with id 'healthAlerts_myChart' not found.");
         return;
     }
-
 
     let healthAlerts = extractUserDtlHealthAlertFromDOM("#customerPopup .slide-popup-container");
 
@@ -1439,29 +1542,45 @@ $(document).on('click', '.second-tap-btn', function () {
         body: new URLSearchParams({ reqId })
     })
     .then(response => {
-        console.log('응답 상태 : ' + response.status);
-        if (!response.ok) throw new Error('탭 로딩 실패');
+        console.log('❕ 응답 상태 : ' + response.status);
+
+        if (!response.ok) throw new Error('❌ Error : second-tap-btn');
+
         return response.text();
     })
     .then(html => {
         $('.slide-popup-container').html(html);
 
-        // 👉 여기에서 drawHealthAlertChart 실행
-        setTimeout(() => {
-            if ($(this).data('tab') === 'health-alerts') {
+        if ($(this).data('tab') === 'health-alerts') {
             healthAlerts_fnSearch();
-                drawHealthAlertChart();
-                initHealthAlertGrid();
-            }
-        }, 100);
+            drawHealthAlertChart();   // 👉 여기에서 drawHealthAlertChart 실행
+            initHealthAlertGrid();
+        } if ($(this).data('tab') === 'service-requests') {
+            drawServiceRequestsChart();
+        } else if ($(this).data('tab') === 'input-checkup-data') {
+            initDropzone();
+            initInputCheckupDataTab();
+        }
 
         //readonly();  // 읽기 전용 설정 함수가 있다면
         //extractUserDtlGeneralFromDOM();  // 다시 객체 구성
         //updateDeletionDateInfo();  // 필요 시
     })
     .catch(error => {
-        console.error('탭 전환 중 에러:', error);
-        alert('탭 내용을 불러오는 데 실패했습니다.');
+        $.confirm({
+            title: '오류',
+            content: message || '탭 내용을 불러오는데 실패했습니다.',
+            type: 'red',
+            typeAnimated: true,
+            buttons: {
+                확인: {
+                    btnClass: 'btn-red',
+                    action: function(){
+                        console.error(error);
+                    }
+                }
+            }
+        });
     });
 });
 
@@ -1488,13 +1607,13 @@ function healthAlerts_setSearchParam() {
 console.log("healthAlerts_startDate" + startDate);
 console.log("healthAlerts_endDate" + endDate);
 
-    let altTpVal = $('#healthAlerts_AltTp .data-select-btn.active').data('filter');
+    let altTpVal = $('#healthAlerts_altTp .data-select-btn.active').data('filter');
 
     return {
         searchBgnDe: startDate || null,
         searchEndDe: endDate || null,
-        altTp : $('#healthAlerts_AltTp .data-select-btn.active').data('filter') != 'alertTpAll'
-            ? '"' + $('#healthAlerts_AltTp .data-select-btn.active').data('filter') + '"'
+        altTp : $('#healthAlerts_altTp .data-select-btn.active').data('filter') != 'alertTpAll'
+            ? '"' + $('#healthAlerts_altTp .data-select-btn.active').data('filter') + '"'
             : "'AF','H','SL','B','T','ST'",
         reqId : reqId,
         inChargeId: inChargeId != null && inChargeId !== '' ? inChargeId : null,
@@ -1528,8 +1647,8 @@ $(document).on('click', '#healthAlerts_Date .data-select-btn', function () {
 });
 
 
-$(document).on('click', '#healthAlerts_AltTp .data-select-btn', function () {
-    $('#healthAlerts_AltTp .data-select-btn').removeClass('active');
+$(document).on('click', '#healthAlerts_altTp .data-select-btn', function () {
+    $('#healthAlerts_altTp .data-select-btn').removeClass('active');
     $(this).addClass('active');
 });
 
@@ -1567,8 +1686,413 @@ $('.dropdown-content a').click(function(){
 $(document).on('click','.logout_icon30', function(){
     window.location.href='<c:url value="/login/logout"/>';
 })
+</script>
 
+<script type="text/javascript">
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////// checkup /////////////////////////////////////////////////////
+/////////////////////////////////////////////////// inputCheckUpData ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function downform(){
+        var _url = "${contextPath}/user/downform";
+        var _jsonData = {
+            name: 'moadata',
+            url: 'www.moadata.co.kr'
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var _data = this.response;
+                var _blob = new Blob([_data], {type : 'text/csv'});
+
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(_blob);
+                link.download = 'twalk_downData.csv';
+                link.click();
+            };
+        };
+
+        xhr.open('POST', _url);
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(_jsonData);
+    }
+
+    function initDropzone() {
+        if ($("#dropzone-file").length === 0) {
+            console.warn("#dropzone-file 요소 없음. Dropzone 초기화 생략.");
+            return;
+        }
+
+        // 이미 Dropzone이 초기화되어 있다면 중복 방지
+        if (Dropzone.instances.length > 0) {
+            Dropzone.instances.forEach(instance => instance.destroy());
+        }
+
+        var dropzoneFile=new Dropzone("#dropzone-file",{
+            url:'${contextPath}/user/getChckUpExcelImport',
+            maxFilesize:5000000,
+            parallelUploads:2,     //한번에 올릴 파일 수
+            //addRemoveLinks:  true, //업로드 후 삭제 버튼
+            timeout:300000,	     //커넥션 타임아웃 설정 -> 데이터가 클 경우 꼭 넉넉히 설정해주자
+            maxFiles:5,            //업로드 할 최대 파일 수
+            paramName:"file",      //파라미터로 넘길 변수명 default는 file
+            acceptedFiles: ".csv,.CSV",   // 허용 확장자
+            autoQueue:true,	     //드래그 드랍 후 바로 서버로 전송
+            createImageThumbnails:true,	//파일 업로드 썸네일 생성
+            uploadMultiple:true,	 //멀티파일 업로드
+            dictRemoveFile:'remove',	    //삭제 버튼의 텍스트 설정
+            //dictDefaultMessage:'PREVIEW', //미리보기 텍스트 설정
+            accept:function(file,done){
+                done();
+            },
+            init:function(){
+                this.on('success',function(file,responseText){
+                    console.log("responseText Start : ");
+                    console.log(responseText);
+                    console.log("responseText End.");
+
+                    //제목의 길이 체크
+                    var tlen = responseText.resultList[0].length;
+                    var vlen = responseText.resultList[1].length;
+
+                    if (tlen == vlen){
+                        for(var k = 0; k < vlen; k++){
+                            var resval = responseText.resultList[0][k]+"";
+                            if (resval.trim().indexOf("hght") >= 0){$("#inputCheckup_hght").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("wght") >= 0){$("#inputCheckup_wght").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("wst")>= 0){$("#inputCheckup_wst").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("sbp")>= 0){$("#inputCheckup_sbp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("dbp")>= 0){$("#inputCheckup_dbp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("fbs") >= 0){$("#inputCheckup_fbs").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("hba1c")>= 0){$("#inputCheckup_hba1c").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("tc") >= 0){$("#inputCheckup_tc").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("hdl") >= 0){$("#inputCheckup_hdl").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("ldl")>= 0){$("#inputCheckup_ldl").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("trgly")>= 0){$("#inputCheckup_trgly").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("sc")>= 0){$("#inputCheckup_sc").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("gfr") >= 0){$("#inputCheckup_gfr").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("urAcd")>= 0){$("#inputCheckup_urAcd").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("bun")>= 0){$("#inputCheckup_bun").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("alt") >= 0){$("#inputCheckup_alt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("ast")>= 0){$("#inputCheckup_ast").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("gtp") >= 0){$("#inputCheckup_gtp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("tprtn")>= 0){$("#inputCheckup_tprtn").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("blrbn")>= 0){$("#inputCheckup_blrbn").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("alp")>= 0){$("#inputCheckup_alp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("comment")>= 0){$("#inputCheckup_comment").val(responseText.resultList[1][k])}
+                            //기본정보
+                            if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#inputCheckup_chckType").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup result")>= 0){$("#inputCheckup_chckResult").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup center")>= 0){$("#chckCt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Doctor")>= 0){$("#chckDctr").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#inputCheckup_chckDt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Date Of Birth")>= 0){$("#inputCheckup_brthDt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Gender")>= 0){
+                                $("#inputCheckup_gender").val(responseText.resultList[1][k])
+                                if (responseText.resultList[1][k] == 'M'){
+                                    $('.sex-btn-f').removeClass('active');
+                                    $('.sex-btn').addClass('active');
+                                } else {
+                                    $('.sex-btn-f').addClass('active');
+                                    $('.sex-btn').removeClass('active');
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Dropzone에 이미지가 추가되면 업로드 버튼 활성화
+                this.on("addedfile", function () {
+                });
+                this.on("removedfile", function(file) {
+                });
+                this.on("complete", function(file) {
+                });
+                this.on("dragover", function(e) {
+                });
+                this.on("drop", function(e) {
+                    console.log("count : " + this.getAcceptedFiles().length);
+                    if (this.getAcceptedFiles().length >= 1) {
+                        var files = this.getAcceptedFiles();
+                        this.removeFile(files[0]);
+                    }
+                });
+            }
+        });
+    }
+
+    function inputCheckup_fnClear() {
+        $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#chckDctr").val('');
+        $("#inputCheckup_brthDt").val(''); $("#inputCheckup_gender").val(''); $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#chckCt').val('');
+        $('#inputCheckup_hght').val(''); $('#inputCheckup_wght').val(''); $('#inputCheckup_wst').val(''); $('#inputCheckup_sbp').val(''); $('#inputCheckup_dbp').val('');
+        $('#inputCheckup_fbs').val(''); $('#inputCheckup_hba1c').val(''); $('#inputCheckup_tc').val(''); $('#inputCheckup_hdl').val(''); $('#inputCheckup_ldl').val('');
+        $('#inputCheckup_trgly').val(''); $('#inputCheckup_sc').val(''); $('#inputCheckup_gfr').val(''); $('#inputCheckup_urAcd').val(''); $('#inputCheckup_bun').val('');
+        $('#inputCheckup_alt').val(''); $('#inputCheckup_ast').val(''); $('#inputCheckup_gtp').val(''); $('#inputCheckup_tprtn').val(''); $('#inputCheckup_blrbn').val('');
+        $('#inputCheckup_alp').val(''); $('#inputCheckup_comment').val('');
+        $('.sex-btn-f').removeClass('active');
+        $('.sex-btn').removeClass('active');
+    }
+
+    function inputCheckup_setAddParam() {
+        return {
+            userId : userDtlGeneral.userId,
+            chckType : $("#inputCheckup_chckType").val(),
+            chckResult : $("#inputCheckup_chckResult").val(),
+            chckCt : $("#inputCheckup_chckDt").val(),
+            chckDctr : $("#chckDct").val(),
+            chckDt : $("#inputCheckup_chckDt").val(),
+            brthDt : $("#inputCheckup_brthDt").val(),
+            gender : $("#inputCheckup_gender").val(),
+            chckDt : $('#inputCheckup_chckDt').val(),
+            brthDt : $('#inputCheckup_brthDt').val(),
+            gender : $('#inputCheckup_gender').val(),
+            hght   : $('#inputCheckup_hght').val(),
+            wght   : $('#inputCheckup_wght').val(),
+            wst    : $('#inputCheckup_wst').val(),
+            sbp    : $('#inputCheckup_sbp').val(),
+            dbp    : $('#inputCheckup_dbp').val(),
+            fbs    : $('#inputCheckup_fbs').val(),
+            hba1c  : $('#inputCheckup_hba1c').val(),
+            tc     : $('#inputCheckup_tc').val(),
+            hdl    : $('#inputCheckup_hdl').val(),
+            ldl    : $('#inputCheckup_ldl').val(),
+            trgly  : $('#inputCheckup_trgly').val(),
+            sc     : $('#inputCheckup_sc').val(),
+            gfr    : $('#inputCheckup_gfr').val(),
+            urAcd  : $('#inputCheckup_urAcd').val(),
+            bun    : $('#inputCheckup_bun').val(),
+            alt    : $('#inputCheckup_alt').val(),
+            ast    : $('#inputCheckup_ast').val(),
+            gtp    : $('#inputCheckup_gtp').val(),
+            tprtn  : $('#inputCheckup_tprtn').val(),
+            blrbn  : $('#inputCheckup_blrbn').val(),
+            alp    : $('#inputCheckup_alp').val(),
+            comment: $('#inputCheckup_comment').val()
+        };
+    }
+
+    $(document).ready(function() {
+        inputCheckup_fnClear();
+    })
+
+    function validation(){
+        return true;
+    }
+
+function initInputCheckupDataTab() {
+    // 초기화
+    inputCheckup_fnClear();
+
+    // 이벤트 바인딩 (중복 방지 위해 off로 제거 후 다시 on)
+    $(document).off('click', '#checkupreset').on('click', '#checkupreset', function () {
+        inputCheckup_fnClear();
+    });
+
+    $(document).off('click', '#checkupsave').on('click', '#checkupsave', function () {
+console.log(inputCheckup_setAddParam());
+        $.confirm({
+            title: '',
+            content: 'Would you like to save an checkup data?',
+            buttons: {
+                OK: function () {
+                    if (validation()) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '${contextPath}/user/checkupAdd',
+                            data: inputCheckup_setAddParam(),
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.isError) {
+                                    $.alert(data.message);
+                                    console.log('ERROR', data.message);
+                                } else {
+                                    inputCheckup_fnClear();
+                                    $.alert(data.message);
+                                    fnSearch();
+                                }
+                            }
+                        });
+                    }
+                },
+                Cancel: function () {}
+            }
+        });
+    });
+}
+
+    $('.table-wrap .dropdown-content a').click(function(){
+        let cnt = $(this).data('cnt');
+
+        rowNumsVal = cnt;
+        $('#gridDropdownBtn').text($(this).text());
+        $("#healthAlertList").setGridParam({ rowNum: cnt });
+        fnSearch();
+    })
+
+    $('.input-txt02').keyup(function(e){
+        if(e.keyCode == '13'){
+            fnSearch();
+        }
+    });
+
+$(document).on('click', '.sex-btn-f', function() {
+    console.log("여자");
+    if($(this).hasClass('active')){
+        $(this).removeClass('active');
+        $("#inputCheckup_gender").val('M');
+        $('.sex-btn').addClass('active');
+    } else {
+        $(this).addClass('active');
+        $("#inputCheckup_gender").val('F');
+        $('.sex-btn').removeClass('active');
+    }
+});
+
+$(document).on('click', '.sex-btn', function() {
+    console.log("남자");
+    if($(this).hasClass('active')){
+        $(this).removeClass('active');
+        $("#inputCheckup_gender").val('F');
+        $('.sex-btn-f').addClass('active');
+    } else {
+        $(this).addClass('active');
+        $("#inputCheckup_gender").val('M');
+        $('.sex-btn-f').removeClass('active');
+    }
+});
+
+</script>
+
+<script type="text/javascript">
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////// temp /////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    $(document).on('click', '.temp-block-wrap button:not(.data-select-btn)', function () {
+        $.confirm({
+            title: '알림',
+            content: '기능 준비 중입니다.',
+            type: 'blue',
+            typeAnimated: true,
+            buttons: {
+                확인: {
+                    btnClass: 'btn-blue',
+                    action: function(){
+                        // 확인 눌렀을 때 실행할 동작 (필요 시)
+                    }
+                }
+            }
+        });
+    });
+
+function drawServiceRequestsChart() {
+    let ctx = document.getElementById('serviceRequests_myChart');
+    if (!ctx) {
+        console.warn("Canvas with id 'serviceChart' not found.");
+        return;
+    }
+
+    let labels = ['Nursing', 'Ambulance', 'Consultation'];
+    let data = [
+        Math.floor(Math.random() * 30) + 10,
+        Math.floor(Math.random() * 30) + 10,
+        Math.floor(Math.random() * 30) + 10
+    ];
+
+    $("#temp-item-01").text(data[0]);
+    $("#temp-item-02").text(data[1]);
+    $("#temp-item-03").text(data[2]);
+    $("#temp-item-sum").text(data.reduce((a, b) => a + b, 0));
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(82, 158, 232, 1)',   // Nursing
+                        'rgba(255, 202, 134, 1)',  // Ambulance
+                        'rgba(238, 147, 144, 1)'   // Consultation
+                    ]
+                }
+            ]
+        },
+        options: {
+            borderColor: 'transparent',
+            borderWidth: 0,
+            maintainAspectRatio: false,
+            responsive: true,
+            cutout: '70%',
+            layout: {
+                padding: {
+                    right: 50,
+                    bottom: 10,
+                    top: 10
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "right",
+                    labels: {
+                        boxWidth: 26,
+                        boxHeight: 26,
+                        padding: 14,
+                        usePointStyle: true,
+                        pointStyle: 'rectRounded',
+                        font: {
+                            size: 14
+                        },
+                        generateLabels: (chart) => {
+                            let datasets = chart.data.datasets;
+                            return datasets[0].data.map((data, i) => ({
+                                text: chart.data.labels[i] + '(' + data + ')',
+                                strokeStyle: 'rgba(0,0,0,0)',
+                                lineWidth: 0,
+                                fillStyle: datasets[0].backgroundColor[i],
+                                index: i,
+                                pointStyle: 'rectRounded'
+                            }));
+                        },
+                        borderWidth: 0
+                    },
+                    fullSize: true,
+                    align: "center"
+                },
+                tooltip: {
+                    enabled: false,
+                    position: 'nearest',
+                    external: externalTooltipHandler // 네가 쓰던 툴팁 있으면 그대로 써!
+                },
+                datalabels: {
+                    color: 'rgba(86, 86, 86, 1)',
+                    font: {
+                        size: 12,
+                        weight: 'bold'
+                    },
+                    formatter: (value) => value
+                },
+                shadowCirclePlugin: {
+                    shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    shadowBlur: 3,
+                    shadowOffsetX: 5,
+                    shadowOffsetY: 3,
+                    shadowFill: '#fff'
+                }
+            }
+        },
+        plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
+    });
+}
+
+$(document).on('click', '#serviceRequests_reqTp .data-select-btn', function () {
+    $('#serviceRequests_reqTp .data-select-btn').removeClass('active');
+    $(this).addClass('active');
+
+    let selected = $(this).data('filter');
+});
+
 </script>
