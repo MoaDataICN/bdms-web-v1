@@ -765,7 +765,7 @@ label {
     line-height: 16px;
     letter-spacing: -0.28px;
     /* white-space: nowrap;
-    overflow: hidden;   
+    overflow: hidden;
     text-overflow: ellipsis;
     max-width: 60%; */
 }
@@ -1518,6 +1518,11 @@ textarea {
     border-color: var(--point-color-01);
 }
 
+.dropdown-search.hold {
+    pointer-events: none;
+    background: var(--gray-17);
+}
+
 .dropdown-search span {
     display: flex;
     justify-content: center;
@@ -1600,6 +1605,11 @@ textarea {
     color: #272727;
     border-radius: 0.4rem;
     transition: all 300ms ease;
+}
+
+.dropdown-content a.hold {
+    pointer-events: none;
+    color: #ccc;
 }
 
 .badges .dropdown .dropdown-button {
@@ -1817,7 +1827,7 @@ textarea {
     border-radius: 5px;
 }
 
-/* ✅ 팝업 박스 */
+/* 팝업 박스 */
 .customer-popup {
     position: fixed;
     top: 0;

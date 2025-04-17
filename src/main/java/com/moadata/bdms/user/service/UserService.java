@@ -3,6 +3,10 @@ package com.moadata.bdms.user.service;
 import java.util.List;
 import java.util.Map;
 
+import com.moadata.bdms.model.dto.MyResetPwDTO;
+import com.moadata.bdms.model.dto.UserDtlGeneralVO;
+import com.moadata.bdms.model.dto.UserSearchDTO;
+import com.moadata.bdms.model.dto.UserUpdateDTO;
 import com.moadata.bdms.model.vo.CheckupVO;
 import com.moadata.bdms.model.vo.UserVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
  * User Service Interface
  */
 public interface UserService {
+	public List<UserSearchDTO> selectUserSearch(UserSearchDTO userSearchDTO);
+
 	/**
 	 * 사용자 목록
 	 * 
@@ -18,7 +24,23 @@ public interface UserService {
 	 * @return
 	 */
 	public List<UserVO> selectUserList(UserVO user);
-	
+
+	public UserDtlGeneralVO selectUserDtlGeneral(String reqId);
+
+	boolean updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO);
+
+	boolean updateUserGeneral(UserUpdateDTO userUpdateDTO);
+
+	public List<UserSearchDTO> selectAllInChargeNm();
+//	public List<String> selectHigherInChargeNm(String grpLv);
+
+	boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO);
+
+	boolean insertUserBody(UserUpdateDTO userUpdateDTO);
+
+
+
+
 	/**
 	 * 사용자 상세
 	 * 

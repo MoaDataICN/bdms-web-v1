@@ -4,6 +4,24 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
+    <!-- 슬라이드 페이지 제외 -->
+    <!-- General 탭 -->
+    <definition name="user/userDtlGeneral" template="/WEB-INF/views/user/userDtlGeneral.jsp" />
+    <!-- Health Alerts 탭 -->
+    <definition name="user/userDtlHealthAlerts" template="/WEB-INF/views/user/userDtlHealthAlerts.jsp" />
+    <!-- Service Requests 탭 -->
+    <definition name="user/userDtlServiceRequests" template="/WEB-INF/views/user/userDtlServiceRequests.jsp" />
+    <!-- Input Checkup Data 탭
+    <definition name="user/userDtlInputCheckupData" template="/WEB-INF/views/user/userDtlInputCheckupData.jsp" />
+    Checkup Results 탭
+    <definition name="user/userDtlCheckupResults" template="/WEB-INF/views/user/userDtlCheckupResults.jsp" />
+    -->
+
+    <definition name="user/resetPwStartPopup" template="/WEB-INF/views/user/resetPwStartPopup.jsp"/>
+    <definition name="user/resetPwConfirmPopup" template="/WEB-INF/views/user/resetPwConfirmPopup.jsp"/>
+    <definition name="user/checkPwStartPopup" template="/WEB-INF/views/user/checkPwStartPopup.jsp"/>
+    <definition name="user/checkPwConfirmPopup" template="/WEB-INF/views/user/checkPwConfirmPopup.jsp"/>
+
     <!-- 대시보드 페이지 body 설정 -->
     <definition name="login/loginForm" extends=".loginForm">
         <put-attribute name="body" value="/WEB-INF/views/login/loginForm.jsp" />

@@ -1,10 +1,15 @@
 package com.moadata.bdms.user.repository;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.moadata.bdms.model.dto.MyResetPwDTO;
+import com.moadata.bdms.model.dto.UserDtlGeneralVO;
+import com.moadata.bdms.model.dto.UserSearchDTO;
+import com.moadata.bdms.model.dto.UserUpdateDTO;
 import com.moadata.bdms.model.vo.CheckupVO;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +23,16 @@ import com.moadata.bdms.model.vo.UserVO;
 @Repository("userDao")
 @SuppressWarnings("unchecked")
 public class UserDao extends BaseAbstractDao {
+	public List<UserSearchDTO> selectUserSearch(UserSearchDTO userSearchDTO) {
+		List<UserSearchDTO> list = selectList("user.selectUserSearch", userSearchDTO);
+
+		if(list.size() > 0) {
+			list.get(0).setCnt((Integer)selectOne("user.selectUserSearchCnt", userSearchDTO));
+		}
+
+		return list;
+	}
+
 	public List<UserVO> selectUserList(UserVO user) {
 		List<UserVO> list = selectList("user.selectUserList", user);
 		if(list.size() > 0) {
@@ -25,8 +40,38 @@ public class UserDao extends BaseAbstractDao {
 		}
 		return list;
 	}
-	
-	public UserVO selectUserInfo(String userId) {
+
+    public UserDtlGeneralVO selectUserDtlGeneral(String reqId) {
+		return (UserDtlGeneralVO) selectOne("user.selectUserDtlGeneral", reqId);
+    }
+
+	public int updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO) {
+		return update("user.updateUserResetPwByAdmin", myResetPwDTO);
+	}
+
+
+	public int updateUserGeneral(UserUpdateDTO userUpdateDTO) {
+		return update("user.updateUserGeneral", userUpdateDTO);
+	}
+
+	public List<UserSearchDTO> selectAllInChargeNm() {
+		return selectList("user.selectAllInChargeNm");
+	}
+
+//	public List<String> selectHigherInChargeNm(String grpLv) {
+//		return selectList("user.selectHigherInChargeNm", grpLv);
+//	}
+
+	public int updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
+		return update("user.updateUserInChargeIdByNm", userUpdateDTO);
+	}
+
+	public int insertUserBody(UserUpdateDTO userUpdateDTO) {
+		return insert("user.insertUserBody", userUpdateDTO);
+	}
+
+
+    public UserVO selectUserInfo(String userId) {
 		return (UserVO) selectOne("user.selectUserInfo", userId);
 	}
 	
