@@ -31,8 +31,8 @@
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/grid.locale-kr.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/jquery.jqgrid.min.js"></script>
     <script src="${contextPath}/resources/js/grid/pager.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="${contextPath}/resources/js/moment.min.js"></script>
+    <script src="${contextPath}/resources/js/jquery.cookie.min.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jquery_confirm/jquery_confirm.js"></script><!-- Confirm -->
     <script src="${contextPath}/resources/bootstrap/js/jquery.serialize-object.js"></script><!-- Confirm -->
 <style>

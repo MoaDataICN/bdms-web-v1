@@ -8,9 +8,8 @@
     <title>Welcome, I am the BDMS administrator.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Noto+Sans+KR:wght@100..900&display=swap"
-            rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Noto+Sans+KR:wght@100..900&display=swap"
+          rel="stylesheet">
 
     <!-- icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -30,9 +29,9 @@
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/grid.locale-kr.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/jquery.jqgrid.min.js"></script>
     <script src="${contextPath}/resources/js/grid/pager.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="${contextPath}/resources/js/moment.min.js"></script>
+    <script src="${contextPath}/resources/js/jquery-3.4.1.min.js"></script>
+    <script src="${contextPath}/resources/js/jquery.cookie.min.js"></script>
     <script src="${contextPath}/resources/bootstrap/js/plugins/jquery_confirm/jquery_confirm.js"></script><!-- Confirm -->
     <script src="${contextPath}/resources/bootstrap/js/jquery.serialize-object.js"></script><!-- Confirm -->
 

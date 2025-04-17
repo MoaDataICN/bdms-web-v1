@@ -6,11 +6,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
-<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
-<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<script src="/resources/js/jquery-ui.js"></script>
+<script src="/resources/js/dropzone-min.js"></script>
 
 <link rel="stylesheet" href="/resources/css/dropzone.css" type="text/css" />
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/css/jquery-ui.css">
 <link rel="stylesheet" href="/resources/css/bdms_common.css">
 <link rel="stylesheet" href="/resources/css/bdms_style.css">
 <link rel="stylesheet" href="/resources/css/bdms_color.css">

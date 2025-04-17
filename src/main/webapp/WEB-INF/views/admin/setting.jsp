@@ -6,9 +6,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
-<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-
+<script src="/resources/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/css/jquery-ui.css">
 <link rel="stylesheet" href="/resources/css/bdms_common.css">
 <link rel="stylesheet" href="/resources/css/bdms_style.css">
 <link rel="stylesheet" href="/resources/css/bdms_color.css">

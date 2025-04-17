@@ -28,7 +28,7 @@
 	<script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/grid.locale-kr.js"></script>
 	<script src="${contextPath}/resources/bootstrap/js/plugins/jqGrid/jquery.jqgrid.min.js"></script>
 	<script src="${contextPath}/resources/js/grid/pager.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
+	<script src="${contextPath}/resources/js/moment.min.js"></script>
 </head>
 <style>
 	#wrapper_popup div[id ^= 'modal-layer'] {width:100%;min-height:400px;left:40%;margin:10px;max-width:500px;position:absolute; padding:20px 30px; background:#fff; z-index:100000;border-radius:5px;overflow:auto;display:none}
