@@ -766,12 +766,12 @@
         })
         .catch(error => {
             $.alert({
-                title: '오류',
+                title: 'Error',
                 content: '탭 내용을 불러오는데 실패했습니다.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
-                    확인: {
+                    OK: {
                         btnClass: 'btn-red'
                     }
                 }
@@ -892,12 +892,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
     .then(({ success, message }) => {
         if (success) {
             $.confirm({
-                title: '성공',
-                content: '비밀번호가 성공적으로 초기화되었습니다.',
+                title: 'Success',
+                content: 'The password has been successfully reset.',
                 type: 'green',
                 typeAnimated: true,
                 buttons: {
-                    확인: {
+                    OK: {
                         btnClass: 'btn-green',
                         action: function(){
                             // 확인 눌렀을 때 실행할 동작 (필요 시)
@@ -910,12 +910,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
             $(".reset-pw-popup-container").empty();
         } else {
             $.confirm({
-                title: '오류',
-                content: message || '비밀번호 초기화에 실패했습니다.',
+                title: 'Error',
+                content: message || 'Failed to reset the password.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
-                    확인: {
+                    OK: {
                         btnClass: 'btn-red',
                         action: function(){}
                     }
@@ -925,12 +925,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
     })
     .catch(error => {
         $.confirm({
-            title: '오류',
-            content: message || '비밀번호 초기화 중 오류가 발생했습니다.',
+            title: 'Error',
+            content: message || 'An error occurred during password reset.',
             type: 'red',
             typeAnimated: true,
             buttons: {
-                확인: {
+                OK: {
                     btnClass: 'btn-red',
                     action: function(){}
                 }
@@ -1176,12 +1176,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
                     break;
                 case "fail":
                     $.confirm({
-                        title: '오류',
-                        content: message || '비밀번호가 일치하지 않습니다.',
+                        title: 'Error',
+                        content: message || 'The password does not match.',
                         type: 'red',
                         typeAnimated: true,
                         buttons: {
-                            확인: {
+                            OK: {
                                 btnClass: 'btn-red',
                                 action: function(){}
                             }
@@ -1190,12 +1190,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
                     break;
                 default:
                     $.confirm({
-                        title: '오류',
-                        content: message || '서버 오류가 발생했습니다.',
+                        title: 'Error',
+                        content: message || 'A server error has occurred.',
                         type: 'red',
                         typeAnimated: true,
                         buttons: {
-                            확인: {
+                            OK: {
                                 btnClass: 'btn-red',
                                 action: function(){}
                             }
@@ -1205,12 +1205,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
         })
         .catch(error => {
             $.confirm({
-                title: '오류',
-                content: message || '네트워크 오류가 발생했습니다.',
+                title: 'Error',
+                content: message || 'A network error has occurred.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
-                    확인: {
+                    OK: {
                         btnClass: 'btn-red',
                         action: function(){}
                     }
@@ -1240,12 +1240,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
             console.log("✅ 사용자 정보 수정 결과 : " + response);
 
             $.confirm({
-                title: '성공',
-                content: '사용자 정보가 수정되었습니다.',
+                title: 'Success',
+                content: 'User information has been successfully updated.',
                 type: 'green',
                 typeAnimated: true,
                 buttons: {
-                    확인: {
+                    OK: {
                         btnClass: 'btn-green',
                         action: function(){
                             // 확인 눌렀을 때 실행할 동작 (필요 시)
@@ -1262,12 +1262,12 @@ $(document).on("click", "#resetApprovalBtn", function () {
         })
         .catch(error => {
             $.confirm({
-                title: '오류',
-                content: message || '사용자 정보 수정 중 오류가 발생했습니다.',
+                title: 'Error',
+                content: message || 'An error occurred while updating user information.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
-                    확인: {
+                    OK: {
                         btnClass: 'btn-red',
                         action: function(){
                             console.error(error);
@@ -1568,12 +1568,12 @@ $(document).on('click', '.second-tap-btn', function () {
     })
     .catch(error => {
         $.confirm({
-            title: '오류',
-            content: message || '탭 내용을 불러오는데 실패했습니다.',
+            title: 'Error',
+            content: message || 'Failed to load tab content.',
             type: 'red',
             typeAnimated: true,
             buttons: {
-                확인: {
+                OK: {
                     btnClass: 'btn-red',
                     action: function(){
                         console.error(error);
@@ -1971,11 +1971,11 @@ $(document).on('click', '.sex-btn', function() {
     $(document).on('click', '.temp-block-wrap button:not(.data-select-btn)', function () {
         $.confirm({
             title: '알림',
-            content: '기능 준비 중입니다.',
+            content: 'This feature is under preparation.',
             type: 'blue',
             typeAnimated: true,
             buttons: {
-                확인: {
+                OK: {
                     btnClass: 'btn-blue',
                     action: function(){
                         // 확인 눌렀을 때 실행할 동작 (필요 시)
