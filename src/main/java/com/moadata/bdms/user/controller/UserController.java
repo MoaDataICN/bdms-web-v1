@@ -1135,21 +1135,21 @@ public class UserController extends BaseController {
 		UserVO vo = (UserVO) getRequestAttribute("user");
 		try {
 
-			    checkup.setAdminId(vo.getUserId());
-			    userService.insertCheckUp(checkup);
+			checkup.setAdminId(vo.getUserId());
+			userService.insertCheckUp(checkup);
 
-				//이력 추가.
-				Map<String,String> param = new HashMap<String,String>();
-				param.put("hisType", "HT16");
-				param.put("batchId", "");
-				param.put("prssType", "HS06");
-				param.put("hisEndDt", "");
-				param.put("prssUsrId", vo.getUserId());
-				String tempMsg = "Administrator " + vo.getUserId() + " - " + "{0}" + " was a success";
-				param.put("msgEtc", tempMsg);
+			//이력 추가.
+			Map<String,String> param = new HashMap<String,String>();
+			param.put("hisType", "HT16");
+			param.put("batchId", "");
+			param.put("prssType", "HS06");
+			param.put("hisEndDt", "");
+			param.put("prssUsrId", vo.getUserId());
+			String tempMsg = "Administrator " + vo.getUserId() + " - " + "{0}" + " was a success";
+			param.put("msgEtc", tempMsg);
 
-				//historyInfoService.commInsertHistory(param,"");
-				message = "Added.";
+			//historyInfoService.commInsertHistory(param,"");
+			message = "Added.";
 
 		} catch(Exception e) {
 			LOGGER.error(e.toString());

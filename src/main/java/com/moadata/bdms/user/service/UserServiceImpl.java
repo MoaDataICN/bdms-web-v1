@@ -469,6 +469,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void insertCheckUp(CheckupVO checkupVO) throws Exception {
+		if(checkupVO.getBrthDt() != null && !checkupVO.getBrthDt().isEmpty()) {
+			checkupVO.setBrthDt(EncryptUtil.encryptText(checkupVO.getBrthDt()));
+		}
+
 		userDao.insertCheckUp(checkupVO);
 	}
 }

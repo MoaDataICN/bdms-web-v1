@@ -260,7 +260,8 @@ public class UserDao extends BaseAbstractDao {
 		}
 
 		checkupVO.setReportId(reportId);
-		update("user.updateWlkMy", checkupVO);
+		// 입력창 필드 해결 이후 추가 예정
+//		update("user.updateWlkMy", checkupVO);
 		insert("user.insertChckReport", checkupVO);
 		insert("user.insertCheckUp", checkUpList);
 		insert("user.insertMyBody", checkupVO);
