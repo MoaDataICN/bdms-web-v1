@@ -111,7 +111,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Input Checkup Type"
-                                   oninput="limitLength(this, 30);" id="chckType">
+                                   oninput="limitLength(this, 30);" id="checkUp_chckType">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -125,7 +125,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Input Checkup result"
-                                   oninput="limitLength(this, 30);" id="chckResult">
+                                   oninput="limitLength(this, 30);" id="checkUp_chckResult">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -183,7 +183,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Health Checkup Date"
-                                   oninput="limitLength(this, 30);" id="chckDt">
+                                   oninput="limitLength(this, 30);" id="checkUp_chckDt">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -197,7 +197,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Date Of Birth"
-                                   oninput="limitLength(this, 30);" id="brthDt">
+                                   oninput="limitLength(this, 30);" id="checkUp_brthDt">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -214,7 +214,7 @@
                             3. Gender
                         </div>
                         <div class="gender-btn-group">
-                            <input type="hidden" id="gender">
+                            <input type="hidden" id="checkUp_gender">
                             <!--<button type="button" class="sex-btn active" >Male</button>-->
                             <button type="button" class="sex-btn">Male</button>
                             <button type="button" class="sex-btn-f">Female</button>
@@ -228,7 +228,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="cm"
-                                   oninput="limitLength(this, 30);" id="hght">
+                                   oninput="limitLength(this, 30);" id="checkUp_hght">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -246,7 +246,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="kg"
-                                   oninput="limitLength(this, 30);" id="wght">
+                                   oninput="limitLength(this, 30);" id="checkUp_wght">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -260,7 +260,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="cm"
-                                   oninput="limitLength(this, 30);" id="wst">
+                                   oninput="limitLength(this, 30);" id="checkUp_wst">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -278,7 +278,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mmHg"
-                                   oninput="limitLength(this, 30);" id="sbp">
+                                   oninput="limitLength(this, 30);" id="checkUp_sbp">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -292,7 +292,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mmHg"
-                                   oninput="limitLength(this, 30);" id="dbp">
+                                   oninput="limitLength(this, 30);" id="checkUp_dbp">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -310,7 +310,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mmHg"
-                                   oninput="limitLength(this, 30);" id="fbs">
+                                   oninput="limitLength(this, 30);" id="checkUp_fbs">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -324,7 +324,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="%"
-                                   oninput="limitLength(this, 30);" id="hba1c">
+                                   oninput="limitLength(this, 30);" id="checkUp_hba1c">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -342,7 +342,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="tc">
+                                   oninput="limitLength(this, 30);" id="checkUp_tc">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -356,7 +356,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="hdl">
+                                   oninput="limitLength(this, 30);" id="checkUp_hdl">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -374,7 +374,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="ldl">
+                                   oninput="limitLength(this, 30);" id="checkUp_ldl">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -388,7 +388,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="trgly">
+                                   oninput="limitLength(this, 30);" id="checkUp_trgly">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -406,7 +406,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="sc">
+                                   oninput="limitLength(this, 30);" id="checkUp_sc">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -420,7 +420,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="ml"
-                                   oninput="limitLength(this, 30);" id="gfr">
+                                   oninput="limitLength(this, 30);" id="checkUp_gfr">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -438,7 +438,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="urAcd">
+                                   oninput="limitLength(this, 30);" id="checkUp_urAcd">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -452,7 +452,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="bun">
+                                   oninput="limitLength(this, 30);" id="checkUp_bun">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -470,7 +470,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="alt">
+                                   oninput="limitLength(this, 30);" id="checkUp_alt">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -484,7 +484,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="ast">
+                                   oninput="limitLength(this, 30);" id="checkUp_ast">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -502,7 +502,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="gtp">
+                                   oninput="limitLength(this, 30);" id="checkUp_gtp">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -516,7 +516,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="g/dL"
-                                   oninput="limitLength(this, 30);" id="tprtn">
+                                   oninput="limitLength(this, 30);" id="checkUp_tprtn">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -534,7 +534,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="g/dL"
-                                   oninput="limitLength(this, 30);" id="blrbn">
+                                   oninput="limitLength(this, 30);" id="checkUp_blrbn">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -548,7 +548,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="alp">
+                                   oninput="limitLength(this, 30);" id="checkUp_alp">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -562,7 +562,7 @@
                     25. Comment
                 </div>
                 <div class="wrap-form">
-                    <textarea class="input-area" id="comment" placeholder="Input checkup comment。"></textarea>
+                    <textarea class="input-area" id="checkUp_comment" placeholder="Input checkup comment。"></textarea>
                 </div>
             </div>
         </div>
@@ -643,37 +643,37 @@
                 if (tlen == vlen){
                     for(var k = 0; k < vlen; k++){
                         var resval = responseText.resultList[0][k]+"";
-                        if (resval.trim().indexOf("hght") >= 0){$("#hght").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("wght") >= 0){$("#wght").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("wst")>= 0){$("#wst").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("sbp")>= 0){$("#sbp").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("dbp")>= 0){$("#dbp").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("fbs") >= 0){$("#fbs").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("hba1c")>= 0){$("#hba1c").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("tc") >= 0){$("#tc").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("hdl") >= 0){$("#hdl").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("ldl")>= 0){$("#ldl").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("trgly")>= 0){$("#trgly").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("sc")>= 0){$("#sc").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("gfr") >= 0){$("#gfr").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("urAcd")>= 0){$("#urAcd").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("bun")>= 0){$("#bun").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("alt") >= 0){$("#alt").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("ast")>= 0){$("#ast").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("gtp") >= 0){$("#gtp").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("tprtn")>= 0){$("#tprtn").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("blrbn")>= 0){$("#blrbn").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("alp")>= 0){$("#alp").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("comment")>= 0){$("#comment").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("hght") >= 0){$("#checkUp_hght").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("wght") >= 0){$("#checkUp_wght").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("wst")>= 0){$("#checkUp_wst").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("sbp")>= 0){$("#checkUp_sbp").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("dbp")>= 0){$("#checkUp_dbp").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("fbs") >= 0){$("#checkUp_fbs").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("hba1c")>= 0){$("#checkUp_hba1c").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("tc") >= 0){$("#checkUp_tc").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("hdl") >= 0){$("#checkUp_hdl").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("ldl")>= 0){$("#checkUp_ldl").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("trgly")>= 0){$("#checkUp_trgly").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("sc")>= 0){$("#checkUp_sc").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("gfr") >= 0){$("#checkUp_gfr").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("urAcd")>= 0){$("#checkUp_urAcd").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("bun")>= 0){$("#checkUp_bun").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("alt") >= 0){$("#checkUp_alt").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("ast")>= 0){$("#checkUp_ast").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("gtp") >= 0){$("#checkUp_gtp").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("tprtn")>= 0){$("#checkUp_tprtn").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("blrbn")>= 0){$("#checkUp_blrbn").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("alp")>= 0){$("#checkUp_alp").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("comment")>= 0){$("#checkUp_comment").val(responseText.resultList[1][k])}
                         //기본정보
-                        if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#chckType").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("Checkup result")>= 0){$("#chckResult").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#checkUp_chckType").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("Checkup result")>= 0){$("#checkUp_chckResult").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Checkup center")>= 0){$("#chckCt").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Doctor")>= 0){$("#chckDctr").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#chckDt").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("Date Of Birth")>= 0){$("#brthDt").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#checkUp_chckDt").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("Date Of Birth")>= 0){$("#checkUp_brthDt").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Gender")>= 0){
-                            $("#gender").val(responseText.resultList[1][k])
+                            $("#checkUp_gender").val(responseText.resultList[1][k])
                             if (responseText.resultList[1][k] == 'M'){
                                 $('.sex-btn-f').removeClass('active');
                                 $('.sex-btn').addClass('active');
@@ -705,58 +705,58 @@
         }
     });
 
-    function fnClear() {
-        $("#chckType").val(''); $("#chckResult").val(''); $("#chckDt").val(''); $("#chckDctr").val('');
-        $("#brthDt").val(''); $("#gender").val(''); $('#chckDt').val(''); $('#brthDt').val(''); $('#chckCt').val('');
-        $('#hght').val(''); $('#wght').val(''); $('#wst').val(''); $('#sbp').val(''); $('#dbp').val('');
-        $('#fbs').val(''); $('#hba1c').val(''); $('#tc').val(''); $('#hdl').val(''); $('#ldl').val('');
-        $('#trgly').val(''); $('#sc').val(''); $('#gfr').val(''); $('#urAcd').val(''); $('#bun').val('');
-        $('#alt').val(''); $('#ast').val(''); $('#gtp').val(''); $('#tprtn').val(''); $('#blrbn').val('');
-        $('#alp').val(''); $('#comment').val('');
+    function checkUp_fnClear() {
+        $("#checkUp_chckType").val(''); $("#checkUp_chckResult").val(''); $("#checkUp_chckDt").val(''); $("#chckDctr").val('');
+        $("#checkUp_brthDt").val(''); $("#checkUp_gender").val(''); $('#checkUp_chckDt').val(''); $('#checkUp_brthDt').val(''); $('#chckCt').val('');
+        $('#checkUp_hght').val(''); $('#checkUp_wght').val(''); $('#checkUp_wst').val(''); $('#checkUp_sbp').val(''); $('#checkUp_dbp').val('');
+        $('#checkUp_fbs').val(''); $('#checkUp_hba1c').val(''); $('#checkUp_tc').val(''); $('#checkUp_hdl').val(''); $('#checkUp_ldl').val('');
+        $('#checkUp_trgly').val(''); $('#checkUp_sc').val(''); $('#checkUp_gfr').val(''); $('#checkUp_urAcd').val(''); $('#checkUp_bun').val('');
+        $('#checkUp_alt').val(''); $('#checkUp_ast').val(''); $('#checkUp_gtp').val(''); $('#checkUp_tprtn').val(''); $('#checkUp_blrbn').val('');
+        $('#checkUp_alp').val(''); $('#checkUp_comment').val('');
         $('.sex-btn-f').removeClass('active');
         $('.sex-btn').removeClass('active');
     }
 
-    function setAddParam() {
+    function checkUp_setAddParam() {
         return {
             userId : 'user01',
-            chckType : $("#chckType").val(),
-            chckResult : $("#chckResult").val(),
-            chckCt : $("#chckDt").val(),
+            chckType : $("#checkUp_chckType").val(),
+            chckResult : $("#checkUp_chckResult").val(),
+            chckCt : $("#checkUp_chckDt").val(),
             chckDctr : $("#chckDct").val(),
-            chckDt : $("#chckDt").val(),
-            brthDt : $("#brthDt").val(),
-            gender : $("#gender").val(),
-            chckDt : $('#chckDt').val(),
-            brthDt : $('#brthDt').val(),
-            gender : $('#gender').val(),
-            hght   : $('#hght').val(),
-            wght   : $('#wght').val(),
-            wst    : $('#wst').val(),
-            sbp    : $('#sbp').val(),
-            dbp    : $('#dbp').val(),
-            fbs    : $('#fbs').val(),
-            hba1c  : $('#hba1c').val(),
-            tc     : $('#tc').val(),
-            hdl    : $('#hdl').val(),
-            ldl    : $('#ldl').val(),
-            trgly  : $('#trgly').val(),
-            sc     : $('#sc').val(),
-            gfr    : $('#gfr').val(),
-            urAcd  : $('#urAcd').val(),
-            bun    : $('#bun').val(),
-            alt    : $('#alt').val(),
-            ast    : $('#ast').val(),
-            gtp    : $('#gtp').val(),
-            tprtn  : $('#tprtn').val(),
-            blrbn  : $('#blrbn').val(),
-            alp    : $('#alp').val(),
-            comment: $('#comment').val()
+            chckDt : $("#checkUp_chckDt").val(),
+            brthDt : $("#checkUp_brthDt").val(),
+            gender : $("#checkUp_gender").val(),
+            chckDt : $('#checkUp_chckDt').val(),
+            brthDt : $('#checkUp_brthDt').val(),
+            gender : $('#checkUp_gender').val(),
+            hght   : $('#checkUp_hght').val(),
+            wght   : $('#checkUp_wght').val(),
+            wst    : $('#checkUp_wst').val(),
+            sbp    : $('#checkUp_sbp').val(),
+            dbp    : $('#checkUp_dbp').val(),
+            fbs    : $('#checkUp_fbs').val(),
+            hba1c  : $('#checkUp_hba1c').val(),
+            tc     : $('#checkUp_tc').val(),
+            hdl    : $('#checkUp_hdl').val(),
+            ldl    : $('#checkUp_ldl').val(),
+            trgly  : $('#checkUp_trgly').val(),
+            sc     : $('#checkUp_sc').val(),
+            gfr    : $('#checkUp_gfr').val(),
+            urAcd  : $('#checkUp_urAcd').val(),
+            bun    : $('#checkUp_bun').val(),
+            alt    : $('#checkUp_alt').val(),
+            ast    : $('#checkUp_ast').val(),
+            gtp    : $('#checkUp_gtp').val(),
+            tprtn  : $('#checkUp_tprtn').val(),
+            blrbn  : $('#checkUp_blrbn').val(),
+            alp    : $('#checkUp_alp').val(),
+            comment: $('#checkUp_comment').val()
         };
     }
 
     $(document).ready(function() {
-        fnClear();
+        checkUp_fnClear();
     })
 
     function validation(){
@@ -764,7 +764,7 @@
     }
 
     $(document).on('click','#checkupreset', function(){
-        fnClear();
+        checkUp_fnClear();
     });
 
     $(document).on('click','#checkupsave', function(){
@@ -777,14 +777,14 @@
                         $.ajax({
                             type: 'POST',
                             url: '${contextPath}/user/checkupAdd',
-                            data: setAddParam(),
+                            data: checkUp_setAddParam(),
                             dataType: 'json',
                             success: function(data) {
                                 if(data.isError){
                                     $.alert(data.message);
                                     console.log('ERROR', data.message);
                                 }else{
-                                    fnClear();
+                                    checkUp_fnClear();
                                     $.alert(data.message);
                                     fnSearch();
                                 }
@@ -828,11 +828,11 @@
     $('.sex-btn-f').click(function(){
         if($(this).hasClass('active')){
             $(this).removeClass('active');
-            $("#gender").val('M');
+            $("#checkUp_gender").val('M');
             $('.sex-btn').addClass('active');
         } else {
             $(this).addClass('active');
-            $("#gender").val('F');
+            $("#checkUp_gender").val('F');
             $('.sex-btn').removeClass('active');
         }
     })
@@ -840,11 +840,11 @@
     $('.sex-btn').click(function(){
         if($(this).hasClass('active')){
             $(this).removeClass('active');
-            $("#gender").val('F');
+            $("#checkUp_gender").val('F');
             $('.sex-btn-f').addClass('active');
         } else {
             $(this).addClass('active');
-            $("#gender").val('M');
+            $("#checkUp_gender").val('M');
             $('.sex-btn-f').removeClass('active');
         }
     })

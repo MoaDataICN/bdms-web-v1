@@ -56,13 +56,13 @@
         <a href="#">
             <img src="/resources/images/arrow-right-gray.svg" class="icon14">
             <span>
-                <spring:message code="common.menu.user_request"/>
+                <spring:message code="common.menu.userRequest"/>
             </span>
         </a>
     </div>
     <!-- 대시보드 타이틀 -->
     <div class="second-title">
-        <spring:message code="common.menu.user_request"/>
+        <spring:message code="common.menu.userRequest"/>
     </div>
 
     <!-- 주요 콘텐츠 시작 -->
@@ -322,7 +322,7 @@
                     return "\"" + $(this).data('filter') + "\"";
                 })
                 .get()
-                .join(',') : "'N','A','T'"
+                .join(',') : "'N','A','T'",
         };
     }
 

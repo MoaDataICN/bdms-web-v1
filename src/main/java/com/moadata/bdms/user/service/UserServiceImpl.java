@@ -1,11 +1,22 @@
 package com.moadata.bdms.user.service;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.*;
 import javax.annotation.Resource;
+
+import com.moadata.bdms.common.util.encrypt.EncryptUtil;
+import com.moadata.bdms.model.dto.MyResetPwDTO;
+import com.moadata.bdms.model.dto.UserDtlGeneralVO;
+import com.moadata.bdms.model.dto.UserSearchDTO;
+import com.moadata.bdms.model.dto.UserUpdateDTO;
+import com.moadata.bdms.model.vo.*;
 
 import com.moadata.bdms.model.vo.CheckupVO;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +25,6 @@ import org.springframework.util.Assert;
 //import com.moadata.hsmng.common.annotation.PrivacySrch;
 //import com.moadata.hsmng.dash.repository.DashDao;
 //import com.moadata.hsmng.history.service.HistoryInfoService;
-import com.moadata.bdms.model.vo.MenuVO;
-import com.moadata.bdms.model.vo.UserVO;
 import com.moadata.bdms.support.idgen.service.IdGenService;
 import com.moadata.bdms.support.menu.service.MenuService;
 import com.moadata.bdms.user.repository.UserDao;
@@ -49,7 +58,163 @@ public class UserServiceImpl implements UserService {
 	
 //	@Resource(name = "historyInfoService")
 //	private HistoryInfoService historyInfoService;
-	
+
+	public List<UserSearchDTO> selectUserSearch(UserSearchDTO userSearchDTO) {
+		try {
+			if(userSearchDTO.getMobile() != null && !userSearchDTO.getMobile().isEmpty()) {
+				userSearchDTO.setMobile(EncryptUtil.encryptText(userSearchDTO.getMobile()));
+			}
+
+			if(userSearchDTO.getBrthDt() != null && !userSearchDTO.getBrthDt().isEmpty()) {
+				userSearchDTO.setBrthDt(EncryptUtil.encryptText(userSearchDTO.getBrthDt()));
+			}
+
+			if(userSearchDTO.getUserNm() != null && !userSearchDTO.getUserNm().isEmpty()) {
+				userSearchDTO.setUserNm(EncryptUtil.encryptText(userSearchDTO.getUserNm()));
+			}
+
+//			if(userSearchDTO.getInChargeNm() != null && !userSearchDTO.getInChargeNm().isEmpty()) {
+//				userSearchDTO.setInChargeNm(EncryptUtil.encryptText(userSearchDTO.getInChargeNm()));
+//			}
+
+			List<UserSearchDTO> userSearchList = userDao.selectUserSearch(userSearchDTO);
+
+			if(userSearchList.size() > 0) {
+				for(UserSearchDTO userSearch : userSearchList) {
+					userSearch.setUserNm(EncryptUtil.decryptText(userSearch.getUserNm()));
+					userSearch.setBrthDt(EncryptUtil.decryptText(userSearch.getBrthDt()));
+					userSearch.setMobile(EncryptUtil.decryptText(userSearch.getMobile()));
+//					userSearch.setInChargeNm(EncryptUtil.decryptText(userSearch.getInChargeNm()));
+				}
+			}
+
+			return userSearchList;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public UserDtlGeneralVO selectUserDtlGeneral(String reqId) {
+		try {
+			UserDtlGeneralVO userDtl = userDao.selectUserDtlGeneral(reqId);
+
+			if (userDtl.getUserNm() != null && !userDtl.getUserNm().isEmpty()) {
+				userDtl.setUserNm(EncryptUtil.decryptText(userDtl.getUserNm()));
+			}
+
+			if (userDtl.getMobile() != null && !userDtl.getMobile().isEmpty()) {
+				userDtl.setMobile(EncryptUtil.decryptText(userDtl.getMobile()));
+			}
+
+//			if (userDtl.getInChargeNm() != null && !userDtl.getInChargeNm().isEmpty()) {
+//				userDtl.setInChargeNm(EncryptUtil.decryptText(userDtl.getInChargeNm()));
+//			}
+
+			if (userDtl.getBrthDt() != null && !userDtl.getBrthDt().isEmpty()) {
+				userDtl.setBrthDt(EncryptUtil.decryptText(userDtl.getBrthDt()));
+			}
+
+			System.out.println("가입일(registDt): " + userDtl.getRegistDt());
+			System.out.println("최근접속일(lastAccess): " + userDtl.getLastAccess());
+
+			return userDtl;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public boolean updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO) {
+		int updatedRows = userDao.updateUserResetPwByAdmin(myResetPwDTO);
+		return updatedRows > 0;
+	}
+
+	@Override
+	public boolean updateUserGeneral(UserUpdateDTO userUpdateDTO) {
+		try {
+			// 암호화
+			if (userUpdateDTO.getMobile() != null && !userUpdateDTO.getMobile().isEmpty()) {
+				userUpdateDTO.setMobile(EncryptUtil.encryptText(userUpdateDTO.getMobile()));
+			}
+
+//			if (userUpdateDTO.getInChargeNm() != null && !userUpdateDTO.getInChargeNm().isEmpty()) {
+//				userUpdateDTO.setInChargeNm(EncryptUtil.encryptText(userUpdateDTO.getInChargeNm()));
+//			}
+
+			if (userUpdateDTO.getBrthDt() != null && !userUpdateDTO.getBrthDt().isEmpty()) {
+				userUpdateDTO.setBrthDt(EncryptUtil.encryptText(userUpdateDTO.getBrthDt()));
+			}
+
+			// UPT_ID도 암호화 추가할 것
+
+			System.out.println(userUpdateDTO.getGrpTp());
+			System.out.println(userUpdateDTO.getGrpTp());
+			System.out.println(userUpdateDTO.getGrpTp());
+			System.out.println(userUpdateDTO.getGrpTp());
+
+			int updatedRows = userDao.updateUserGeneral(userUpdateDTO);
+			return updatedRows > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<UserSearchDTO> selectAllInChargeNm() {
+		try {
+			List<UserSearchDTO> inChargeList = userDao.selectAllInChargeNm();
+			return inChargeList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
+
+//	@Override
+//	public List<String> selectHigherInChargeNm(String grpLv) {
+//		try {
+//			if (grpLv != null && !grpLv.isEmpty()) {
+//				return userDao.selectHigherInChargeNm(grpLv);
+//			} else {
+//				return Collections.emptyList();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
+
+	@Override
+	public boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
+		try {
+//			if (userUpdateDTO.getInChargeNm() != null && !userUpdateDTO.getInChargeNm().isEmpty()) {
+//				userUpdateDTO.setInChargeNm(EncryptUtil.encryptText(userUpdateDTO.getInChargeNm()));
+//			}
+			int updatedRows = userDao.updateUserInChargeIdByNm(userUpdateDTO);
+
+			return updatedRows > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean insertUserBody(UserUpdateDTO userUpdateDTO) {
+		try {
+			int insertedRows = userDao.insertUserBody(userUpdateDTO);
+			return insertedRows > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	@Override
 	//@PrivacySrch("userNm,phoneNo")
 	public List<UserVO> selectUserList(UserVO user) {
