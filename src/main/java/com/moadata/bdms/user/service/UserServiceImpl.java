@@ -116,9 +116,6 @@ public class UserServiceImpl implements UserService {
 				userDtl.setBrthDt(EncryptUtil.decryptText(userDtl.getBrthDt()));
 			}
 
-			if (reqId != null && reqId.isEmpty()) {
-				userDtl.setReqId(EncryptUtil.decryptText(userDtl.getReqId()));
-			}
 			System.out.println("가입일(registDt): " + userDtl.getRegistDt());
 			System.out.println("최근접속일(lastAccess): " + userDtl.getLastAccess());
 
