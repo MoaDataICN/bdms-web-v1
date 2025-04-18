@@ -77,7 +77,7 @@
 </div>
 
 <!-- 입력폼 그룹 -->
-<div class="second-container mt-18px">
+<div class="second-container mt-18px" id="inputCheckup_dataFields">
     <div class="content-row">
         <div class="second-title02">
             Input Checkup Information

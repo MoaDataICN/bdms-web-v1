@@ -62,6 +62,15 @@
         pointer-events: auto; /* 꼭 있어야 클릭 가능 */
     }
 
+    .required-input {
+        border: 1px solid red !important;
+    }
+
+    .required-msg {
+        color: red;
+        font-size: 12px;
+        margin-left: 8px;
+    }
 </style>
 
 <main class="main">
@@ -171,7 +180,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 datePicker" id="brthDt" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" required>
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -1146,6 +1155,22 @@ $(document).on('click', '.second-tap-btn', function () {
             }).text().trim()
         };
 
+        if (!editedValues.brthDt) {
+            $('#general_brthDt')
+                .addClass('required-input');
+
+            $('#saveChangesBtn')
+                .removeClass('red-submit-btn')
+                .addClass('hold-submit-btn')
+                .prop("disabled", true);
+
+            return;
+        } else {
+            $('#general_brthDt')
+                .removeClass('required-input')
+                .addClass('required-input')
+        }
+
         let isChanged = Object.keys(editedValues).some(key => {
             let initialValue = userDtlGeneral[key] ? String(userDtlGeneral[key]).trim() : '';
             let currentValue = editedValues[key] || '';
@@ -1912,6 +1937,7 @@ function initInputCheckupDataTab() {
 
     $(document).off('click', '#checkupsave').on('click', '#checkupsave', function () {
 console.log(inputCheckup_setAddParam());
+
         $.confirm({
             title: '',
             content: 'Would you like to save an checkup data?',
@@ -1982,6 +2008,31 @@ $(document).on('click', '.sex-btn', function() {
         $('.sex-btn-f').removeClass('active');
     }
 });
+
+/* 실시간으로 모든 필드의 입력 값이 있으면 버튼을 바꿈
+$(document).on('click', '#inputCheckup_dataFields input', function() {
+    let isAllFilled = true;
+
+    $('#inputCheckup_dataFields input').each(function () {
+        if (!$(this).val()?.trim()) {
+            isAllFilled = false;
+            return false;
+        }
+    });
+
+    if (isAllFilled) {
+        $('#checkupsave')
+            .removeClass('gray-submit-btn')
+            .addClass('point-submit-btn')
+            .prop('disabled', false);
+    } else {
+        $('#checkupsave')
+            .removeClass('point-submit-btn')
+            .addClass('gray-submit-btn')
+            .prop('disabled', true);
+    }
+});
+*/
 
 </script>
 

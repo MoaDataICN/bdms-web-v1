@@ -17,6 +17,8 @@ import org.springframework.stereotype.Repository;
 import com.moadata.bdms.common.base.dao.BaseAbstractDao;
 import com.moadata.bdms.model.vo.UserVO;
 
+import static java.lang.Math.pow;
+
 /**
  * User Dao
  */
@@ -243,6 +245,13 @@ public class UserDao extends BaseAbstractDao {
 		tmpmap.put("msmt", checkupVO.getComment());
 		checkUpList.add(tmpmap);
 
+		if (checkupVO.getWght() != null && checkupVO.getHght() != null && isNumberic(checkupVO.getWght()) && isNumberic(checkupVO.getHght())) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "14000000"); //BMI 지수
+			tmpmap.put("msmt", Double.toString(Integer.parseInt(checkupVO.getWght()) / pow((Integer.parseInt(checkupVO.getHght()) / 100), 2)));
+			checkUpList.add(tmpmap);
+		}
+
 		reportId = (String)selectOne("user.selectMaxSeqReportItem");
 		for(int i=0; i < checkUpList.size(); i++) {
 			checkUpList.get(i).put("reportId", reportId);
@@ -251,9 +260,19 @@ public class UserDao extends BaseAbstractDao {
 		}
 
 		checkupVO.setReportId(reportId);
-		update("user.updateWlkMy", checkupVO);
+		// 입력창 필드 해결 이후 추가 예정
+//		update("user.updateWlkMy", checkupVO);
 		insert("user.insertChckReport", checkupVO);
 		insert("user.insertCheckUp", checkUpList);
 		insert("user.insertMyBody", checkupVO);
+	}
+
+	public boolean isNumberic(String str) {
+		try {
+			Double.parseDouble(str);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 }
