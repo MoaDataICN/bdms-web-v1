@@ -509,7 +509,7 @@ public class LoginController extends BaseController {
 		HttpSession session = request.getSession(false);
 		
 		if(session != null) {
-			session.setMaxInactiveInterval(120*60);
+			session.setMaxInactiveInterval(1800);
 		}
 	}
 	

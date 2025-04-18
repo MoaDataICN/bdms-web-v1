@@ -1,13 +1,68 @@
 @charset "UTF-8";
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@200..800&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 @font-face {
-    font-family: 'manrope';
-    src: url('../font/Manrope-VariableFont_wght.ttf') format('truetype');
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-ExtraLight.woff2') format('woff2'),
+        url('../fonts/Manrope-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-ExtraBold.woff2') format('woff2'),
+        url('../fonts/Manrope-ExtraBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-Bold.woff2') format('woff2'),
+        url('../fonts/Manrope-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-Light.woff2') format('woff2'),
+        url('../fonts/Manrope-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-Medium.woff2') format('woff2'),
+        url('../fonts/Manrope-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-Regular.woff2') format('woff2'),
+        url('../fonts/Manrope-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('../fonts/Manrope-SemiBold.woff2') format('woff2'),
+        url('../fonts/Manrope-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
 
 * {
     margin: 0;
@@ -540,6 +595,7 @@ label {
     position: relative;
     padding: 20px 32px;
     width: 100%;
+    overflow: hidden;
 }
 
 .board-title {
@@ -765,7 +821,7 @@ label {
     line-height: 16px;
     letter-spacing: -0.28px;
     /* white-space: nowrap;
-    overflow: hidden;
+    overflow: hidden;   
     text-overflow: ellipsis;
     max-width: 60%; */
 }
@@ -1518,11 +1574,6 @@ textarea {
     border-color: var(--point-color-01);
 }
 
-.dropdown-search.hold {
-    pointer-events: none;
-    background: var(--gray-17);
-}
-
 .dropdown-search span {
     display: flex;
     justify-content: center;
@@ -1605,11 +1656,6 @@ textarea {
     color: #272727;
     border-radius: 0.4rem;
     transition: all 300ms ease;
-}
-
-.dropdown-content a.hold {
-    pointer-events: none;
-    color: #ccc;
 }
 
 .badges .dropdown .dropdown-button {
@@ -1803,7 +1849,7 @@ textarea {
     text-transform: capitalize;
 }
 
-.gender-btn-group{
+.gender-btn-group {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -1827,7 +1873,7 @@ textarea {
     border-radius: 5px;
 }
 
-/* 팝업 박스 */
+/* ✅ 팝업 박스 */
 .customer-popup {
     position: fixed;
     top: 0;
@@ -1842,13 +1888,11 @@ textarea {
     transition: transform 0.3s ease-out;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     z-index: 1001;
 }
 
 .customer-popup.active {
     transform: translateX(0);
-    overflow-y: auto;
 }
 
 /* 팝업 헤더 */
@@ -2009,6 +2053,13 @@ textarea {
     position: absolute;
     right: 30px;
     top: 10px;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+    z-index: 9999;
+}
+
+.push-wrap.show {
+    transform: translateX(0);
 }
 
 .push-message {

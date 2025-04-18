@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="announcement">
+	<select id="selectMaxAnnId"  parameterType="String" resultType="String">
+		SELECT (CASE WHEN IFNULL(MAX(ANN_ID),0) = '0'
+						 then (CONCAT('AN' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD('1',5,'0'), '')))
+					 ELSE (CONCAT('AN' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD(SUBSTR(MAX(ANN_ID), 12, 5)+1, 5, '0'), '')))
+			END ) ANN_ID
+		FROM T_WLK_MNG_ANN
+		WHERE ANN_ID LIKE CONCAT('AN' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '%')
+	</select>
+
+	<insert id="insertAnnouncement" parameterType="announcementVO">
+		INSERT INTO T_WLK_MNG_ANN(ANN_ID, SND_DT, TG_TP, GRP_NM, RCPT, TITLE, CONT, SND_ID, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID)
+		VALUES (#{annId}, SYSDATE(), #{tgTp}, #{grpNm}, #{rcpt}, #{title}, #{cont}, #{sndId}, SYSDATE(), #{userId}, SYSDATE(), #{userId})
+	</insert>
+
+	<insert id="insertAnnReadStatus" parameterType="java.util.List">
+		INSERT INTO T_WLK_MNG_ANN_ST (ANN_ID, USER_ID, READ_ST)
+		VALUES
+		<foreach collection="list" item="ann" separator=",">
+			(#{ann.annId}, #{ann.userId}, '0')
+		</foreach>
+	</insert>
+
+	<select id="selectAnnouncementList" parameterType="announcementVO" resultType="announcementVO">
+		select SQL_CALC_FOUND_ROWS
+		    *
+		from t_wlk_mng_ann
+		ORDER BY
+		<choose>
+			<when test='sidx == "sndDt"'>
+				SND_DT
+			</when>
+			<when test='sidx == "tgTp"'>
+				TG_TP
+			</when>
+			<when test='sidx == "grpNm"'>
+				GRP_NM
+			</when>
+			<when test='sidx == "rcpt"'>
+				RCPT
+			</when>
+			<when test='sidx == "sndId"'>
+				SND_ID
+			</when>
+			<otherwise>
+				SND_DT
+			</otherwise>
+		</choose>
+		<choose>
+			<when test='sord == "DESC" or sord == "desc"'>
+				DESC
+			</when>
+			<otherwise>
+				ASC
+			</otherwise>
+		</choose>
+		LIMIT #{rowNo}, #{rows}
+	</select>
+
+	<select id="selectAnnouncementListCnt" parameterType="announcementVO" resultType="int">
+		SELECT FOUND_ROWS()
+	</select>
+</mapper>

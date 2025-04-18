@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="alarm">
+	<select id="selectMaxAlrmId"  parameterType="String" resultType="String">
+		SELECT (CASE WHEN IFNULL(MAX(ALRM_ID),0) = '0'
+						 then (CONCAT('AL' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD('1',5,'0'), '')))
+					 ELSE (CONCAT('AL' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD(SUBSTR(MAX(ALRM_ID), 12, 5)+1, 5, '0'), '')))
+			END ) ALRM_ID
+		FROM T_WLK_CMM_ALRM
+		WHERE ALRM_ID LIKE CONCAT('AL' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '%')
+	</select>
+
+	<select id="selectMaxAlrmScheId"  parameterType="String" resultType="String">
+		SELECT (CASE WHEN IFNULL(MAX(ALRM_PUSH_ID),0) = '0'
+						 then (CONCAT('AP' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD('1',5,'0'), '')))
+					 ELSE (CONCAT('AP' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '_' , IFNULL(LPAD(SUBSTR(MAX(ALRM_PUSH_ID), 12, 5)+1, 5, '0'), '')))
+			END ) ALRM_PUSH_ID
+		FROM T_WLK_CMM_ALRM_SCHE
+		WHERE ALRM_PUSH_ID LIKE CONCAT('AP' , IFNULL(DATE_FORMAT(CURDATE(), '%Y%m%d'), '') , '%')
+	</select>
+
+	<select id="selectAlrmSetting" resultType="alarmVO">
+		SELECT STT.*, MY.USER_NM
+		FROM T_WLK_CMM_ALRM_STT STT
+				 left outer join T_WLK_MY MY on MY.USER_ID = STT.USER_ID
+		WHERE STT.USER_ID = #{userId}
+	</select>
+
+	<select id="selectAllUsersToken" parameterType="String" resultType="String">
+		SELECT TOKEN_ID
+		FROM T_WLK_CMM_ALRM_STT
+		WHERE TOKEN_ID IS NOT NULL
+		<if test="type != null and type != '' and type == 'event'">
+			AND BNF_EVT_YN = 'Y'
+		</if>
+	</select>
+
+	<insert id="insertAlarmSche" parameterType="alarmVO">
+		INSERT INTO T_WLK_CMM_ALRM_SCHE(ALRM_PUSH_ID, SEQNO, TOKEN_ID, ALRM_TITLE, ALRM_CONT, ALRM_URL, REGIST_DT) VALUES
+		<foreach collection="tokenList" item="token" index="index" separator=",">
+			(#{alrmPushId}, #{index} , #{token}, #{title}, #{cont}, #{alrmUrl}, SYSDATE())
+		</foreach>
+	</insert>
+</mapper>

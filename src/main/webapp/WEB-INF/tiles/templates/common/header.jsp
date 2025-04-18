@@ -18,6 +18,7 @@
         const diff = expireAt - now;
         if (diff <= 0) {
             clearInterval(countdown);
+            location.reload();
         } else {
             const totalSeconds = Math.floor(diff / 1000);
             const minutes = Math.floor(totalSeconds / 60);
@@ -25,6 +26,20 @@
             $('#sessionTimeout').text(pad(minutes)+':'+pad(seconds));
         }
     }, 1000);
+
+
+    function continueLogin() {
+        $.ajax({
+            url: '/login/continueLogin',
+            method: 'POST',
+            success: function(response) {
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error("에러 발생: ", error);
+            }
+        });
+    }
 </script>
 <!-- 헤더 영역-->
 <header class="header">
@@ -38,13 +53,13 @@
             <img src="../../resources/images/time-svg.svg" class="icon22">
             <p class="header-time-text">session out <span id="sessionTimeout">--:--</span></p>
         </div>
-        <button type="button" class="reflesh-btn" onclick="location.reload()">
+        <button type="button" class="reflesh-btn" onclick="continueLogin()">
             <img src="../../resources/images/reflesh-icon.png" class="icon26">
         </button>
-        <!--
-        <button type="button" class="header-btn">
+        <button type="button" class="header-btn" id="messageBtn">
             <img src="../../resources/images/bell-icon.svg" class="icon30">
         </button>
+        <!--
         <button type="button" class="header-btn">
             <img src="../../resources/images/user-icon.svg" class="icon30">
         </button>
@@ -54,3 +69,9 @@
         </button>
     </div>
 </header>
+
+<script>
+    $('#messageBtn').click(function(){
+        showToast('퍼블리싱 작업 중인 기능입니다.')
+    })
+</script>

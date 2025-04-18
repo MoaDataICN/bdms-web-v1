@@ -13,13 +13,13 @@ const doughnutLabel = {
         ctx.fillStyle= 'rgba(79, 80, 82, 1)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(summation(data.datasets[0].data), xCoor, yCoor);
+        ctx.fillText(summation(data.datasets[0].data), xCoor, yCoor-5);
 
         ctx.font = 'bold 15px sans-serif';
         ctx.fillStyle= 'rgba(135, 138, 142, 1)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText("Today's Total Status", xCoor, yCoor+25);
+        ctx.fillText("Today's Total Status", xCoor, yCoor+30);
     }
 }
 

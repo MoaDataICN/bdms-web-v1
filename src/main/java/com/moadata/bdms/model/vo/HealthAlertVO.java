@@ -27,6 +27,7 @@ public class HealthAlertVO extends BaseSearchObject {
 
 	private String grpId;
 	private String grpNm;
+	private String grpTp;
 
 	private String inChargeIds;
 	private String inChargeId;

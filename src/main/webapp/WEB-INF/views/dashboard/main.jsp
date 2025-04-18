@@ -469,7 +469,21 @@
                             <spring:message code="common.activity"/>
                         </div>
                         <div class="alerts-item-text02">
-                            ${healthAlertCntMap.A["0"] + healthAlertCntMap.A["1"] + healthAlertCntMap.F["0"] + healthAlertCntMap.F["1"]}
+                            ${healthAlertCntMap.A["0"] + healthAlertCntMap.A["1"]}
+                        </div>
+                    </div>
+                </div>
+                <!-- 아이템 -->
+                <div class="alerts-item">
+                    <div class="alerts-icon-box">
+                        <img src="../../resources/images/activity-icon.svg">
+                    </div>
+                    <div class="alerts-text-group">
+                        <div class="alerts-item-text01">
+                            <spring:message code="common.fall"/>
+                        </div>
+                        <div class="alerts-item-text02">
+                            ${healthAlertCntMap.F["0"] + healthAlertCntMap.F["1"]}
                         </div>
                     </div>
                 </div>
@@ -621,9 +635,12 @@
     <!-- Chart S -->
 
     let healthAlerts = {
-        'Activify/Falls': <c:out value="${
+        'Activity': <c:out value="${
         (healthAlertCntMap.A['0'] != null ? healthAlertCntMap.A['0'] : 0) +
-        (healthAlertCntMap.A['1'] != null ? healthAlertCntMap.A['1'] : 0) +
+        (healthAlertCntMap.A['1'] != null ? healthAlertCntMap.A['1'] : 0)
+    }" default="0" />,
+
+        'Falls': <c:out value="${
         (healthAlertCntMap.F['0'] != null ? healthAlertCntMap.F['0'] : 0) +
         (healthAlertCntMap.F['1'] != null ? healthAlertCntMap.F['1'] : 0)
     }" default="0" />,
@@ -671,7 +688,7 @@
                 {
                     label: '',
                     data: Object.values(healthAlerts),
-                    backgroundColor: ['rgba(82, 158, 232, 1)', 'rgba(160, 205, 255, 1)', 'rgba(255, 202, 134, 1)','rgba(238, 147, 144, 1)','rgba(251, 228, 137, 1)','rgba(216, 216, 216, 1)']
+                    backgroundColor: ['rgba(0, 0, 0, 1)', 'rgba(82, 158, 232, 1)', 'rgba(160, 205, 255, 1)', 'rgba(255, 202, 134, 1)','rgba(238, 147, 144, 1)','rgba(251, 228, 137, 1)','rgba(216, 216, 216, 1)']
                 }
             ]
         },
@@ -723,13 +740,19 @@
                     external: externalTooltipHandler
                 },
                 datalabels: {
-                    color: 'rgba(86, 86, 86, 1)',
+                    color: function (ctx) {
+                        const value = ctx.dataset.data[ctx.dataIndex]
+                        if (ctx.dataIndex === 0) {
+                            return '#ffffff';
+                        } else {
+                            return 'rgba(86, 86, 86, 1)';
+                        }
+                    },
                     font: {
-                        size: 12,
+                        size: 16,
                         weight: 'bold'
                     },
                     formatter: (value, ctx) => {
-
                         return value != 0 ? value : '';
                     }
                 },

@@ -41,6 +41,9 @@
             <when test='sortColumn == "registDt"'>
                 REGIST_DT
             </when>
+            <otherwise>
+                USER_ID
+            </otherwise>
         </choose>
         <choose>
             <when test='sord == "DESC" or sord == "desc"'>
@@ -50,7 +53,9 @@
                 ASC
             </otherwise>
         </choose>
-        LIMIT #{rowNo}, #{rows}
+        <if test="(rowNo != null and rowNo != '') and (rows != null and rows != '')">
+            LIMIT #{rowNo}, #{rows}
+        </if>
     </select>
 
     <!-- User 목록 total -->

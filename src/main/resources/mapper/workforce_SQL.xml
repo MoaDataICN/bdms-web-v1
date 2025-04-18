@@ -14,9 +14,8 @@
 
 	<select id="selectWorkforceList" parameterType="workforceVO" resultType="workforceVO">
 		select SQL_CALC_FOUND_ROWS
-		    WRKFRC.*, GRP.GRP_NM
+		    WRKFRC.*
 		from T_WLK_MNG_WRKFRC WRKFRC
-			LEFT OUTER JOIN T_WLK_MNG_GRP GRP ON GRP.GRP_ID = WRKFRC.GRP_ID
 		WHERE 1=1
 		<if test="wrkfrcNmbr != null and wrkfrcNmbr != ''">
 			AND WRKFRC.WRKFRC_NMBR LIKE CONCAT('%',#{wrkfrcNmbr},'%')
@@ -33,11 +32,8 @@
 		<if test="svcTp != null and svcTp != ''">
 			AND WRKFRC.SVC_TP IN (${svcTp})
 		</if>
-		<if test="grpId != null and grpId != ''">
-			AND WRKFRC.GRP_ID = #{grpId}
-		</if>
-		<if test="grpNm != null and grpNm != ''">
-			AND GRP.GRP_NM = #{grpNm}
+		<if test="grpTp != null and grpTp != ''">
+			AND WRKFRC.GRP_TP = #{grpTp}
 		</if>
 		<if test="wrkfrcSx != null and wrkfrcSx != '' and wrkfrcSx != 'ALL'">
 			AND WRKFRC.WRKFRC_SX = #{wrkfrcSx}
@@ -50,11 +46,11 @@
 			<when test='sidx == "wrkfrcSx"'>
 				WRKFRC.WRKFRC_SX
 			</when>
-			<when test='sidx == "grpNm"'>
-				grp.GRP_NM
-			</when>
 			<when test='sidx == "svcTp"'>
 				WRKFRC.SVC_TP
+			</when>
+			<when test='sidx == "grpTp"'>
+				WRKFRC.GRP_TP
 			</when>
 			<otherwise>
 				WRKFRC.REGIST_DT
@@ -76,8 +72,8 @@
 	</select>
 
 	<insert id="insertWorkforce" parameterType="workforceVO">
-		INSERT INTO T_WLK_MNG_WRKFRC (WRKFRC_ID, WRKFRC_NM,WRKFRC_NMBR, WRKFRC_MOBILE, WRKFRC_SX, WRKFRC_BRTH_DT, SVC_TP, GRP_ID, MEMO, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID )
-		VALUES (#{wrkfrcId}, #{wrkfrcNm}, #{wrkfrcNmbr}, #{wrkfrcMobile}, #{wrkfrcSx}, #{wrkfrcBrthDt}, #{svcTp}, #{grpId}, #{memo}, SYSDATE(), #{userId}, SYSDATE(), #{userId})
+		INSERT INTO T_WLK_MNG_WRKFRC (WRKFRC_ID, WRKFRC_NM,WRKFRC_NMBR, WRKFRC_MOBILE, WRKFRC_SX, WRKFRC_BRTH_DT, SVC_TP, GRP_TP, MEMO, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID )
+		VALUES (#{wrkfrcId}, #{wrkfrcNm}, #{wrkfrcNmbr}, #{wrkfrcMobile}, #{wrkfrcSx}, #{wrkfrcBrthDt}, #{svcTp}, #{grpTp}, #{memo}, SYSDATE(), #{userId}, SYSDATE(), #{userId})
 	</insert>
 
 	<update id="updateWorkforce" parameterType="workforceVO">
@@ -88,7 +84,7 @@
 		    WRKFRC_SX = #{wrkfrcSx},
 		    WRKFRC_BRTH_DT = #{wrkfrcBrthDt},
 		    SVC_TP = #{svcTp},
-		    GRP_ID = #{grpId},
+		    GRP_TP = #{grpTp},
 		    MEMO = #{memo},
 		    UPT_DT = SYSDATE(),
 		    UPT_ID = #{userId}

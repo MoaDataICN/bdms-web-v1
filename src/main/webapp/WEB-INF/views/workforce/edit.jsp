@@ -12,6 +12,10 @@
 
 
 <style>
+    table {
+        width: 100%; !important;
+    }
+
     #workforcePager {
         display:none;
     }
@@ -43,16 +47,18 @@
     .calendar-icon {
         z-index: 1;
     }
+
+    table {
+        width: 100% !important;
+    }
 </style>
 
 <main class="main">
-    <!-- Area map 위치 텍스트 -->
-    <!-- 대시보드 타이틀 -->
-    <div class="second-title" style="display:flex; justify-content:space-between;">
-        <spring:message code="common.menu.wf_srch"/>
+    <div class="second-title f-x">
+        Workforce editing
         <c:if test="${sessionScope.user.grpLv eq '1'}">
-            <button type="button" class="point-submit-btn" id="addBtn" onclick="openPopup('workforceAddPopup')">
-                <span>Workforce Add</span>
+            <button class="add-btn ml-10px" id="addBtn" onclick="openPopup('workforceAddPopup')">Workfoce Add
+                <img src="/resources/images/plus-icon.svg" class="icon20">
             </button>
         </c:if>
     </div>
@@ -101,10 +107,10 @@
                             <button class="dropdown-search" id="grpNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                                                                      src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
-                                <a data-grpid="All" onclick="$('#grpNm').text($(this).text())"><spring:message code="common.all"/></a>
-                                <c:forEach var="group" items="${groupList}">
-                                    <a data-grpid="${group.grpId}" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">${group.grpNm}</a>
-                                </c:forEach>
+                                <a data-grptp="All" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text());"><spring:message code="common.all"/></a>
+                                <a data-grptp="Group A" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text());">Group A</a>
+                                <a data-grptp="Group B" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text());">Group B</a>
+                                <a data-grptp="Group C" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text());">Group C</a>
                             </div>
                         </div>
                     </c:if>
@@ -131,8 +137,14 @@
                         <spring:message code="common.birthDt"/>
                     </div>
                     <div class="row-input">
-                        <input type="text" class="input-txt02 datePicker" id="wrkfrcBrthDt" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="dateDisplay1"
+                                   placeholder="ALL" readonly>
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                                 onclick="openCalendar('wrkfrcBrthDt')" alt="달력 아이콘">
+                            <input type="date" id="wrkfrcBrthDt" class="hidden-date"
+                                   onchange="updateDate('wrkfrcBrthDt', 'dateDisplay1')">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -261,9 +273,19 @@
                             <div class="input-label01">
                                 Group
                             </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter" id="addWrkfrcGrpId"
-                                       oninput="limitLength(this, 30);">
+                            <div class="dropdown">
+                                <input type="hidden" id="addWrkfrcGrpId" value="Group A">
+                                <button class="dropdown-search" id="addWrkfrcGrpIdBtn">
+                                    Group A
+                                    <span>
+                                        <img class="icon20" alt="" src="/resources/images/arrow-gray-bottom.svg">
+                                    </span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <a data-grptp="Group A" onclick="$('#addWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcGrpId').val($(this).data('grptp'))">Group A</a>
+                                    <a data-grptp="Group B" onclick="$('#addWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcGrpId').val($(this).data('grptp'))">Group B</a>
+                                    <a data-grptp="Group C" onclick="$('#addWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcGrpId').val($(this).data('grptp'))">Group C</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -291,9 +313,13 @@
                             <div class="input-label01">
                                 Date of birth
                             </div>
+
                             <div class="row-input">
-                                <input type="text" class="input-txt02 datePicker" placeholder="Please Select" id="addWrkfrcBrthDt"
-                                       oninput="limitLength(this, 30);" readonly>
+                                <div class="p-r">
+                                    <input type="text" class="date-input input-txt02" id="dateDisplay2" placeholder="YYYY-MM-DD" readonly="">
+                                    <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('addWrkfrcBrthDt')" alt="달력 아이콘">
+                                    <input type="date" id="addWrkfrcBrthDt" class="hidden-date" onchange="updateDate('addWrkfrcBrthDt', 'dateDisplay2')">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -400,9 +426,19 @@
                             <div class="input-label01">
                                 Group
                             </div>
-                            <div class="row-input">
-                                <input type="text" class="input-txt02" placeholder="Please enter" id="editWrkfrcGrpId"
-                                       oninput="limitLength(this, 30);">
+                            <div class="dropdown">
+                                <input type="hidden" id="editWrkfrcGrpId" value="Group A">
+                                <button class="dropdown-search" id="editWrkfrcGrpIdBtn">
+                                    Group A
+                                    <span>
+                                        <img class="icon20" alt="" src="/resources/images/arrow-gray-bottom.svg">
+                                    </span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <a data-grptp="Group A" onclick="$('#editWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#editWrkfrcGrpId').val($(this).data('grptp'))">Group A</a>
+                                    <a data-grptp="Group B" onclick="$('#editWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#editWrkfrcGrpId').val($(this).data('grptp'))">Group B</a>
+                                    <a data-grptp="Group C" onclick="$('#editWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#editWrkfrcGrpId').val($(this).data('grptp'))">Group C</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -430,9 +466,13 @@
                             <div class="input-label01">
                                 Date of birth
                             </div>
+
                             <div class="row-input">
-                                <input type="text" class="input-txt02 datePicker" placeholder="Please Select" id="editWrkfrcBrthDt"
-                                       oninput="limitLength(this, 30);" readonly>
+                                <div class="p-r">
+                                    <input type="text" class="date-input input-txt02" id="dateDisplay3" placeholder="YYYY-MM-DD" readonly="">
+                                    <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('editWrkfrcBrthDt')" alt="달력 아이콘">
+                                    <input type="date" id="editWrkfrcBrthDt" class="hidden-date" onchange="updateDate('editWrkfrcBrthDt', 'dateDisplay3')">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -498,7 +538,7 @@
         {
             "grpId": "${group.grpId}",
             "pgrpId": "${group.pgrpId}",
-            "grpNm": "${group.grpNm}",
+            "grpTp": "${group.grpNm}",
             "registDt": "${group.registDt}",
             "registId": "${group.registId}",
             "uptDt": "${group.uptDt}",
@@ -522,7 +562,7 @@
             wrkfrcMobile : $('#wrkfrcMobile').val().replaceAll('-',''),
             wrkfrcSx : $('#wrkfrcSx').text() != "All" ? $('#wrkfrcSx').text().slice(0,1) : "ALL",
             wrkfrcBrthDt : $('#wrkfrcBrthDt').val(),
-            grpNm : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
+            grpTp : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
             svcTp : $('.svcBtns.active').data('filter') != 'all' ? $('.svcBtns.active')
                 .map(function() {
                     return "\"" + $(this).data('filter') + "\"";
@@ -536,37 +576,37 @@
         $('#wrkfrcNm').val('');
         $('#wrkfrcNmbr').val('');
         $('#wrkfrcMobile').val('');
-        $("#wrkfrcSx").text('All');
+        $('#wrkfrcSx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#wrkfrcBrthDt').val('');
-        $('#grpNm').text('All');
+        $('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('.svcBtns.active').removeClass('active');
         $('.svcBtns')[0].classList.add('active');
     }
 
-    function fnSearch(){
+    function fnSearch() {
         $('#workforceList').jqGrid('setGridParam', {
             url: 'selectWorkforceList',
             datatype: 'json',
-            postData : setSearchParam()
+            postData: setSearchParam()
         });
-        $('#workforceList').trigger('reloadGrid', [{page:1, current:true}]);
+        $('#workforceList').trigger('reloadGrid', [{page: 1, current: true}]);
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.datePicker').datepicker({
             dateFormat: 'yy-mm-dd',
             autoclose: true,
-            todayHighlight:true
+            todayHighlight: true
         });
 
         $('#workforceList').jqGrid({
-            url : '${contextPath}/workforce/selectWorkforceList',
-            mtype : "POST",
+            url: '${contextPath}/workforce/selectWorkforceList',
+            mtype: "POST",
             datatype: "json",
-            jsonReader : {repeatitems: false},
+            jsonReader: {repeatitems: false},
             postData: setSearchParam(),
-            colModel : [
-                { label: 'Workforce Number', name: 'wrkfrcNmbr', width:200, sortable : true},
+            colModel: [
+                {label: 'Workforce Number', name: 'wrkfrcNmbr', width:200, sortable : true},
                 { label: 'Name', name: 'wrkfrcNm', width:130, sortable : false},
                 { label: 'Phone', name: 'wrkfrcMobile', width:130, sortable : false, formatter: function(cellValue, options, rowObject) {
                         var cleaned = ('' + cellValue).replace(/\D/g, '');
@@ -584,7 +624,7 @@
                         }
                     }},
                 { label: 'Date Of Birth', name: 'wrkfrcBrthDt', width:130, sortable : false},
-                { label: 'Group', name: 'grpNm', width:130, sortable : true},
+                { label: 'Group', name: 'grpTp', width:130, sortable : true},
                 { label: 'Service Type', name: 'svcTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
                         switch(cellValue) {
                             case 'N' :
@@ -676,10 +716,12 @@
                     $('#editWrkfrcNm').val(data.workforce.wrkfrcNm);
                     $('#editWrkfrcNmbr').val(data.workforce.wrkfrcNmbr);
                     $('#editWrkfrcMobile').val(data.workforce.wrkfrcMobile);
-                    $('#editWrkfrcGrpId').val(data.workforce.grpId);
+                    $('#editWrkfrcGrpId').val(data.workforce.grpTp);
+                    $('#editWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith(data.workforce.grpTp);
                     $('#editWrkfrcSxVal').val(data.workforce.wrkfrcSx);
-                    $('#editWrkfrcSx').text(data.workforce.wrkfrcSx === 'F' ? 'Female' : 'Male');
+                    $('#editWrkfrcSx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith(data.workforce.wrkfrcSx === 'F' ? 'Female' : 'Male');
                     $('#editWrkfrcBrthDt').val(data.workforce.wrkfrcBrthDt);
+                    $('#dateDisplay3').val(data.workforce.wrkfrcBrthDt);
                     $('#editWrkfrcSvcTpVal').val(data.workforce.svcTp);
                     $('#editWrkfrcSvcTp').text(data.workforce.svcTp == 'N' ? 'Nursing' : data.workforce.svcTp == 'A' ? 'Ambulance' : data.workforce.svcTp == 'T' ? 'Telehealth' : data.workforce.svcTp == 'H' ? 'Health Manager' : '' );
                     $('#editWrkfrcMemo').val(data.workforce.memo);
@@ -783,10 +825,11 @@
             }
         }
 
+        /*
         const mobileRegex = /^\d{3}-\d{3,4}-\d{4}$/;
         if (!mobileRegex.test(param.wrkfrcMobile)) {
             return false;
-        }
+        }*/
 
         const birthDateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
         if (!birthDateRegex.test(param.wrkfrcBrthDt)) {
@@ -802,8 +845,8 @@
             "userId" : "${sessionScope.user.userId}",
             "wrkfrcNm" : $('#addWrkfrcNm').val(),
             "wrkfrcNmbr" : $('#addWrkfrcNmbr').val(),
-            "wrkfrcMobile" : $('#addWrkfrcMobile').val(),
-            "grpId" : $('#addWrkfrcGrpId').val(),
+            "wrkfrcMobile" : $('#addWrkfrcMobile').val().replaceAll('-',''),
+            "grpTp" : $('#addWrkfrcGrpId').val(),
             "wrkfrcSx" : $('#addWrkfrcSxVal').val(),
             "wrkfrcBrthDt" : $('#addWrkfrcBrthDt').val(),
             "svcTp" : $('#addWrkfrcSvcTpVal').val(),
@@ -817,10 +860,16 @@
                 data: param,
                 datatype: 'json',
                 success: function (data) {
-                    closePopup();
-                    fnSearch()
+                    if(!data.isError) {
+                        showToast('New Workforce has been created.')
+                        closePopup();
+                        fnSearch();
+                    } else {
+                        showToast('Processing failed.', 'point')
+                    }
                 },
                 error: function (request, status, error) {
+                    showToast('Processing failed.', 'point')
                     console.log("code:" + request.status + "\n" + "error:" + error); //+"message:"+request.responseText+"\n"
                 }
             });
@@ -836,8 +885,8 @@
             "wrkfrcId" : $('#editWrkfrcId').val(),
             "wrkfrcNm" : $('#editWrkfrcNm').val(),
             "wrkfrcNmbr" : $('#editWrkfrcNmbr').val(),
-            "wrkfrcMobile" : $('#editWrkfrcMobile').val(),
-            "grpId" : $('#editWrkfrcGrpId').val(),
+            "wrkfrcMobile" : $('#editWrkfrcMobile').val().replaceAll('-',''),
+            "grpTp" : $('#editWrkfrcGrpId').val(),
             "wrkfrcSx" : $('#editWrkfrcSxVal').val(),
             "wrkfrcBrthDt" : $('#editWrkfrcBrthDt').val(),
             "svcTp" : $('#editWrkfrcSvcTpVal').val(),
@@ -852,11 +901,15 @@
                 datatype: 'json',
                 success: function (data) {
                     if(!data.isError) {
+                        showToast('Workforce has been updated.')
                         closePopup();
                         fnSearch();
+                    } else {
+                        showToast('Processing failed.', 'point')
                     }
                 },
                 error: function (request, status, error) {
+                    showToast('Processing failed.', 'point')
                     console.log("code:" + request.status + "\n" + "error:" + error); //+"message:"+request.responseText+"\n"
                 }
             });
@@ -870,12 +923,13 @@
         $('#addWrkfrcNm').val('');
         $('#addWrkfrcNmbr').val('');
         $('#addWrkfrcMobile').val('');
-        $('#addWrkfrcGrpId').val('');
+        $('#addWrkfrcGrpId').val('Group A');
+        $('#addWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('Group A');
         $('#addWrkfrcSxVal').val('F');
-        $('#addWrkfrcSx').text('Female');
+        $('#addWrkfrcSx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('Female');
         $('#addWrkfrcBrthDt').val('');
         $('#addWrkfrcSvcTpVal').val('N');
-        $('#addWrkfrcSvcTp').text('Nursing');
+        $('#addWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('Nursing');
         $('#addWrkfrcMemo').val('');
     }
 
@@ -888,16 +942,16 @@
     })
 
     function resetEditWorkforce() {
-        $('#editWrkfrcId').val('');
         $('#editWrkfrcNm').val('');
         $('#editWrkfrcNmbr').val('');
         $('#editWrkfrcMobile').val('');
-        $('#editWrkfrcGrpId').val('');
+        $('#editWrkfrcGrpId').val('Group A');
+        $('#editWrkfrcGrpIdBtn').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('Group A');
         $('#editWrkfrcSxVal').val('F');
-        $('#editWrkfrcSx').text('Female');
+        $('#editWrkfrcSx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('Female');
         $('#editWrkfrcBrthDt').val('');
         $('#editWrkfrcSvcTpVal').val('N');
-        $('#editWrkfrcSvcTp').text('Nursing');
+        $('#editWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('Nursing');
         $('#editWrkfrcMemo').val('');
     }
 

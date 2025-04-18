@@ -43,6 +43,10 @@
     .calendar-icon {
         z-index: 1;
     }
+
+    table {
+        width: 100% !important;
+    }
 </style>
 
 <main class="main">
@@ -96,10 +100,10 @@
                             <button class="dropdown-search" id="grpNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                                                                      src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
-                                <a data-grpid="All" onclick="$('#grpNm').text($(this).text())"><spring:message code="common.all"/></a>
-                                <c:forEach var="group" items="${groupList}">
-                                    <a data-grpid="${group.grpId}" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">${group.grpNm}</a>
-                                </c:forEach>
+                                <a data-grpid="All" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3 }).first().replaceWith($(this).text())"><spring:message code="common.all"/></a>
+                                <a data-grpid="Group A" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">Group A</a>
+                                <a data-grpid="Group B" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">Group B</a>
+                                <a data-grpid="Group C" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">Group C</a>
                             </div>
                         </div>
                     </c:if>
@@ -126,8 +130,14 @@
                         <spring:message code="common.birthDt"/>
                     </div>
                     <div class="row-input">
-                        <input type="text" class="input-txt02 datePicker" id="wrkfrcBrthDt" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="dateDisplay1"
+                                   placeholder="ALL" readonly>
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                                 onclick="openCalendar('wrkfrcBrthDt')" alt="달력 아이콘">
+                            <input type="date" id="wrkfrcBrthDt" class="hidden-date"
+                                   onchange="updateDate('wrkfrcBrthDt', 'dateDisplay1')">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -305,7 +315,7 @@
                                 <div class="dropdown-content">
                                     <a data-tp="N" onclick="$('#addWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcSvcTpVal').val($(this).data('tp'))">Nursing</a>
                                     <a data-tp="A" onclick="$('#addWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcSvcTpVal').val($(this).data('tp'))">Ambulance</a>
-                                    <a data-tp="T" onclick="$('#addWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcSvcTpVal').val($(this).data('tp'))">Telehealth</a>
+                                    <a data-tp="T" onclick="$('#addWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcSvcTpVal').val($(this).data('tp'))">Consultation</a>
                                     <a data-tp="H" onclick="$('#addWrkfrcSvcTp').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text()); $('#addWrkfrcSvcTpVal').val($(this).data('tp'))">Health Manager</a>
                                 </div>
                             </div>
@@ -354,7 +364,7 @@
         {
             "grpId": "${group.grpId}",
             "pgrpId": "${group.pgrpId}",
-            "grpNm": "${group.grpNm}",
+            "grpTp": "${group.grpNm}",
             "registDt": "${group.registDt}",
             "registId": "${group.registId}",
             "uptDt": "${group.uptDt}",
@@ -375,10 +385,10 @@
             inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
             wrkfrcNm : $('#wrkfrcNm').val(),
             wrkfrcNmbr : $('#wrkfrcNmbr').val(),
-            wrkfrcMobile : $('#wrkfrcMobile').val().replaceAll('-',''),
+            wrkfrcMobile : $('#wrkfrcMobile').val(),
             wrkfrcSx : $('#wrkfrcSx').text() != "All" ? $('#wrkfrcSx').text().slice(0,1) : "ALL",
             wrkfrcBrthDt : $('#wrkfrcBrthDt').val(),
-            grpNm : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
+            grpTp : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
             svcTp : $('.svcBtns.active').data('filter') != 'all' ? $('.svcBtns.active')
                 .map(function() {
                     return "\"" + $(this).data('filter') + "\"";
@@ -392,9 +402,9 @@
         $('#wrkfrcNm').val('');
         $('#wrkfrcNmbr').val('');
         $('#wrkfrcMobile').val('');
-        $("#wrkfrcSx").text('All');
+        $('#wrkfrcSx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#wrkfrcBrthDt').val('');
-        $('#grpNm').text('All');
+        $('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('.svcBtns.active').removeClass('active');
         $('.svcBtns')[0].classList.add('active');
     }
@@ -440,7 +450,7 @@
                         }
                     }},
                 { label: 'Date Of Birth', name: 'wrkfrcBrthDt', width:130, sortable : false},
-                { label: 'Group', name: 'grpNm', width:130, sortable : true},
+                { label: 'Group', name: 'grpTp', width:130, sortable : true},
                 { label: 'Service Type', name: 'svcTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
                         switch(cellValue) {
                             case 'N' :
@@ -450,7 +460,7 @@
                                 return 'Ambulance';
                                 break;
                             case 'T' :
-                                return 'Telehealth';
+                                return 'Consultation';
                                 break;
                             case 'H' :
                                 return 'Health Manager';

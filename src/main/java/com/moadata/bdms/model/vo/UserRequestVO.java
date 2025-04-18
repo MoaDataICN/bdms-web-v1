@@ -34,6 +34,7 @@ public class UserRequestVO extends BaseSearchObject {
 	private String inChargeNm;
 	private String grpId;
 	private String grpNm;
+	private String grpTp;
 
 	private String registDt;
 	private String registId;

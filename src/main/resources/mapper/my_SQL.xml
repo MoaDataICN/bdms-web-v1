@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="my">
+	<select id="selectUserInfo" parameterType="String" resultType="myVO">
+		select my.user_id, my.user_nm, my.email, my.brth_dt, BIRTH_YEAR, (YEAR(SYSDATE())-BIRTH_YEAR) as AGE, my.mobile,
+			   alrm.BNF_EVT_YN as MK_USE_YN, my.SX, my.GUNHYUP_YN, my.ADMIN_YN, my.CHECKUP_KEY, my.THEME
+		from T_WLK_MY my
+				 inner join T_WLK_cmm_alrm_stt alrm on alrm.USER_ID = my.USER_ID
+		where my.user_id = #{userId}
+	</select>
+</mapper>

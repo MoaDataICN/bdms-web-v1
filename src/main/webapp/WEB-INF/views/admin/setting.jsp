@@ -448,11 +448,13 @@
 							dataType: 'json',
 							success: function(data) {
 								if(data.isError){
-									$.alert(data.message);
+									showToast('Processing failed.', 'point');
+									//$.alert(data.message);
 									console.log('ERROR', data.message);
 								}else{
 									setClearAddParam();
-									$.alert(data.message);
+									showToast('The admin account has been created.');
+									//$.alert(data.message);
 									$('#add_popup').hide();
 									fnSearch();
 								}

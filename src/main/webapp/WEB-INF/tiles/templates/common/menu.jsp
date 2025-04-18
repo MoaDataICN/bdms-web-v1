@@ -9,9 +9,6 @@
         <img src="../../resources/images/arrow-left-icon.svg" class="icon20">
     </div>
     <div class="head">
-        <div class="user-img">
-            <img src="../../resources/images/user-img.jpg" alt="user-img">
-        </div>
         <div class="user-details">
             <p class="side-name-text"><spring:message code="side.user.greet" arguments="${sessionScope.user.userNm}" /></p>
             <%

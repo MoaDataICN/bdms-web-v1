@@ -56,13 +56,13 @@
         <a href="#">
             <img src="/resources/images/arrow-right-gray.svg" class="icon14">
             <span>
-                <spring:message code="common.menu.userRequest"/>
+                <spring:message code="common.menu.user_request"/>
             </span>
         </a>
     </div>
     <!-- 대시보드 타이틀 -->
     <div class="second-title">
-        <spring:message code="common.menu.userRequest"/>
+        <spring:message code="common.menu.user_request"/>
     </div>
 
     <!-- 주요 콘텐츠 시작 -->
@@ -120,9 +120,9 @@
                         <button class="dropdown-search" id="sx"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                               src="/resources/images/arrow-gray-bottom.svg"></span></button>
                         <div class="dropdown-content">
-                            <a onclick="$('#sx').text($(this).text())"><spring:message code="common.all"/></a>
-                            <a onclick="$('#sx').text($(this).text())"><spring:message code="common.sex.f"/></a>
-                            <a onclick="$('#sx').text($(this).text())"><spring:message code="common.sex.m"/></a>
+                            <a onclick="$('#sx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())"><spring:message code="common.all"/></a>
+                            <a onclick="$('#sx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())"><spring:message code="common.sex.f"/></a>
+                            <a onclick="$('#sx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())"><spring:message code="common.sex.m"/></a>
                         </div>
                     </div>
                 </div>
@@ -135,9 +135,9 @@
                             <button class="dropdown-search" id="inChargeNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                                           src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
-                                <a data-inchargeid="All" onclick="$('#inChargeNm').text($(this).text())"><spring:message code="common.all"/></a>
+                                <a data-inchargeid="All" onclick="$('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())"><spring:message code="common.all"/></a>
                                 <c:forEach var="inCharge" items="${inChargeList}">
-                                    <a data-inchargeid="${inCharge.userId}" onclick="$('#inChargeNm').text($(this).text())">${inCharge.userNm}</a>
+                                    <a data-inchargeid="${inCharge.userId}" onclick="$('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">${inCharge.userNm}</a>
                                 </c:forEach>
                             </div>
                         </div>
@@ -164,10 +164,10 @@
                             <button class="dropdown-search" id="grpNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                                      src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
-                                <a data-grpid="All" onclick="$('#grpNm').text($(this).text())"><spring:message code="common.all"/></a>
-                                <c:forEach var="group" items="${groupList}">
-                                    <a data-grpid="${group.grpId}" onclick="$('#grpNm').text($(this).text())">${group.grpNm}</a>
-                                </c:forEach>
+                                <a data-grpid="All" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3 }).first().replaceWith($(this).text())"><spring:message code="common.all"/></a>
+                                <a data-grpid="Group A" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">Group A</a>
+                                <a data-grpid="Group B" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">Group B</a>
+                                <a data-grpid="Group C" onclick="$('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">Group C</a>
                             </div>
                         </div>
                     </c:if>
@@ -295,10 +295,10 @@
         $('#emailId').val('');
         $('#userId').val('');
         $('#mobile').val('');
-        $("#sx").text('All');
+        $('#sx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#brthDt').val('');
-        $('#inChargeNm').text('All');
-        $('#grpNm').text('All');
+        $('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
+        $('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('.alertBtns.active').removeClass('active');
         $('.alertBtns')[0].classList.add('active');
         $('.periodBtn')[3].click();
@@ -316,13 +316,13 @@
             sx : $('#sx').text() != "All" ? $('#sx').text().slice(0,1) : "ALL",
             brthDt : $('#brthDt').val(),
             inChargeNm : $('#inChargeNm').text() != "All" ? $('#inChargeNm').text() : "",
-            grpNm : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
+            grpTp : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
             reqTp : $('.alertBtns.active').data('filter') != 'all' ? $('.alertBtns.active')
                 .map(function() {
                     return "\"" + $(this).data('filter') + "\"";
                 })
                 .get()
-                .join(',') : "'N','A','T'",
+                .join(',') : "'N','A','T'"
         };
     }
 
