@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.common.util.StringUtil;
@@ -73,11 +74,11 @@ public class UserController extends BaseController {
 	private GroupService groupService;
 
     // 확인 필요
-	@Value("${admin.grpId}")
-	private String grpId;
-
-	@Value("${admin.grpLv}")
-	private String grpLv;
+//	@Value("${admin.grpId}")
+//	private String grpId;
+//
+//	@Value("${admin.grpLv}")
+//	private String grpLv;
 
 	@Value("${admin.userId}")
 	private String userId;
@@ -89,18 +90,23 @@ public class UserController extends BaseController {
     private String windowPreOpenFilePath;
 
 	@GetMapping("/userSearch")
-	public String userSearch(ModelMap model) {
+	public String userSearch(ModelMap model, HttpServletRequest request) {
 		// 세션에 저장 된, 사용자의 정보를 바탕으로 조회를 수행
 		// GRP_ID, GRP_LV 를 세션에 저장하며, 이를 바탕으로 조회 조건 및 레벨이 달라짐
+
+		HttpSession session = request.getSession(false);
+		UserVO user = (UserVO) session.getAttribute("user");
+
+		String grpId = user.getGrpId();
+		String grpLv = user.getGrpLv();
+
+		System.out.println("grpId : " + grpId);
+		System.out.println("grpLv : " + grpLv);
 
 		if(grpLv != null && grpLv.equals("1")) {
 			// 최상위 관리자인 경우
 			List<GroupVO> groupList = groupService.selectLowLevelGroups(grpId);
 //			List<UserVO> inChargeList = groupService.selectLowLevelAdmins(grpId);  // grp.GRP_NM -> my.GRP_TP
-
-			System.out.println();
-			System.out.println("grpLv : " + grpLv);
-			System.out.println();
 
 			List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
 
@@ -162,8 +168,16 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/detail/{tab}", method = RequestMethod.POST)
-	public String getUserDetail(@PathVariable String tab, @RequestParam String reqId, Model model) {
+	public String getUserDetail(@PathVariable String tab, @RequestParam String reqId, Model model, HttpServletRequest request) {
 
+		HttpSession session = request.getSession(false);
+		UserVO user = (UserVO) session.getAttribute("user");
+
+		String grpId = user.getGrpId();
+		String grpLv = user.getGrpLv();
+
+		System.out.println("grpId : " + grpId);
+		System.out.println("grpLv : " + grpLv);
 		System.out.println("reqId : " + reqId);
 		UserDtlGeneralVO userDtlGeneralVO = userService.selectUserDtlGeneral(reqId);
 		System.out.println(userService.selectUserDtlGeneral(reqId).toString());
@@ -1113,7 +1127,7 @@ public class UserController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/checkupAdd", method=RequestMethod.POST)
-	public @ResponseBody Map<String, Object> checkupAdd(@ModelAttribute("checkup") CheckupVO checkup)throws Exception{
+	public @ResponseBody Map<String, Object> checkupAdd(@ModelAttribute("checkup") CheckupVO checkup) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		boolean isError = false;

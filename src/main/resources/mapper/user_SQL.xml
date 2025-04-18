@@ -595,8 +595,8 @@
 
 	<select id="selectMaxSeqReportItem" resultType="String">
 		SELECT IF(ISNULL(MAX(REPORT_ID)),
-				  CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD('1',5,'0')),
-				  CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD(SUBSTRING(MAX(REPORT_ID), 11, 5)+1, 5, '0'))) REPORT_ID
+		CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), '_', LPAD('1',5,'0')),
+		CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), '_', LPAD(SUBSTRING(MAX(REPORT_ID), 12, 5)+1, 5, '0'))) REPORT_ID
 		FROM T_WLK_REPORT
 		WHERE REPORT_ID  LIKE CONCAT('RE', DATE_FORMAT(NOW(), '%Y%m%d'), '%')
 	</select>
@@ -630,5 +630,5 @@
 		(USER_ID, CR_DT, WEIGHT, HEIGHT, WAISTLINE_INCH, WAISTLINE_CM, MEMO, PUBLIC_YN, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID)
 		VALUES(#{userId}, now(), #{wght}, #{hght} , cast((cast(#{wst} as unsigned) / 2.54) as  varchar(10)), #{wst},'checkup','Y', now(), #{adminId}, now(), #{adminId})
 	</insert>
-
+	
 </mapper>
