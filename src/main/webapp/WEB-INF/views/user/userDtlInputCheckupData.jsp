@@ -204,7 +204,7 @@
             <div class="row-wrap02">
                 <div class="row-input f-x-c">
                     <div class="input-label03 mb-4px">
-                        4.Height(cm)
+                        4. Height(cm)
                     </div>
                     <div class="input-img-wrap">
                         <input type="text" class="input-txt02" placeholder="cm"

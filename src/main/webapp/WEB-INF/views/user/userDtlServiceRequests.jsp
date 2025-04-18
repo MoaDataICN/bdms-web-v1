@@ -106,7 +106,7 @@
                                 <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker2')" alt="달력 아이콘">
                                 <input type="date" id="healthAlerts_datePicker2" class="hidden-date" onchange="updateDate('healthAlerts_datePicker2', 'healthAlerts_dateDisplay2')">
                             </div>
-                            <div class="day-button-wrap" id="healthAlerts_Date">
+                            <div class="day-button-wrap" id="healthAlerts_date">
                                 <button class="data-select-btn" data-period="all">All</button>
                                 <button class="data-select-btn" data-period="today">Today</button>
                                 <button class="data-select-btn" data-period="7-day">7day</button>

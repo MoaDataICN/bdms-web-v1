@@ -216,11 +216,11 @@
                                    onchange="updateDate('datePicker2', 'searchEndDe')">
                         </div>
                         <div class="day-button-wrap" id="search_date">
-                            <button class="data-select-btn periodBtn" data-period="all">All</button>
-                            <button class="data-select-btn periodBtn" data-period="today">Today</button>
-                            <button class="data-select-btn periodBtn" data-period="7-day">7day</button>
-                            <button class="data-select-btn periodBtn active" data-period="30-day">30day</button>
-                            <button class="data-select-btn periodBtn" data-period="90-day">90day</button>
+                            <button class="data-select-btn" data-period="all">All</button>
+                            <button class="data-select-btn" data-period="today">Today</button>
+                            <button class="data-select-btn" data-period="7-day">7day</button>
+                            <button class="data-select-btn active" data-period="30-day">30day</button>
+                            <button class="data-select-btn" data-period="90-day">90day</button>
                         </div>
                     </div>
                 </div>
@@ -276,12 +276,12 @@
         <div class="submit-ui-wrap">
         </div>
         <div class="submit-ui-wrap">
-            <button type="button" class="gray-submit-btn" id="reset" onclick="fnClear()">
+            <button type="button" class="gray-submit-btn" id="reset" onclick="search_fnClear()">
                 <img src="/resources/images/reset-icon.svg" class="icon22">
                 <span><spring:message code='common.btn.reset'/></span>
             </button>
 
-            <button type="button" class="point-submit-btn" id="search" onclick="fnSearch()">
+            <button type="button" class="point-submit-btn" id="search" onclick="search_fnSearch()">
                 <img src="/resources/images/search-icon.svg" class="icon22">
                 <span><spring:message code='common.btn.search'/></span>
             </button>
@@ -300,7 +300,7 @@
                 <div class="dropdown02">
                     <button class="dropdown-search input-line-b" id="gridDropdownBtn"><spring:message code='common.viewResults' arguments="10" /> <span><img class="icon20"
                                                                                             alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                    <div class="dropdown-content">
+                    <div class="dropdown-content" id="search_viewCntDropdown">
                         <a data-cnt="100"><spring:message code='common.viewResults' arguments="100" /></a>
                         <a data-cnt="50"><spring:message code='common.viewResults' arguments="50" /></a>
                         <a data-cnt="10"><spring:message code='common.viewResults' arguments="10" /></a>
@@ -311,7 +311,7 @@
         <div class="w-line01 mt-8px"></div>
         <div class="main-table">
             <div class="tableWrapper">
-                <table id="userRequestList"></table>
+                <table id="userSearchTable"></table>
                 <div id="userRequestPager"></div>
                 <div id="customPager" class="page-group mb-22px mt-10px"></div>
             </div>
@@ -363,11 +363,18 @@
         select: "<spring:message code='common.select'/>"
     };
 
-    let reqId = "${reqId}";
-    let userDtlGeneral = {};
+    // Grid 하단 페이지 숫자
+    let pageSize = 10;
+    let currentPageGroup = 1;
 
-    let calculatedWdDt = "";  // 변경 될 삭제 예정일
-    let calculatedWdYn = "";  // 변경 될 탈퇴 상태
+    // 기본 Items 개수
+    var rowNumsVal = 10;
+
+    let reqId = "${reqId}";
+    let inChargeId = "${inChargeId}";
+
+    // userDtlGeneral : 기존 값 저장
+    let userDtlGeneral = {};
 
     function extractUserDtlGeneralFromDOM() {
         userDtlGeneral = {
@@ -400,16 +407,8 @@
         };
     }
 
-    const inChargeId = "${inChargeId}";
-
-    // Grid 하단 페이저 숫자
-    const pageSize = 10;
-    let currentPageGroup = 1;
-
-    // 기본 Items 개수
-    var rowNumsVal = 10;
-
-    function fnClear() {
+    // 검색 조건 초기화
+    function search_fnClear() {
         $('#searchBgnDe').val('');
         $('#searchEndDe').val('');
         $('#userNm').val('');
@@ -424,10 +423,11 @@
         $('.serviceBtns')[0].classList.add('active');
         $('.alertBtns.active').removeClass('active');
         $('.alertBtns')[0].classList.add('active');
-        $('.periodBtn')[3].click();
+        $('#search_date .data-select-btn.active')[3].click();
     }
 
-    function setSearchParam() {
+    // 검색 조건 설정
+    function search_setSearchParam() {
         return {
             inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
             searchBgnDe : $('#searchBgnDe').val()+' 00:00:00',
@@ -464,13 +464,14 @@
         };
     }
 
-    function fnSearch(){
-        $('#userRequestList').jqGrid('setGridParam', {
-            url: 'selectUserSearch',
+    // 검색
+    function search_fnSearch(){
+        $('#userSearchTable').jqGrid('setGridParam', {
+            url: '/user/selectUserSearch',
             datatype: 'json',
-            postData : setSearchParam()
+            postData : search_setSearchParam()
         });
-        $('#userRequestList').trigger('reloadGrid', [{page:1, current:true}]);
+        $('#userSearchTable').trigger('reloadGrid', [{page:1, current:true}]);
     }
 
     $(document).ready(function() {
@@ -483,12 +484,12 @@
         $('#searchBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
         $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
 
-        $('#userRequestList').jqGrid({
+        $('#userSearchTable').jqGrid({
             url : '/user/selectUserSearch',
             mtype : "POST",
             datatype: "json",
             jsonReader : {repeatitems: false},
-            postData: setSearchParam(),
+            postData: search_setSearchParam(),
             colModel : [
                 { label: 'UID', name: 'userId', width:300, sortable : true},
                 { label: 'Registration Date', name: 'registDt', width:200, sortable : true},
@@ -566,7 +567,6 @@
                     }
                 },
                 */
-                <!-- 버튼 대신 hidden form 사용 -->
                 {
                     label: 'Details',
                     name: 'details',
@@ -600,11 +600,11 @@
             console.log("전체 데이터 rows : " + data.rows);
                 $('#totalResultsCnt').text(data.records);
                 $('#currentRowsCnt').text(data.rows.length);
-                createCustomPager('userRequestList');
+                createCustomPager('userSearchTable');
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             gridComplete: function() {
-                createCustomPager('userRequestList');
+                createCustomPager('userSearchTable');
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             onSortCol: function (index, columnIndex, sortOrder) {
@@ -615,9 +615,21 @@
         })
     })
 
-    $(document).on('click', '.periodBtn', function(){
-        console.log('✅ search periodBtn clicked!');
-        $('.periodBtn').removeClass('active');
+    // 달력 아이콘 클릭 시, date input 활성화
+    function openCalendar(dateInputId) {
+        document.getElementById(dateInputId).showPicker();
+    }
+
+    // 날짜 선택 시, 표시할 입력 필드 업데이트
+    function updateDate(dateInputId, displayId) {
+        const dateValue = document.getElementById(dateInputId).value;
+        document.getElementById(displayId).value = dateValue;
+    }
+
+    // 검색일 계산
+    $(document).on('click', '#search_date .data-select-btn', function(){
+        console.log('✅ search data-select-btn clicked!');
+        $('#search_date .data-select-btn').removeClass('active');
 
         $(this).addClass('active');
 
@@ -682,31 +694,24 @@
     })
     */
 
-    // 달력 아이콘 클릭 시, date input 활성화
-    function openCalendar(dateInputId) {
-        document.getElementById(dateInputId).showPicker();
-    }
-
-    // 날짜 선택 시, 표시할 입력 필드 업데이트
-    function updateDate(dateInputId, displayId) {
-        const dateValue = document.getElementById(dateInputId).value;
-        document.getElementById(displayId).value = dateValue;
-    }
-
-    $('.table-wrap .dropdown-content a').click(function(){
+    $('.table-wrap #search_viewCntDropdown a').click(function(){
         let cnt = $(this).data('cnt');
 
         rowNumsVal = cnt;
         $('#gridDropdownBtn').text($(this).text());
-        $("#healthAlertList").setGridParam({ rowNum: cnt });
-        fnSearch();
+        $("#userSearchTable").setGridParam({ rowNum: cnt });
+        search_fnSearch();
     })
 
     $('.input-txt02').keyup(function(e){
         if(e.keyCode == '13'){
-            fnSearch();
+            search_fnSearch();
         }
     });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////// slide ////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 우측에서 나타나는 슬라이드 팝업 열기
     function openPopup() {
@@ -727,6 +732,73 @@
         closePopup();
     });
 
+function loadUserDetailTab(tab = 'general') {
+    fetch("/user/detail/" + tab, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({ reqId })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('❌ Error : ' + tab);
+        return response.text();
+    })
+    .then(html => {
+        $('.slide-popup-container').html(html);
+
+        if (tab === 'general') {
+            readonly();
+            extractUserDtlGeneralFromDOM("#customerPopup .slide-popup-container");
+            updateDeletionDateInfo();
+        } else if (tab === 'health-alerts') {
+            healthAlerts_fnSearch();
+            drawHealthAlertChart();
+            initHealthAlertGrid();
+        } else if (tab === 'service-requests') {
+            drawServiceRequestsChart();
+        } else if (tab === 'input-checkup-data') {
+            initDropzone();
+            initInputCheckupDataTab();
+        }
+
+    })
+    .catch(error => {
+        $.confirm({
+            title: 'Error',
+            content: 'Failed to load tab content.',
+            type: 'red',
+            typeAnimated: true,
+            buttons: {
+                OK: {
+                    btnClass: 'btn-red',
+                    action: function(){ console.error(error); }
+                }
+            }
+        });
+    });
+}
+
+$(document).on("click", ".open-slide-btn", function () {
+    reqId = $(this).data("reqid");
+
+    openPopup();
+    loadUserDetailTab('general');  // 기본 탭 로딩
+});
+
+
+$(document).on('click', '.second-tap-btn', function () {
+    $('.second-tap-btn').removeClass('active');
+    $(this).addClass('active');
+
+    let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
+    loadUserDetailTab(tab);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////// General ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // 입력창 잠금
     function readonly() {
         $('#customerPopup input, #customerPopup textarea').attr('readonly', true);
@@ -739,6 +811,7 @@
         $('#customerPopup .dropdown-search, #customerPopup .dropdown-content a').not('.readonly-dropdown').removeClass('hold');
     }
 
+/* 삭제
     $(document).on("click", ".open-slide-btn", function () {
         reqId = $(this).data("reqid");
 
@@ -767,7 +840,7 @@
         .catch(error => {
             $.alert({
                 title: 'Error',
-                content: '탭 내용을 불러오는데 실패했습니다.',
+                content: 'Failed to load tab content.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
@@ -778,6 +851,7 @@
             });
         });
     });
+*/
 
     // editBtn : 사용자 정보 변경 버튼
     $(document).on('click', '#editBtn', function () {
@@ -876,42 +950,57 @@
         }
     });
 
-// resetApprovalBtn : 관리자에 의한 사용자 비밀번호 초기화
-$(document).on("click", "#resetApprovalBtn", function () {
-    fetch("/user/resetPwByAdmin", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: new URLSearchParams({
-            userId: $("#general_userId").val().trim(),
-            newPw: $("#resetPwInput").val().trim()
+    // resetApprovalBtn : 관리자에 의한 사용자 비밀번호 초기화
+    $(document).on("click", "#resetApprovalBtn", function () {
+        fetch("/user/resetPwByAdmin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                userId: $("#general_userId").val().trim(),
+                newPw: $("#resetPwInput").val().trim()
+            })
         })
-    })
-    .then(response => response.json())
-    .then(({ success, message }) => {
-        if (success) {
-            $.confirm({
-                title: 'Success',
-                content: 'The password has been successfully reset.',
-                type: 'green',
-                typeAnimated: true,
-                buttons: {
-                    OK: {
-                        btnClass: 'btn-green',
-                        action: function(){
-                            // 확인 눌렀을 때 실행할 동작 (필요 시)
+        .then(response => response.json())
+        .then(({ success, message }) => {
+            if (success) {
+                $.confirm({
+                    title: 'Success',
+                    content: 'The password has been successfully reset.',
+                    type: 'green',
+                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            btnClass: 'btn-green',
+                            action: function(){
+                                // 확인 눌렀을 때 실행할 동작 (필요 시)
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            $("#resetPwConfirmPopup").fadeOut();
-            $(".reset-pw-popup-container").empty();
-        } else {
+                $("#resetPwConfirmPopup").fadeOut();
+                $(".reset-pw-popup-container").empty();
+            } else {
+                $.confirm({
+                    title: 'Error',
+                    content: message || 'Failed to reset the password.',
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            btnClass: 'btn-red',
+                            action: function(){}
+                        }
+                    }
+                });
+            }
+        })
+        .catch(error => {
             $.confirm({
                 title: 'Error',
-                content: message || 'Failed to reset the password.',
+                content: message || 'An error occurred during password reset.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
@@ -921,23 +1010,8 @@ $(document).on("click", "#resetApprovalBtn", function () {
                     }
                 }
             });
-        }
-    })
-    .catch(error => {
-        $.confirm({
-            title: 'Error',
-            content: message || 'An error occurred during password reset.',
-            type: 'red',
-            typeAnimated: true,
-            buttons: {
-                OK: {
-                    btnClass: 'btn-red',
-                    action: function(){}
-                }
-            }
         });
     });
-});
 
     // resetBtn : 전체 필드 복원 버튼
     $(document).on("click", "#resetBtn", function () {
@@ -967,6 +1041,9 @@ $(document).on("click", "#resetApprovalBtn", function () {
         resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userSearch_messages.select);
         resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userSearch_messages.select);
     });
+
+    let calculatedWdDt = "";  // 변경 될 삭제 예정일
+    let calculatedWdYn = "";  // 변경 될 탈퇴 상태
 
     function updateDeletionDateInfo() {
         let wdYn = $("#general_statusDropdown").contents().filter(function () {
@@ -1248,7 +1325,7 @@ $(document).on("click", "#resetApprovalBtn", function () {
                     OK: {
                         btnClass: 'btn-green',
                         action: function(){
-                            // 확인 눌렀을 때 실행할 동작 (필요 시)
+                            $(".open-slide-btn[data-reqid='" + reqId + "']").click();
                         }
                     }
                 }
@@ -1277,6 +1354,7 @@ $(document).on("click", "#resetApprovalBtn", function () {
             });
         });
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////// healthAlerts /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1526,64 +1604,6 @@ function extractUserDtlHealthAlertFromDOM() {
         'Stress': Number($("#healthAlerts_cntST").text().replace(/,/g, "")) || 0
     };
 }
-
-$(document).on('click', '.second-tap-btn', function () {
-    // 탭 UI 상태 업데이트
-    $('.second-tap-btn').removeClass('active');
-    $(this).addClass('active');
-
-    let tab = $(this).data('tab');  // 예: 'health-alerts'
-
-    fetch("/user/detail/" + tab, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({ reqId })
-    })
-    .then(response => {
-        console.log('❕ 응답 상태 : ' + response.status);
-
-        if (!response.ok) throw new Error('❌ Error : second-tap-btn');
-
-        return response.text();
-    })
-    .then(html => {
-        $('.slide-popup-container').html(html);
-
-        if ($(this).data('tab') === 'health-alerts') {
-            healthAlerts_fnSearch();
-            drawHealthAlertChart();   // 👉 여기에서 drawHealthAlertChart 실행
-            initHealthAlertGrid();
-        } if ($(this).data('tab') === 'service-requests') {
-            drawServiceRequestsChart();
-        } else if ($(this).data('tab') === 'input-checkup-data') {
-            initDropzone();
-            initInputCheckupDataTab();
-        }
-
-        //readonly();  // 읽기 전용 설정 함수가 있다면
-        //extractUserDtlGeneralFromDOM();  // 다시 객체 구성
-        //updateDeletionDateInfo();  // 필요 시
-    })
-    .catch(error => {
-        $.confirm({
-            title: 'Error',
-            content: message || 'Failed to load tab content.',
-            type: 'red',
-            typeAnimated: true,
-            buttons: {
-                OK: {
-                    btnClass: 'btn-red',
-                    action: function(){
-                        console.error(error);
-                    }
-                }
-            }
-        });
-    });
-});
-
 </script>
 
 <script type="text/javascript">
@@ -1621,9 +1641,9 @@ console.log("healthAlerts_endDate" + endDate);
     };
 }
 
-$(document).on('click', '#healthAlerts_Date .data-select-btn', function () {
+$(document).on('click', '#healthAlerts_date .data-select-btn', function () {
     console.log('✅ healthAlerts healthAlerts clicked!');
-    $('#healthAlerts_Date .data-select-btn').removeClass('active');
+    $('#healthAlerts_date .data-select-btn').removeClass('active');
     $(this).addClass('active');
 
     let period = $(this).data('period');
@@ -1668,8 +1688,9 @@ $(document).on('click', '#healthAlerts_altTp .data-select-btn', function () {
             $(this).toggleClass('active');
         }
 
-        fnSearch();
+        healthAlerts_fnSearch();
     })
+
 
 
 
@@ -1679,7 +1700,7 @@ $('.dropdown-content a').click(function(){
     rowNumsVal = cnt;
     $('#gridDropdownBtn').text($(this).text());
     $("#healthAlerts_alertGrid").setGridParam({ rowNum: cnt });
-    fnSearch();
+    healthAlerts_fnSearch();
 })
 
 //logout 임다.
@@ -1909,7 +1930,7 @@ console.log(inputCheckup_setAddParam());
                                 } else {
                                     inputCheckup_fnClear();
                                     $.alert(data.message);
-                                    fnSearch();
+                                    healthAlerts_fnSearch();
                                 }
                             }
                         });
@@ -1927,12 +1948,12 @@ console.log(inputCheckup_setAddParam());
         rowNumsVal = cnt;
         $('#gridDropdownBtn').text($(this).text());
         $("#healthAlertList").setGridParam({ rowNum: cnt });
-        fnSearch();
+        healthAlerts_fnSearch();
     })
 
     $('.input-txt02').keyup(function(e){
         if(e.keyCode == '13'){
-            fnSearch();
+            healthAlerts_fnSearch();
         }
     });
 
@@ -1970,8 +1991,8 @@ $(document).on('click', '.sex-btn', function() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     $(document).on('click', '.temp-block-wrap button:not(.data-select-btn)', function () {
         $.confirm({
-            title: '알림',
-            content: 'This feature is under preparation.',
+            title: 'This feature is under preparation.',
+            content: ' ',
             type: 'blue',
             typeAnimated: true,
             buttons: {

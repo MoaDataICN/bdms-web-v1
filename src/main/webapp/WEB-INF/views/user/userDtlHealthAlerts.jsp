@@ -130,7 +130,6 @@
         <div class="second-container mt-18px">
             <div class="content-row">
                 <!-- 좌측 입력폼 그룹 -->
-        
                 <div class="row-md-100">
                     <div class="row-wrap">
                         <div class="input-label01">
@@ -148,7 +147,7 @@
                                 <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker2')" alt="달력 아이콘">
                                 <input type="date" id="healthAlerts_datePicker2" class="hidden-date" onchange="updateDate('healthAlerts_datePicker2', 'healthAlerts_dateDisplay2')">
                             </div>
-                            <div class="day-button-wrap" id="healthAlerts_Date">
+                            <div class="day-button-wrap" id="healthAlerts_date">
                                 <button class="data-select-btn" data-period="all">All</button>
                                 <button class="data-select-btn" data-period="today">Today</button>
                                 <button class="data-select-btn" data-period="7-day">7day</button>
@@ -199,6 +198,7 @@
 
         <!-- Today health board Table
         <div class="table-wrap mt-14px" style="width:100%;">
+        userRequestList 등으로 쓰이고 있음
             <table id="healthAlerts_alertGrid" style="width:100%;"></table>
             <div id="healthAlerts_alertGridPager"></div>
             <div id="healthAlerts_customPager" class="page-group mb-22px mt-10px"></div>
