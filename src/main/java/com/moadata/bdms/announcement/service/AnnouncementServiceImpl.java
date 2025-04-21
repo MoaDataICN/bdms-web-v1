@@ -128,4 +128,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
         return announcementDao.selectAnnouncementList(announcementVO);
     }
+
+    @Override
+    public List<AnnouncementVO> selectUserMessage(String userId) {
+        return announcementDao.selectUserMessage(userId);
+    }
 }

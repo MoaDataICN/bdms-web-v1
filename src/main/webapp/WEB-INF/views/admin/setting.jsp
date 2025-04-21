@@ -45,6 +45,10 @@
 	.calendar-icon {
 		z-index: 1;
 	}
+
+	table {
+		width: 100% !important;
+	}
 </style>
 
 <main class="main">
@@ -398,7 +402,7 @@
 			sortable : true,
 			sortname : 'registDt',
 			sortorder : 'DESC',
-			shrinkToFit: false,
+			shrinkToFit: true,
 			rownumbers: true,
 			loadonce : false,
 			pager : '#adminPager',
@@ -418,6 +422,10 @@
 				$("#sord").val(sortOrder);
 			}
 		})
+	})
+
+	$(window).on('resize.jqGrid', function() {
+		jQuery("#adminList").jqGrid('setGridWidth', $(".table-wrap").width());
 	})
 
 	$(document).on('click','#adm_cancel', function(){

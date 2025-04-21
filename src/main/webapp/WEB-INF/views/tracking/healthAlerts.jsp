@@ -41,6 +41,10 @@
     .calendar-icon {
         z-index: 1;
     }
+
+    table {
+        width: 100% !important;
+    }
 </style>
 
 <main class="main">
@@ -408,7 +412,7 @@
             sortable : true,
             sortname : 'dctDt',
             sortorder : 'DESC',
-            shrinkToFit: false,
+            shrinkToFit: true,
             rownumbers: true,
             loadonce : false,
             pager : '#healthAlertPager',
@@ -429,6 +433,11 @@
                 $("#sord").val(sortOrder);
             }
         })
+    })
+
+    $(window).on('resize.jqGrid', function() {
+        console.log('resize')
+        jQuery("#healthAlertList").jqGrid('setGridWidth', $(".table-wrap").width());
     })
 
 

@@ -30,4 +30,8 @@ public class AnnouncementDao extends BaseAbstractDao {
 
         return list;
     }
+
+    public List<AnnouncementVO> selectUserMessage(String userId) {
+        return selectList("announcement.selectUserMessage", userId);
+    }
 }

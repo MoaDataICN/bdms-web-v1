@@ -8,4 +8,5 @@ public interface AnnouncementService {
     public void insertAnnouncement(AnnouncementVO announcement);
 
     public List<AnnouncementVO> selectAnnouncementList(AnnouncementVO announcementVO);
+    public List<AnnouncementVO> selectUserMessage(String userId);
 }

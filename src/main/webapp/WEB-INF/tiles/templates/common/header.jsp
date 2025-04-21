@@ -69,9 +69,3 @@
         </button>
     </div>
 </header>
-
-<script>
-    $('#messageBtn').click(function(){
-        showToast('퍼블리싱 작업 중인 기능입니다.')
-    })
-</script>

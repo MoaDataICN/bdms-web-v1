@@ -42,6 +42,10 @@
     .calendar-icon {
         z-index: 1;
     }
+
+    table {
+        width: 100% !important;
+    }
 </style>
 
 <main class="main">
@@ -396,7 +400,7 @@
             sortable : true,
             sortname : 'reqDt',
             sortorder : 'DESC',
-            shrinkToFit: false,
+            shrinkToFit: true,
             rownumbers: true,
             loadonce : false,
             pager : '#userRequestPager',
@@ -417,6 +421,11 @@
                 $("#sord").val(sortOrder);
             }
         })
+    })
+
+    $(window).on('resize.jqGrid', function() {
+        console.log('resize')
+        jQuery("#userRequestList").jqGrid('setGridWidth', $(".table-wrap").width());
     })
 
     $(document).on('click', '.periodBtn', function(){

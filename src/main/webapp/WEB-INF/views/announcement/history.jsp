@@ -42,6 +42,10 @@
   .calendar-icon {
     z-index: 1;
   }
+
+  table {
+    width: 100% !important;
+  }
 </style>
 
 <main class="main">
@@ -158,6 +162,10 @@
         $("#sord").val(sortOrder);
       }
     })
+  })
+
+  $(window).on('resize.jqGrid', function() {
+    jQuery("#messageHistoryList").jqGrid('setGridWidth', $(".table-wrap").width());
   })
 
   $(document).on('click', '.detail-btn', function(){

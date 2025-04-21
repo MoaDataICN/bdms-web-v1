@@ -9,6 +9,7 @@
         <put-attribute name="header" value="/WEB-INF/tiles/templates/common/header.jsp" />
         <put-attribute name="sideMenu" value="/WEB-INF/tiles/templates/common/menu.jsp" />
         <put-attribute name="body" value="/WEB-INF/tiles/templates/common/body.jsp" />
+        <put-attribute name="message" value="/WEB-INF/tiles/templates/common/message.jsp" />
         <put-attribute name="footer" value="/WEB-INF/tiles/templates/common/footer.jsp" />
     </definition>
 

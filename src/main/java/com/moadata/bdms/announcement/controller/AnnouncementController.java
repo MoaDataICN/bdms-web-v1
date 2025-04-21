@@ -83,4 +83,28 @@ public class AnnouncementController {
 
         return map;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/selectUserMessage", method = RequestMethod.POST)
+    public Map<String, Object> selectUserMessage(String userId) {
+        Map<String, Object> map = new HashMap<>();
+
+        String message = "";
+        boolean isError = false;
+        List<AnnouncementVO> resultList;
+
+        try {
+            resultList = announcementService.selectUserMessage(userId);
+            map.put("messageList", resultList);
+        } catch(Exception e) {
+            e.printStackTrace();
+            isError = true;
+            message = e.getMessage();
+        }
+
+        map.put("isError", isError);
+        map.put("message", message);
+
+        return map;
+    }
 }

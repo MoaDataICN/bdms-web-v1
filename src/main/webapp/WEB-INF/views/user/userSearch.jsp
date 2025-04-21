@@ -71,6 +71,10 @@
         font-size: 12px;
         margin-left: 8px;
     }
+
+    table {
+        width: 100% !important;
+    }
 </style>
 
 <main class="main">
@@ -600,7 +604,7 @@
             sortable : true,
             sortname : 'reqDt',
             sortorder : 'DESC',
-            shrinkToFit: false,
+            shrinkToFit: true,
             rownumbers: true,
             loadonce : false,
             pager : '#userRequestPager',
@@ -622,6 +626,10 @@
                 $("#sord").val(sortOrder);
             }
         })
+    })
+
+    $(window).on('resize.jqGrid', function() {
+        jQuery("#userSearchTable").jqGrid('setGridWidth', $(".table-wrap").width());
     })
 
     // 달력 아이콘 클릭 시, date input 활성화

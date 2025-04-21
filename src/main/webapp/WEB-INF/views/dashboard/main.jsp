@@ -49,6 +49,10 @@
         font-size : 12px;
         color: rgba(96,96,97,1);
     }
+
+    table {
+        width: 100% !important;
+    }
 </style>
 
 <!-- 주요콘텐츠 영역-->
@@ -883,6 +887,11 @@
             }
         });
     });
+
+    $(window).on('resize.jqGrid', function() {
+        console.log('resize')
+        jQuery("#alertGrid").jqGrid('setGridWidth', $(".table-wrap").width());
+    })
     <!-- Grid E -->
 
     function fnSearch(){

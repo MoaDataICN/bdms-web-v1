@@ -26,6 +26,7 @@ public class AnnouncementVO extends BaseSearchObject {
 	private String cont;
 	private String sndId;
 	private String userId;
+	private String userNm;
 	private String readSt;
 
 	private List<String> adminList;

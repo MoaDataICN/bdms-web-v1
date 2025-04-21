@@ -686,6 +686,10 @@
         })
     })
 
+    $(window).on('resize.jqGrid', function() {
+        jQuery("#workforceList").jqGrid('setGridWidth', $(".table-wrap").width());
+    })
+
     $(document).on('click','.svcBtns', function(){
         if($('.svcBtns.active').length === 1 && $('.svcBtns.active')[0] == this){
             return;

@@ -1,3 +1,4 @@
+
 /************* 본문 관련 공통 시작 *************/
 .icon14 {
     height: 14px;
@@ -531,6 +532,13 @@
 .w-line01 {
     width: 100%;
     height: 1px;
+    background-color: var(--gray-10);
+}
+
+.w-line02 {
+    width: 100%;
+    height: 1px;
+    margin: 4px 0;
     background-color: var(--gray-10);
 }
 

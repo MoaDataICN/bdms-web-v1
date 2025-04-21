@@ -58,6 +58,7 @@
         <tiles:insertAttribute name="sideMenu" />
         <!-- body -->
         <tiles:insertAttribute name="body" />
+        <tiles:insertAttribute name="message" />
     </div>
 </body>
 </html>

@@ -64,4 +64,13 @@
 	<select id="selectAnnouncementListCnt" parameterType="announcementVO" resultType="int">
 		SELECT FOUND_ROWS()
 	</select>
+
+	<select id="selectUserMessage" parameterType="String" resultType="announcementVO">
+		select *
+		from T_WLK_MNG_ANN_ST ST
+				 join T_WLK_MNG_ANN ANN on ANN.ANN_ID = ST.ANN_ID
+				 join T_WLK_MNG_USER user on user.USER_ID = ANN.SND_ID
+		where ST.USER_ID=#{userId}
+		order by ANN.SND_DT DESC
+	</select>
 </mapper>
