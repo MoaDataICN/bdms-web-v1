@@ -37,19 +37,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserService {
 	@Resource(name="userDao")
 	private UserDao userDao;
-	
-//	@Resource(name="dashDao")
-//	private DashDao dashDao;
-	
-//	@Value("#{config['product.option']}")
-//	private String productOption;
-	
+
 	@Value("${manager.id}")
 	private String managerId;
-	
-//	@Value("#{config['dash.default.dashNm']}")
-//	private String defaultDashNm;
-	
+
 	@Resource(name = "userIdGenService")
 	private IdGenService userIdGenService;
 	
@@ -73,10 +64,6 @@ public class UserServiceImpl implements UserService {
 				userSearchDTO.setUserNm(EncryptUtil.encryptText(userSearchDTO.getUserNm()));
 			}
 
-//			if(userSearchDTO.getInChargeNm() != null && !userSearchDTO.getInChargeNm().isEmpty()) {
-//				userSearchDTO.setInChargeNm(EncryptUtil.encryptText(userSearchDTO.getInChargeNm()));
-//			}
-
 			List<UserSearchDTO> userSearchList = userDao.selectUserSearch(userSearchDTO);
 
 			if(userSearchList.size() > 0) {
@@ -84,7 +71,6 @@ public class UserServiceImpl implements UserService {
 					userSearch.setUserNm(EncryptUtil.decryptText(userSearch.getUserNm()));
 					userSearch.setBrthDt(EncryptUtil.decryptText(userSearch.getBrthDt()));
 					userSearch.setMobile(EncryptUtil.decryptText(userSearch.getMobile()));
-//					userSearch.setInChargeNm(EncryptUtil.decryptText(userSearch.getInChargeNm()));
 				}
 			}
 
@@ -108,16 +94,9 @@ public class UserServiceImpl implements UserService {
 				userDtl.setMobile(EncryptUtil.decryptText(userDtl.getMobile()));
 			}
 
-//			if (userDtl.getInChargeNm() != null && !userDtl.getInChargeNm().isEmpty()) {
-//				userDtl.setInChargeNm(EncryptUtil.decryptText(userDtl.getInChargeNm()));
-//			}
-
 			if (userDtl.getBrthDt() != null && !userDtl.getBrthDt().isEmpty()) {
 				userDtl.setBrthDt(EncryptUtil.decryptText(userDtl.getBrthDt()));
 			}
-
-			System.out.println("가입일(registDt): " + userDtl.getRegistDt());
-			System.out.println("최근접속일(lastAccess): " + userDtl.getLastAccess());
 
 			return userDtl;
 
@@ -141,16 +120,11 @@ public class UserServiceImpl implements UserService {
 				userUpdateDTO.setMobile(EncryptUtil.encryptText(userUpdateDTO.getMobile()));
 			}
 
-//			if (userUpdateDTO.getInChargeNm() != null && !userUpdateDTO.getInChargeNm().isEmpty()) {
-//				userUpdateDTO.setInChargeNm(EncryptUtil.encryptText(userUpdateDTO.getInChargeNm()));
-//			}
-
 			if (userUpdateDTO.getBrthDt() != null && !userUpdateDTO.getBrthDt().isEmpty()) {
 				userUpdateDTO.setBrthDt(EncryptUtil.encryptText(userUpdateDTO.getBrthDt()));
 			}
 
 			// UPT_ID도 암호화 추가할 것
-
 			System.out.println(userUpdateDTO.getGrpTp());
 			System.out.println(userUpdateDTO.getGrpTp());
 			System.out.println(userUpdateDTO.getGrpTp());
@@ -175,28 +149,10 @@ public class UserServiceImpl implements UserService {
 		return null;
     }
 
-//	@Override
-//	public List<String> selectHigherInChargeNm(String grpLv) {
-//		try {
-//			if (grpLv != null && !grpLv.isEmpty()) {
-//				return userDao.selectHigherInChargeNm(grpLv);
-//			} else {
-//				return Collections.emptyList();
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-
 	@Override
 	public boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
 		try {
-//			if (userUpdateDTO.getInChargeNm() != null && !userUpdateDTO.getInChargeNm().isEmpty()) {
-//				userUpdateDTO.setInChargeNm(EncryptUtil.encryptText(userUpdateDTO.getInChargeNm()));
-//			}
 			int updatedRows = userDao.updateUserInChargeIdByNm(userUpdateDTO);
-
 			return updatedRows > 0;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -282,19 +238,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void deleteUser(String uid) {
-		/*
-		if("solar".equals(productOption)) {
-			List<DashVO> dashList = (List<DashVO>) dashDao.selectDashListByUser(uid);
-			
-			for(DashVO dash : dashList) {
-				// DELETE DASH LAYOUT
-				dashDao.deleteDashLayoutByDash(dash.getDashId());
-				// DELETE DASH
-				dashDao.deleteDash(dash.getDashId());
-			}
-		}
-		*/
-		// DELETE USER
 		userDao.deleteUser(uid);
 	}
 	
@@ -305,17 +248,6 @@ public class UserServiceImpl implements UserService {
 		List<Map> delDataMap = user.getDelDataMap();
 		String userId = "";
 		for(String uid : user.getUIds().split(",")) {
-			/*
-			if("solar".equals(productOption)) {
-				List<DashVO> dashList = (List<DashVO>) dashDao.selectDashListByUser(uid);
-				
-				for(DashVO dash : dashList) {
-					// DELETE DASH LAYOUT
-					dashDao.deleteDashLayoutByDash(dash.getDashId());
-					// DELETE DASH
-					dashDao.deleteDash(dash.getDashId());
-				}
-			}*/
 			//사용자 삭제 전 상세조회를 하기 위해 임시 UserVO를 생성 후 조회하여 암호화 파일을 생성한다.
 			UserVO temp = new UserVO();
 			temp.setJobType("D");
@@ -339,10 +271,7 @@ public class UserServiceImpl implements UserService {
 				param.put("prssUsrId", user.getLoginId());				
 				String tempMsg = "사용자 " + userId + " - " + "{0}" + " 성공 하였습니다.";
 				param.put("msgEtc", tempMsg);
-				
 				//historyInfoService.commInsertHistory(param,"");
-				
-				
 			}else {
 				//실패
 				Map<String,String> param = new HashMap<String,String>();
@@ -353,7 +282,6 @@ public class UserServiceImpl implements UserService {
 				param.put("prssUsrId", user.getLoginId());				
 				String tempMsg = "사용자 " + userId + " - " + "{0}" + " 실패 하였습니다.";
 				param.put("msgEtc", tempMsg);
-				
 				//historyInfoService.commInsertHistory(param,"");
 			}
 			
@@ -472,7 +400,6 @@ public class UserServiceImpl implements UserService {
 		if(checkupVO.getBrthDt() != null && !checkupVO.getBrthDt().isEmpty()) {
 			checkupVO.setBrthDt(EncryptUtil.encryptText(checkupVO.getBrthDt()));
 		}
-
 		userDao.insertCheckUp(checkupVO);
 	}
 }

@@ -751,44 +751,7 @@ public class UserController extends BaseController {
 		boolean isError = false;
 		UserVO vo = (UserVO) getRequestAttribute("user");
 		try {
-			//usergroup 제거 22.08.23
-			//슈퍼 권한은 추후 수정 22.08.23
-			if(user.getUid().equals("USR_000000000000")) {
-				throw new ProcessException("슈퍼사용자는 편집할수 없습니다.");
-			}
-		
 			user.setModifyId(vo.getUserId());
-
-			if(user.getUserPw()!= null) {
-				String encryptPassword = EncryptUtil.encryptSha(user.getUserPw());
-				user.setUserPw(encryptPassword);
-				//비밀번호 변경시 비밀번호 변경 날짜 업데이트 해야됨 22.08.23
-			}
-			
-			//사용자 이름, 핸드폰번호 암호와				
-			String userNm = "";
-			String phoneNo = "";
-			String emailAddr = "";
-			
-			userNm = EncryptUtil.encryptText(user.getUserNm());
-			
-			if (!user.getPhoneNo().equals("")) {
-				phoneNo = EncryptUtil.encryptText(user.getPhoneNo());
-			}
-			if (!user.getEmailAddr().equals("")) {
-			    emailAddr = EncryptUtil.encryptText(user.getEmailAddr());
-			}			
-			
-			user.setUserNm(userNm);
-			user.setPhoneNo(phoneNo);
-			user.setEmailAddr(emailAddr);
-			user.setJobType("U");
-			
-			if(!user.getOldLockYn().equals(user.getLockYn()) && user.getLockYn().equals("N")) {
-				//잠긴 계정을 풀었을 경우  oldLockYn 값을 C로 설정하여 로그인 시간을 현재시간으로 업데이트 한다.
-				user.setOldLockYn("C");
-			}
-			
 			userService.updateUser(user);
 			
 			//이력 추가.
@@ -803,7 +766,7 @@ public class UserController extends BaseController {
 			
 			//historyInfoService.commInsertHistory(param,"");
 			
-			message = "편집되었습니다.";
+			message = "Edited.";
 			
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
@@ -846,13 +809,8 @@ public class UserController extends BaseController {
 		try {
 						
 			user.setModifyId(vo.getUserId());
-			message = "삭제되었습니다.";
-			/*
-			for(String uid : user.getUIds().split(",")) {
-				if(uid.equals("USR_000000000000")) {
-					throw new ProcessException("슈퍼 사용자는 삭제할 수 없습니다");
-				}
-			}*/
+			message = "Deleted.";
+
 			//로그인 계정 저장
 			user.setLoginId(vo.getUserId());
 			//삭제 전에 
@@ -955,23 +913,11 @@ public class UserController extends BaseController {
 		boolean isError = false;
 		
 		try {
-			//UserGroupVO vo = (UserGroupVO) getRequestAttribute("usergroup");
-			//if("Y".equalsIgnoreCase(vo.getUsergroupBtnYn()))
-			//{
-				UserVO user = (UserVO) getRequestAttribute("user");
-				userVO.setRegistId(user.getUserId());
-				/* 그룹이 제거되어 아래 구문 주석 처리 22.08.22
-				if(userVO.getUsergroupId().equals("UGP_000000000000")) {
-					throw new ProcessException("슈퍼그룹은 편집 할 수 없습니다.");
-				}*/
-				
-				userService.userMenuUpdate(userVO);
-				message = "편집 되었습니다.";
-			//}
-			//else
-			//{
-			//	message = "권한이 없습니다.";
-			//}
+			UserVO user = (UserVO) getRequestAttribute("user");
+			userVO.setRegistId(user.getUserId());
+
+			userService.userMenuUpdate(userVO);
+			message = "편집 되었습니다.";
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 			isError = true;
@@ -983,19 +929,6 @@ public class UserController extends BaseController {
 		return map;
 	}
 	
-	/**
-	 * 비밀번호 변경 페이지이동
-	 * 
-	 * @return
-	
-	@Auth
-	@RequestMapping(value = "/userPwChange", method = RequestMethod.GET)
-	public String userPwChange(HttpServletRequest request,ModelMap model) {
-		
-	
-		return "user/userPwChange";
-	}
-	 */
 	//개인정보 수정 Popup화면
 	@RequestMapping(value = "/popup/UserInfo_form", method = RequestMethod.GET)
 	public  String Userinfo(ModelMap model) throws Exception {
@@ -1134,7 +1067,6 @@ public class UserController extends BaseController {
 		String message = "";
 		UserVO vo = (UserVO) getRequestAttribute("user");
 		try {
-
 			checkup.setAdminId(vo.getUserId());
 			userService.insertCheckUp(checkup);
 
@@ -1228,5 +1160,29 @@ public class UserController extends BaseController {
 		} catch (Exception e) {
 			LOGGER.info(e.getMessage());
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/selectAdminById", method = RequestMethod.POST)
+	public Map<String, Object> selectAdminById(@ModelAttribute("checkup") CheckupVO checkup) {
+		Map<String, Object> map = new HashMap<>();
+
+		String message = "";
+		boolean isError = false;
+		UserVO resultUserVO = new UserVO();
+		String userId = checkup.getUserId();
+
+		try {
+			resultUserVO = userService.selectUserInfoDetail(userId);
+			//String pwd = resultUserVO.getPwd();
+			map.put("row", resultUserVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			isError = true;
+			message = e.getMessage();
+		}
+		map.put("isError", isError);
+		map.put("message", message);
+		return map;
 	}
 }

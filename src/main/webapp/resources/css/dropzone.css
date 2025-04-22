@@ -38,12 +38,26 @@
 .dropzone * {
     box-sizing: border-box;
 }
+/*
 .dropzone {
     min-height: 150px;
     border: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 5px;
     padding: 20px 20px;
 }
+*/
+.dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 150px;
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
+    border-radius: 5px;
+    padding: 20px 20px;
+    width: 100%;
+}
+
 .dropzone.dz-clickable {
     cursor: pointer;
 }

@@ -126,7 +126,7 @@ public interface UserService {
 	/**
 	 * 로그인한 사용자 개인 정보 조회
 	 * 
-	 * @param user
+	 * @param userId
 	*/
 	public UserVO selectUserInfoDetail(String userId);
 	
@@ -140,6 +140,4 @@ public interface UserService {
 	public Map<String, Object> getImportMapForBDMS(MultipartFile file, String loginId);
 
 	public void insertCheckUp(CheckupVO checkupVO) throws Exception;
-
-
 }

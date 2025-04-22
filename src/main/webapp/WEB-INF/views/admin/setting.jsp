@@ -78,7 +78,7 @@
 						<spring:message code="common.userNm"/>
 					</div>
 					<div class="row-input">
-						<input type="text" class="input-txt02 hold" id="userNm" placeholder="Please enter"
+						<input type="text" class="input-txt02" id="userNm" placeholder="Please enter"
 							   oninput="limitLength(this, 30);">
 					</div>
 				</div>
@@ -87,7 +87,7 @@
 						<spring:message code="common.loginId"/>
 					</div>
 					<div class="row-input">
-						<input type="text" class="input-txt02 hold" id="userId" placeholder="Please enter"
+						<input type="text" class="input-txt02" id="userId" placeholder="Please enter"
 							   oninput="limitLength(this, 30);">
 					</div>
 				</div>
@@ -275,10 +275,11 @@
 						Cancel
 					</button>
 					<button type="button" class="point-submit-btn" id="adm_create">
-						Create
+						Save
 					</button>
 				</div>
 			</div>
+			<input type="hidden" id="showType" name="showType"/>
 		</div>
 	</div>
 
@@ -305,6 +306,7 @@
 		$('#mobile').val('');
 		$('#userTpNm').val('');
 		$('#userTpNm').text('Select Admin Type');
+		setClearAddParam();
 	}
 
 	function setSearchParam() {
@@ -316,8 +318,9 @@
 		};
 	}
 
-	function setAddParam() {
+	function setAddParam(showType) {
 		return {
+			showType: showType,
 			userId  : $('#adminid').val(),
 			userPw  : $('#adminpw').val(),
 			grpLv   : $('#au').val(),
@@ -325,7 +328,6 @@
 			userNm  : $('#adminnm').val(),
 			tpNm    : $('#tpNm').val(),
 			phoneNo : $('#adminphone').val().replaceAll('-','')
-
 		};
 	}
 
@@ -340,6 +342,10 @@
 		$('#tpNm').text('Select Admin Type');
 		$('#au').val('');
 		$('#au').text('Select Authority Type');
+		$('#adminid').removeClass('hold');
+		$('#adminpw').removeClass('hold');
+		$("#adminpw").removeAttr("disabled");
+		$("#adminid").removeAttr("disabled");
 	}
 
 	function fnSearch(){
@@ -420,6 +426,11 @@
 			onSortCol: function (index, columnIndex, sortOrder) {
 				$("#sortColumn").val(index);
 				$("#sord").val(sortOrder);
+			},
+			ondblClickRow: function (rowid, iRow, iCol,e) {
+				const rowData = $("#adminList").getRowData(rowid);
+				var usrId = rowData.userId;
+				selectAdminRowId(usrId);
 			}
 		})
 	})
@@ -442,27 +453,93 @@
 		return true;
 	}
 
+	function selectAdminRowId(userId){
+		$.ajax({
+			type: 'POST',
+			url: '${contextPath}/user/selectAdminById',
+			data: {userId : userId},
+			dataType: 'json',
+			success: function(data) {
+				if(data.isError){
+					$.alert(data.message);
+					console.log('ERROR', data.message);
+				}else{
+					console.log('SUCCESS', data.row);
+					var rowData = data.row;
+
+					$('#adminid').val(rowData.userId);
+					$('#adminpw').val(rowData.userPw);
+
+					$("#adminpw").attr("disabled",true);
+					$('#adminid').attr("disabled",true);
+
+					$('#adminid').addClass('hold');
+					$('#adminpw').addClass('hold');
+
+					$('#au').val(rowData.grpLv);
+					if (rowData.grpLv == '1'){
+						$('#au').text('<spring:message code="Admin.Authority.Type.system"/>');
+					} else if (rowData.grpLv == '2'){
+						$('#au').text('<spring:message code="Admin.Authority.Type.manager"/>');
+					} else if (rowData.grpLv == '3'){
+						$('#au').text('<spring:message code="Admin.Authority.Type.staff"/>');
+					}
+
+					$('#grpId').val(rowData.grpId);
+					$('#grpId').text(rowData.grpNm);
+
+					$('#adminnm').val(rowData.userNm);
+					$('#tpNm').val(rowData.tpNm);
+					if (rowData.tpNm == 'N'){
+						$('#tpNm').text('<spring:message code="Admin.Type.Nursing"/>');
+					} else if (rowData.tpNm == 'A'){
+						$('#tpNm').text('<spring:message code="Admin.Type.Ambulance"/>');
+					} else if (rowData.tpNm == 'T'){
+						$('#tpNm').text('<spring:message code="Admin.Type.Telehealth"/>');
+					} else if (rowData.tpNm == 'H'){
+						$('#tpNm').text('<spring:message code="Admin.Type.HealthManager"/>');
+					}
+
+					$('#adminphone').val(rowData.phoneNo);
+					$('#showType').val('M');
+					$('#add_popup').show();
+				}
+			}
+		});
+	}
+
 	$(document).on('click','#adm_create', function(){
+		var msgcontent = "";
+		var suburl = '';
+		if ($('#showType').val() == 'M') {
+			msgcontent = 'Would you like to save an Admin?';
+			$("#adminpw").attr("disabled",true);
+			$('#adminid').attr("disabled",true);
+			suburl = 'adminUpdate';
+		} else if ($('#showType').val() == 'A') {
+			msgcontent = 'Would you like to add an Admin?';
+			$("#adminpw").removeAttr("disabled");
+			$("#adminid").removeAttr("disabled");
+			suburl = 'adminAdd';
+		}
 		$.confirm({
 			title: '',
-			content: 'Would you like to add an Admin?',
+			content: msgcontent,
 			buttons: {
 				OK: function () {
 					if (validation()) {
 						$.ajax({
 							type: 'POST',
-							url: '${contextPath}/admin/adminAdd',
+							url: '${contextPath}/admin/'+suburl,
 							data: setAddParam(),
 							dataType: 'json',
 							success: function(data) {
 								if(data.isError){
 									showToast('Processing failed.', 'point');
-									//$.alert(data.message);
 									console.log('ERROR', data.message);
 								}else{
 									setClearAddParam();
 									showToast('The admin account has been created.');
-									//$.alert(data.message);
 									$('#add_popup').hide();
 									fnSearch();
 								}
@@ -477,6 +554,8 @@
 	});
 
 	function fnAdd() {
+		fnClear();
+		$('#showType').val('A');
 		$('#add_popup').show();
 	}
 

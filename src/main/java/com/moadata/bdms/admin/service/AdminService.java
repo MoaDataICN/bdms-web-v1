@@ -11,4 +11,5 @@ public interface AdminService {
 	public void insertAdmin(UserVO user) throws Exception;
 	public int selectAdminIdCnt(String userId);
 	public List<Map> selectManagerGroupList(String grpId);
+	public void updateAdmin(UserVO user);
 }

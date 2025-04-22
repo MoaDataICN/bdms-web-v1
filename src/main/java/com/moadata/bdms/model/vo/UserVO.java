@@ -76,4 +76,7 @@ public class UserVO extends BaseSearchObject {
 	/* Group, 권한 관련 */
 	private String grpId;
 	private String grpLv;
+	private String grpNm;
+
+	private String showType;
 }

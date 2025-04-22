@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.common.util.StringUtil;
+
 /**
  * Admin
  */
@@ -46,23 +47,8 @@ public class AdminController extends BaseController {
 			userVO.setSortColumn(userVO.getSidx());
 			userVO.setPageIndex(Integer.parseInt(userVO.getPage()) -1);
 			userVO.setRowNo(userVO.getPageIndex() * userVO.getRows());
-			/*
-			//이름이 암호화 되어 있을때 검색조건을 암호화해서 검색한다.
-			if(null != userVO.getUserNm() && !"".equals(userVO.getUserNm())){
-
-				//사용자명은 암호화 되어있기 떄문에 암호화해서 검색
-				String userNm = EncryptUtil.encryptText(userVO.getUserNm());
-				userVO.setUserNm(userNm);
-			}
-            */
 
 			resultList = adminService.selectAdminList(userVO);
-			/*
-			for (UserVO usrvo : resultList) {
-				usrvo.setPhoneNo(EncryptUtil.decryptText(usrvo.getPhoneNo()));
-				usrvo.setUserNm(EncryptUtil.decryptText(usrvo.getUserNm()));
-			}
-            */
 			int records = resultList.size() == 0 ? 0 : resultList.get(0).getCnt();
 			map.put("page", userVO.getPageIndex() + 1);
 			map.put("records", records);
@@ -152,4 +138,58 @@ public class AdminController extends BaseController {
 		return map;
 	}
 
+	/**
+	 * Admin 수정 - 관리자 수정
+	 *
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/adminUpdate", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> adminUpdate(@ModelAttribute("user") UserVO user) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		String message = "";
+		boolean isError = false;
+		UserVO vo = (UserVO) getRequestAttribute("user");
+		try {
+			user.setModifyId(vo.getUserId());
+			adminService.updateAdmin(user);
+
+			//이력 추가.
+			Map<String,String> param = new HashMap<String,String>();
+			param.put("hisType", "HT16");
+			param.put("batchId", "");
+			param.put("prssType", "HS08");
+			param.put("hisEndDt", "");
+			param.put("prssUsrId", vo.getUserId());
+			String tempMsg = "사용자 " + user.getUserId() + " - " + "{0}" + " 성공 하였습니다.";
+			param.put("msgEtc", tempMsg);
+
+			//historyInfoService.commInsertHistory(param,"");
+
+			message = "Edited.";
+
+		} catch (Exception e) {
+			LOGGER.error(e.toString());
+			isError = true;
+			message = e.getMessage();
+
+			//이력 추가.
+			Map<String,String> param = new HashMap<String,String>();
+			param.put("hisType", "HT16");
+			param.put("batchId", "");
+			param.put("prssType", "HS08");
+			param.put("hisEndDt", "");
+			param.put("prssUsrId", vo.getUserId());
+			String tempMsg = "사용자 " + user.getUserId() + " - " + "{0}" + " 실패 하였습니다.";
+			param.put("msgEtc", tempMsg);
+
+			//historyInfoService.commInsertHistory(param,"");
+		}
+
+		map.put("isError", isError);
+		map.put("message", message);
+		return map;
+	}
 }

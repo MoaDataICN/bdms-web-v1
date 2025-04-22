@@ -43,6 +43,7 @@
     .calendar-icon {
         z-index: 1;
     }
+
 </style>
 
 <!-- 주요콘텐츠 영역-->
@@ -215,7 +216,6 @@
                         </div>
                         <div class="gender-btn-group">
                             <input type="hidden" id="checkUp_gender">
-                            <!--<button type="button" class="sex-btn active" >Male</button>-->
                             <button type="button" class="sex-btn">Male</button>
                             <button type="button" class="sex-btn-f">Female</button>
                         </div>
@@ -616,15 +616,15 @@
     var dropzoneFile=new Dropzone("#dropzone-file",{
         url:'${contextPath}/user/getChckUpExcelImport',
         maxFilesize:5000000,
-        parallelUploads:2,     //한번에 올릴 파일 수
-        //addRemoveLinks:  true, //업로드 후 삭제 버튼
-        timeout:300000,	     //커넥션 타임아웃 설정 -> 데이터가 클 경우 꼭 넉넉히 설정해주자
-        maxFiles:5,            //업로드 할 최대 파일 수
-        paramName:"file",      //파라미터로 넘길 변수명 default는 file
-        acceptedFiles: ".csv,.CSV",   // 허용 확장자
-        autoQueue:true,	     //드래그 드랍 후 바로 서버로 전송
-        createImageThumbnails:true,	//파일 업로드 썸네일 생성
-        uploadMultiple:true,	 //멀티파일 업로드
+        parallelUploads:2,              //한번에 올릴 파일 수
+        //addRemoveLinks:  true,        //업로드 후 삭제 버튼
+        timeout:300000,	                //커넥션 타임아웃 설정 -> 데이터가 클 경우 꼭 넉넉히 설정해주자
+        maxFiles:5,                     //업로드 할 최대 파일 수
+        paramName:"file",               //파라미터로 넘길 변수명 default는 file
+        acceptedFiles: ".csv,.CSV",     // 허용 확장자
+        autoQueue:true,	                //드래그 드랍 후 바로 서버로 전송
+        createImageThumbnails:true,	    //파일 업로드 썸네일 생성
+        uploadMultiple:true,	        //멀티파일 업로드
         dictRemoveFile:'remove',	    //삭제 버튼의 텍스트 설정
         //dictDefaultMessage:'PREVIEW', //미리보기 텍스트 설정
         accept:function(file,done){

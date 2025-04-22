@@ -421,7 +421,7 @@
 	<select id="selectTotalRecords" resultType="int">
 		SELECT FOUND_ROWS();
 	</select>
-
+	
 	<!-- 사용자 상세 - USER_ID -->
 	<select id="selectUserInfo" parameterType="String" resultType="userVO">
 		SELECT UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT,
@@ -429,7 +429,7 @@
 		FROM   t_wlk_MNG_USER
 		WHERE  USER_ID = #{userId}
 	</select>
-
+	
 	<!-- 사용자 상세 - UID -->
 	<select id="selectUserInfoByUid" parameterType="String" resultType="userVO">
 		SELECT UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT,
@@ -437,21 +437,21 @@
 		FROM   t_wlk_MNG_USER
 		WHERE  UID = #{uid}
 	</select>
-
+	
 	<!-- 사용자 확인 -->
 	<select id="selectUserIdCnt" parameterType="String" resultType="int">
 		SELECT COUNT(USER_ID) AS CNT
 		FROM   t_wlk_MNG_USER
 		WHERE  USER_ID = #{userId}
 	</select>
-
+	
 	<!-- 사용자 확인  - 사용자 그룹 아이디 -->
 	<select id="selectUserCntByUserGroupId" parameterType="String" resultType="int">
 		SELECT COUNT(USER_ID) AS CNT
 		FROM   t_wlk_MNG_USER
 		WHERE  USERGROUP_ID = #{userGroupId}
 	</select>
-
+	
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="uid" parameterType="userVO">
 		INSERT INTO t_wlk_MNG_USER
@@ -461,8 +461,8 @@
 		)
 		VALUES
 		(
-			#{uid}, #{userId}, #{userNm}, #{userPw}, #{emailAddr}, #{phoneNo, jdbcType=VARCHAR}, 'Y', #{deptNm, jdbcType=VARCHAR},
-
+			#{uid}, #{userId}, #{userNm}, #{userPw}, #{emailAddr}, #{phoneNo, jdbcType=VARCHAR}, 'Y', #{deptNm, jdbcType=VARCHAR}, 
+		
 			<choose>
 				<when test='lockYn != null and lockYn !=""'>
 					#{lockYn},
@@ -470,7 +470,7 @@
 				<otherwise>
 					'N',
 				</otherwise>
-			</choose>
+			</choose>	
 			#{useYn}, #{userType}, #{userDesc, jdbcType=VARCHAR}, #{registId}, NOW(), #{modifyId}, NOW(), NOW(), #{connectIp1}, #{connectIp2}, #{connectIp3},
 			<choose>
 				<when test='usergroupId == "null" or usergroupId == ""'>
@@ -569,7 +569,16 @@
 			mngUser.UID, mngUser.USER_ID, mngUser.USER_NM, mngUser.USER_PW, mngUser.EMAIL_ADDR, mngUser.PHONE_NO, mngUser.LOGIN_DT,
 			mngUser.LOGIN_YN, mngUser.DEPT_NM, mngUser.LOCK_YN, mngUser.USE_YN, mngUser.USER_TYPE, mngUser.USER_DESC,
 			mngUser.REGIST_ID, mngUser.REGIST_DT,mngUser.MODIFY_ID, mngUser.MODIFY_DT,  mngUser.CONNECT_IP1, mngUser.CONNECT_IP2, mngUser.CONNECT_IP3,
-			mngUser.USERGROUP_ID, mngUser.WRK_TP, userGroup.USERGROUP_NM AS userGroupNm, mngCode.CODE_NAME AS wrkNm
+			mngUser.USERGROUP_ID, mngUser.WRK_TP, userGroup.USERGROUP_NM AS userGroupNm, mngCode.CODE_NAME AS wrkNm,
+			/*
+			case when mngUser.TP_NM = 'A' then 'Ambulance'
+				 when mngUser.TP_NM = 'T' then 'Telehealth'
+				 when mngUser.TP_NM = 'H' then 'Health Manager'
+				 when mngUser.TP_NM = 'N' then 'Nursing'
+		         else '' END AS tpNm,
+			*/
+			mngUser.TP_NM, mngUser.LST_LOGIN_DT, mngUser.GRP_ID, mngUser.GRP_LV,
+		    (SELECT GRP_NM FROM T_WLK_MNG_GRP WHERE GRP_ID = mngUser.GRP_ID) AS GRP_NM
 		FROM   t_wlk_MNG_USER mngUser
 		LEFT OUTER JOIN t_wlk_MNG_USERGROUP userGroup ON mngUser.USERGROUP_ID = userGroup.USERGROUP_ID
 		LEFT OUTER JOIN t_wlk_MNG_CODE mngCode ON  mngUser.WRK_TP = mngCode.CODE AND mngCode.P_CODE = 'WK00'

@@ -2034,7 +2034,7 @@ textarea {
     letter-spacing: -0.22px;
     height: 12px;
 }
-
+/*
 #drop-area {
     display: flex;
     align-items: center;
@@ -2043,6 +2043,19 @@ textarea {
     border-radius: 18px;
     width: 100%;
     padding: 30px 40px;
+    background: #f6fafd;
+    flex-direction: column;
+}
+*/
+
+#drop-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--gray-19);
+    border-radius: 18px;
+    width: 100%;
+    /* padding: 30px 40px; */
     background: #f6fafd;
     flex-direction: column;
 }

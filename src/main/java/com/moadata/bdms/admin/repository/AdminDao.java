@@ -33,4 +33,8 @@ public class AdminDao extends BaseAbstractDao {
 		return selectList("admin.selectManagerGroupList", grpId);
 	}
 
+	public void updateAdmin(UserVO user) {
+		update("admin.updateAdminInfo", user);
+	}
+
 }

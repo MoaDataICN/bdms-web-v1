@@ -60,4 +60,13 @@ public class AdminServiceImpl implements AdminService {
 	public List<Map> selectManagerGroupList(String grpId){
 		return adminDao.selectManagerGroupList(grpId);
 	}
+
+	@Override
+	public void updateAdmin(UserVO user) {
+		if(user.getModifyId() == null) {
+			user.setModifyId(user.getUserId());
+		}
+		adminDao.updateAdmin(user);
+	}
+
 }
