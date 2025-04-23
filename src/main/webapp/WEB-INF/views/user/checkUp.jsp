@@ -144,7 +144,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Input Checkup center"
-                                   oninput="limitLength(this, 30);" id="chckCt">
+                                   oninput="limitLength(this, 30);" id="checkUp_chckCt">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -158,7 +158,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Input Doctor Name"
-                                   oninput="limitLength(this, 30);" id="chckDctr">
+                                   oninput="limitLength(this, 30);" id="checkUp_chckDctr">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -668,8 +668,8 @@
                         //기본정보
                         if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#checkUp_chckType").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Checkup result")>= 0){$("#checkUp_chckResult").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("Checkup center")>= 0){$("#chckCt").val(responseText.resultList[1][k])}
-                        if (resval.trim().indexOf("Doctor")>= 0){$("#chckDctr").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("Checkup center")>= 0){$("#checkUp_chckCt").val(responseText.resultList[1][k])}
+                        if (resval.trim().indexOf("Doctor")>= 0){$("#checkUp_chckDctr").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#checkUp_chckDt").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Date Of Birth")>= 0){$("#checkUp_brthDt").val(responseText.resultList[1][k])}
                         if (resval.trim().indexOf("Gender")>= 0){
@@ -706,8 +706,8 @@
     });
 
     function checkUp_fnClear() {
-        $("#checkUp_chckType").val(''); $("#checkUp_chckResult").val(''); $("#checkUp_chckDt").val(''); $("#chckDctr").val('');
-        $("#checkUp_brthDt").val('');   $("#checkUp_gender").val('');     $('#checkUp_chckDt').val(''); $('#checkUp_brthDt').val(''); $('#chckCt').val('');
+        $("#checkUp_chckType").val(''); $("#checkUp_chckResult").val(''); $("#checkUp_chckDt").val(''); $("#checkUp_chckDctr").val('');
+        $("#checkUp_brthDt").val('');   $("#checkUp_gender").val('');     $('#checkUp_chckDt').val(''); $('#checkUp_brthDt').val(''); $('#checkUp_chckCt').val('');
         $('#checkUp_hght').val('');     $('#checkUp_wght').val('');       $('#checkUp_wst').val('');    $('#checkUp_sbp').val('');    $('#checkUp_dbp').val('');
         $('#checkUp_fbs').val('');      $('#checkUp_hba1c').val('');      $('#checkUp_tc').val('');     $('#checkUp_hdl').val('');    $('#checkUp_ldl').val('');
         $('#checkUp_trgly').val('');    $('#checkUp_sc').val('');         $('#checkUp_gfr').val('');    $('#checkUp_urAcd').val('');  $('#checkUp_bun').val('');
@@ -722,8 +722,8 @@
             userId     : 'user01',
             chckType   : $("#checkUp_chckType").val(),
             chckResult : $("#checkUp_chckResult").val(),
-            chckCt     : $("#checkUp_chckDt").val(),
-            chckDctr   : $("#chckDct").val(),
+            chckCt     : $("#checkUp_chckCt").val(),
+            chckDctr   : $("#checkUp_chckDctr").val(),
             chckDt : $("#checkUp_chckDt").val(),
             brthDt : $("#checkUp_brthDt").val(),
             gender : $("#checkUp_gender").val(),
@@ -803,7 +803,6 @@
                                 }else{
                                     checkUp_fnClear();
                                     $.alert(data.message);
-                                    fnSearch();
                                 }
                             }
                         });
@@ -826,21 +825,6 @@
         const dateValue = document.getElementById(dateInputId).value;
         document.getElementById(displayId).value = dateValue;
     }
-
-    $('.table-wrap .dropdown-content a').click(function(){
-        let cnt = $(this).data('cnt');
-
-        rowNumsVal = cnt;
-        $('#gridDropdownBtn').text($(this).text());
-        $("#healthAlertList").setGridParam({ rowNum: cnt });
-        fnSearch();
-    })
-
-    $('.input-txt02').keyup(function(e){
-        if(e.keyCode == '13'){
-            fnSearch();
-        }
-    });
 
     $('.sex-btn-f').click(function(){
         if($(this).hasClass('active')){
