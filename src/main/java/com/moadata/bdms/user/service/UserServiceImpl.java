@@ -402,4 +402,9 @@ public class UserServiceImpl implements UserService {
 		}
 		userDao.insertCheckUp(checkupVO);
 	}
+
+	@Override
+	public List<Map> selectValidMinMax(){
+		return userDao.selectValidMinMax();
+	}
 }

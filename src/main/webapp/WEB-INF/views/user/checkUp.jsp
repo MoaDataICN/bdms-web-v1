@@ -86,7 +86,7 @@
             </div>
             <div id="drop-area" class="mt-14px">
                 <form class="dropzone" id="dropzone-file" name="dropzone-file" method="post" enctype="multipart/form-data">
-                    <input type="file" value="" id="file" name="file" multiple="true" style="width:0px;">
+                    <input type="file" value="" id="file" name="file" style="width:0px;">      <!-- multiple="true" -->
                     <img src="/resources/images/drap-icon.png" class="icon80">
                     <p class="mt-10px drop-text">Drag And Drop File Here</p>
                     <!--<p class="drop-text02">OR</p>-->
@@ -227,8 +227,8 @@
                             4.Height(cm)
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="cm"
-                                   oninput="limitLength(this, 30);" id="checkUp_hght">
+                            <input type="number" class="input-txt02" placeholder="cm"
+                                   oninput="limitLength(this, 3);" id="checkUp_hght" min="100" max="250">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -245,8 +245,8 @@
                             5. Weight(kg)
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="kg"
-                                   oninput="limitLength(this, 30);" id="checkUp_wght">
+                            <input type="number" class="input-txt02" placeholder="kg"
+                                   oninput="limitLength(this, 3);" id="checkUp_wght" min="25" max="250">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -259,8 +259,8 @@
                             6. Waist Circumference(cm)
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="cm"
-                                   oninput="limitLength(this, 30);" id="checkUp_wst">
+                            <input type="number" class="input-txt02" placeholder="cm"
+                                   oninput="limitLength(this, 3);" id="checkUp_wst" min="40" max="150">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -277,8 +277,8 @@
                             7. Systolic Blood Pressure
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mmHg"
-                                   oninput="limitLength(this, 30);" id="checkUp_sbp">
+                            <input type="number" class="input-txt02" placeholder="mmHg"
+                                   oninput="limitLength(this, 3);" id="checkUp_sbp" min="50" max="250">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -291,8 +291,8 @@
                             8. Diastolic Blood Pressure
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mmHg"
-                                   oninput="limitLength(this, 30);" id="checkUp_dbp">
+                            <input type="number" class="input-txt02" placeholder="mmHg"
+                                   oninput="limitLength(this, 3);" id="checkUp_dbp" min="30" max="150">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -309,8 +309,8 @@
                             9. Fasting Blood Sugar
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mmHg"
-                                   oninput="limitLength(this, 30);" id="checkUp_fbs">
+                            <input type="number" class="input-txt02" placeholder="mmHg"
+                                   oninput="limitLength(this, 3);" id="checkUp_fbs" min="40" max="500">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -323,8 +323,8 @@
                             10. HbA1C
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="%"
-                                   oninput="limitLength(this, 30);" id="checkUp_hba1c">
+                            <input type="number" class="input-txt02" placeholder="%"
+                                   oninput="limitLength(this, 2);" id="checkUp_hba1c" min="3" max="15">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -341,8 +341,8 @@
                             11. Total Cholesterol
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_tc">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="checkUp_tc" min="50" max="500">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -355,8 +355,8 @@
                             12. HDL-C
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_hdl">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="checkUp_hdl" min="5" max="150">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -373,8 +373,8 @@
                             13. LDL-C
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_ldl">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="checkUp_ldl" min="10" max="300">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -387,8 +387,8 @@
                             14. Triglyceride
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_trgly">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 4);" id="checkUp_trgly" min="20" max="1000">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -405,8 +405,8 @@
                             15. Serum Creatinine
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_sc">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="checkUp_sc" min="0.1" max="30">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -419,8 +419,8 @@
                             16. GFR (Glomerular Filtration Rate)
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="ml"
-                                   oninput="limitLength(this, 30);" id="checkUp_gfr">
+                            <input type="number" class="input-txt02" placeholder="ml"
+                                   oninput="limitLength(this, 3);" id="checkUp_gfr" min="0" max="150">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -437,8 +437,8 @@
                             17. Uric Acid
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_urAcd">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 2);" id="checkUp_urAcd" min="1" max="15">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -451,8 +451,8 @@
                             18. BUN
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="mg/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_bun">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="checkUp_bun" min="1" max="300">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -469,8 +469,8 @@
                             19. ALT
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="checkUp_alt">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="checkUp_alt" min="0" max="5000">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -483,8 +483,8 @@
                             20. AST
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="checkUp_ast">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="checkUp_ast" min="0" max="5000">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -501,8 +501,8 @@
                             21. γ-GTP
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="checkUp_gtp">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="checkUp_gtp" min="0" max="5000">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -515,8 +515,8 @@
                             22. Total Protein
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="g/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_tprtn">
+                            <input type="number" class="input-txt02" placeholder="g/dL"
+                                   oninput="limitLength(this, 2);" id="checkUp_tprtn" min="3" max="12">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -533,8 +533,8 @@
                             23. Bilirubin
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="g/dL"
-                                   oninput="limitLength(this, 30);" id="checkUp_blrbn">
+                            <input type="number" class="input-txt02" placeholder="g/dL"
+                                   oninput="limitLength(this, 2);" id="checkUp_blrbn" min="0" max="50">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -547,8 +547,8 @@
                             24. ALP(Alkaline Phosphatase)
                         </div>
                         <div class="input-img-wrap">
-                            <input type="text" class="input-txt02" placeholder="IU/L"
-                                   oninput="limitLength(this, 30);" id="checkUp_alp">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="checkUp_alp" min="10" max="2000">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -562,7 +562,7 @@
                     25. Comment
                 </div>
                 <div class="wrap-form">
-                    <textarea class="input-area" id="checkUp_comment" placeholder="Input checkup comment。"></textarea>
+                    <textarea class="input-area" id="checkUp_comment" placeholder="Input checkup comment。" oninput="limitLength(this, 1000);"></textarea>
                 </div>
             </div>
         </div>
@@ -621,7 +621,7 @@
         timeout:300000,	                //커넥션 타임아웃 설정 -> 데이터가 클 경우 꼭 넉넉히 설정해주자
         maxFiles:5,                     //업로드 할 최대 파일 수
         paramName:"file",               //파라미터로 넘길 변수명 default는 file
-        acceptedFiles: ".csv,.CSV",     // 허용 확장자
+        acceptedFiles: ".csv,.CSV",     //허용 확장자
         autoQueue:true,	                //드래그 드랍 후 바로 서버로 전송
         createImageThumbnails:true,	    //파일 업로드 썸네일 생성
         uploadMultiple:true,	        //멀티파일 업로드
@@ -707,23 +707,23 @@
 
     function checkUp_fnClear() {
         $("#checkUp_chckType").val(''); $("#checkUp_chckResult").val(''); $("#checkUp_chckDt").val(''); $("#chckDctr").val('');
-        $("#checkUp_brthDt").val(''); $("#checkUp_gender").val(''); $('#checkUp_chckDt').val(''); $('#checkUp_brthDt').val(''); $('#chckCt').val('');
-        $('#checkUp_hght').val(''); $('#checkUp_wght').val(''); $('#checkUp_wst').val(''); $('#checkUp_sbp').val(''); $('#checkUp_dbp').val('');
-        $('#checkUp_fbs').val(''); $('#checkUp_hba1c').val(''); $('#checkUp_tc').val(''); $('#checkUp_hdl').val(''); $('#checkUp_ldl').val('');
-        $('#checkUp_trgly').val(''); $('#checkUp_sc').val(''); $('#checkUp_gfr').val(''); $('#checkUp_urAcd').val(''); $('#checkUp_bun').val('');
-        $('#checkUp_alt').val(''); $('#checkUp_ast').val(''); $('#checkUp_gtp').val(''); $('#checkUp_tprtn').val(''); $('#checkUp_blrbn').val('');
-        $('#checkUp_alp').val(''); $('#checkUp_comment').val('');
+        $("#checkUp_brthDt").val('');   $("#checkUp_gender").val('');     $('#checkUp_chckDt').val(''); $('#checkUp_brthDt').val(''); $('#chckCt').val('');
+        $('#checkUp_hght').val('');     $('#checkUp_wght').val('');       $('#checkUp_wst').val('');    $('#checkUp_sbp').val('');    $('#checkUp_dbp').val('');
+        $('#checkUp_fbs').val('');      $('#checkUp_hba1c').val('');      $('#checkUp_tc').val('');     $('#checkUp_hdl').val('');    $('#checkUp_ldl').val('');
+        $('#checkUp_trgly').val('');    $('#checkUp_sc').val('');         $('#checkUp_gfr').val('');    $('#checkUp_urAcd').val('');  $('#checkUp_bun').val('');
+        $('#checkUp_alt').val('');      $('#checkUp_ast').val('');        $('#checkUp_gtp').val('');    $('#checkUp_tprtn').val('');  $('#checkUp_blrbn').val('');
+        $('#checkUp_alp').val('');      $('#checkUp_comment').val('');
         $('.sex-btn-f').removeClass('active');
         $('.sex-btn').removeClass('active');
     }
 
     function checkUp_setAddParam() {
         return {
-            userId : 'user01',
-            chckType : $("#checkUp_chckType").val(),
+            userId     : 'user01',
+            chckType   : $("#checkUp_chckType").val(),
             chckResult : $("#checkUp_chckResult").val(),
-            chckCt : $("#checkUp_chckDt").val(),
-            chckDctr : $("#chckDct").val(),
+            chckCt     : $("#checkUp_chckDt").val(),
+            chckDctr   : $("#chckDct").val(),
             chckDt : $("#checkUp_chckDt").val(),
             brthDt : $("#checkUp_brthDt").val(),
             gender : $("#checkUp_gender").val(),
@@ -755,8 +755,25 @@
         };
     }
 
+    var validData;
     $(document).ready(function() {
         checkUp_fnClear();
+
+        $.ajax({
+            type: 'POST',
+            url: '${contextPath}/user/selectValidMinMax',
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                if(data.isError){
+                    $.alert(data.message);
+                    console.log('ERROR', data.message);
+                }else{
+                    console.log('SUCCESS', data.row);
+                    validData = data.row;
+                }
+            }
+        });
     })
 
     function validation(){

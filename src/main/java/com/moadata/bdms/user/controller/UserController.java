@@ -1185,4 +1185,26 @@ public class UserController extends BaseController {
 		map.put("message", message);
 		return map;
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/selectValidMinMax", method = RequestMethod.POST)
+	public Map<String, Object> selectValidMinMax() {
+		Map<String, Object> map = new HashMap<>();
+		List<Map> minmaxList = new ArrayList<>();
+
+		String message = "";
+		boolean isError = false;
+
+		try {
+			minmaxList = userService.selectValidMinMax();
+			map.put("row", minmaxList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			isError = true;
+			message = e.getMessage();
+		}
+		map.put("isError", isError);
+		map.put("message", message);
+		return map;
+	}
 }

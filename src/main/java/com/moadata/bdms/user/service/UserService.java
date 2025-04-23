@@ -140,4 +140,6 @@ public interface UserService {
 	public Map<String, Object> getImportMapForBDMS(MultipartFile file, String loginId);
 
 	public void insertCheckUp(CheckupVO checkupVO) throws Exception;
+
+	public List<Map> selectValidMinMax();
 }

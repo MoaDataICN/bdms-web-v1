@@ -267,6 +267,10 @@ public class UserDao extends BaseAbstractDao {
 		insert("user.insertMyBody", checkupVO);
 	}
 
+	public List<Map> selectValidMinMax(){
+		return selectList("user.selectValidMinMax");
+	}
+
 	public boolean isNumberic(String str) {
 		try {
 			Double.parseDouble(str);

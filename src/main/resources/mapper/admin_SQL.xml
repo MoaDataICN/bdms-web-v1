@@ -9,7 +9,7 @@
         UID, USER_ID, USER_NM, EMAIL_ADDR, PHONE_NO, DATE_FORMAT(LOGIN_DT, '%Y-%m-%d %T') AS LOGIN_DT, LOGIN_YN, DEPT_NM, LOCK_YN, LOCK_YN AS oldLockYn, USE_YN,
         USER_TYPE, USER_DESC, REGIST_ID, DATE_FORMAT(REGIST_DT, '%Y-%m-%d %T') AS REGIST_DT, MODIFY_ID, DATE_FORMAT(MODIFY_DT, '%Y-%m-%d %T') AS MODIFY_DT,
         CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP, LST_LOGIN_DT, TP_NM
-        FROM t_wlk_MNG_USER
+        FROM T_WLK_MNG_USER
         <where>
             <if test='userId != null and userId != "" '>
                 AND USER_ID LIKE CONCAT('%', #{userId}, '%')
@@ -67,7 +67,7 @@
     <select id="selectAdminInfo" parameterType="String" resultType="userVO">
         SELECT UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT,
                CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP
-        FROM   t_wlk_MNG_USER
+        FROM   T_WLK_MNG_USER
         WHERE  USER_ID = #{userId}
     </select>
 
@@ -75,21 +75,21 @@
     <select id="selectAdminInfoByUid" parameterType="String" resultType="userVO">
         SELECT UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT,
                CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP
-        FROM   t_wlk_MNG_USER
+        FROM   T_WLK_MNG_USER
         WHERE  UID = #{uid}
     </select>
 
     <!-- 사용자 확인 -->
     <select id="selectAdminIdCnt" parameterType="String" resultType="int">
         SELECT COUNT(USER_ID) AS CNT
-        FROM   t_wlk_MNG_USER
+        FROM   T_WLK_MNG_USER
         WHERE  USER_ID = #{userId}
     </select>
 
     <!-- 사용자 확인  - 사용자 그룹 아이디 -->
     <select id="selectAdminCntByUserGroupId" parameterType="String" resultType="int">
         SELECT COUNT(USER_ID) AS CNT
-        FROM   t_wlk_MNG_USER
+        FROM   T_WLK_MNG_USER
         WHERE  USERGROUP_ID = #{userGroupId}
     </select>
 
@@ -127,7 +127,7 @@
 
     <!-- 사용자 수정 -->
     <update id="updateAdmin" parameterType="userVO">
-        UPDATE t_wlk_MNG_USER
+        UPDATE T_WLK_MNG_USER
         SET
         USER_NM 	= #{userNm},
         <if test='userPw != null and userPw !=""'>
@@ -175,7 +175,7 @@
 
     <!-- 사용자 수정 - 사용자 그룹 -->
     <update id="updateAdminGroupId" parameterType="userVO">
-        UPDATE t_wlk_MNG_USER
+        UPDATE T_WLK_MNG_USER
         SET
             USERGROUP_ID	= #{usergroupId, jdbcType=VARCHAR},
             MODIFY_ID		= #{modifyId},
@@ -185,13 +185,13 @@
 
     <!-- 사용자 삭제 -->
     <delete id="deleteAdmin" parameterType="String">
-        DELETE FROM t_wlk_MNG_USER
+        DELETE FROM T_WLK_MNG_USER
         WHERE UID != 'USR_000000000000' AND UID = #{uid}
     </delete>
 
     <!-- 사용자 목록 삭제 -->
     <delete id="deleteAdminList" parameterType="java.util.List">
-        DELETE FROM t_wlk_MNG_USER
+        DELETE FROM T_WLK_MNG_USER
         WHERE UID IN <foreach item="id" collection="list" open="(" separator="," close=")">#{id}</foreach>
     </delete>
 
@@ -200,9 +200,9 @@
         SELECT  UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, LOCK_YN, USE_YN, USER_TYPE, USER_DESC,
                 REGIST_ID, DATE_FORMAT(REGIST_DT, '%Y-%m-%d %T') AS REGIST_DT, MODIFY_ID, DATE_FORMAT(MODIFY_DT, '%Y-%m-%d %T') AS MODIFY_DT,
                 CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP
-        FROM    t_wlk_MNG_USER
-        WHERE   USE_YN = 'Y'
-          AND     LOCK_YN = 'N'
+        FROM    T_WLK_MNG_USER
+        WHERE   USE_YN  = 'Y'
+          AND   LOCK_YN = 'N'
     </select>
 
     <select id="selectAdminInfoDetail" parameterType="String" resultType="userVO">
@@ -211,10 +211,10 @@
             mngUser.LOGIN_YN, mngUser.DEPT_NM, mngUser.LOCK_YN, mngUser.USE_YN, mngUser.USER_TYPE, mngUser.USER_DESC,
             mngUser.REGIST_ID, mngUser.REGIST_DT,mngUser.MODIFY_ID, mngUser.MODIFY_DT,  mngUser.CONNECT_IP1, mngUser.CONNECT_IP2, mngUser.CONNECT_IP3,
             mngUser.USERGROUP_ID, mngUser.WRK_TP, userGroup.USERGROUP_NM AS userGroupNm, mngCode.CODE_NAME AS wrkNm
-        FROM   t_wlk_MNG_USER mngUser
-                   LEFT OUTER JOIN t_wlk_MNG_USERGROUP userGroup ON mngUser.USERGROUP_ID = userGroup.USERGROUP_ID
-                   LEFT OUTER JOIN t_wlk_MNG_CODE mngCode ON  mngUser.WRK_TP = mngCode.CODE AND mngCode.P_CODE = 'WK00'
-        WHERE  mngUser.USER_ID = #{userId}
+        FROM  T_WLK_MNG_USER mngUser
+              LEFT OUTER JOIN T_WLK_MNG_USERGROUP userGroup ON mngUser.USERGROUP_ID = userGroup.USERGROUP_ID
+              LEFT OUTER JOIN T_WLK_MNG_CODE mngCode ON  mngUser.WRK_TP = mngCode.CODE AND mngCode.P_CODE = 'WK00'
+        WHERE mngUser.USER_ID = #{userId}
     </select>
 
     <!-- 사용자 전체 목록 조회 -->
@@ -243,7 +243,7 @@
     </select>
 
     <update id="updateAdminInfo" parameterType="userVO">
-        UPDATE t_wlk_MNG_USER
+        UPDATE T_WLK_MNG_USER
         SET
         USER_NM 	  = #{userNm},
         PHONE_NO	  = #{phoneNo, jdbcType=VARCHAR},

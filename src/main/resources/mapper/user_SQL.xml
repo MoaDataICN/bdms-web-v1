@@ -570,13 +570,6 @@
 			mngUser.LOGIN_YN, mngUser.DEPT_NM, mngUser.LOCK_YN, mngUser.USE_YN, mngUser.USER_TYPE, mngUser.USER_DESC,
 			mngUser.REGIST_ID, mngUser.REGIST_DT,mngUser.MODIFY_ID, mngUser.MODIFY_DT,  mngUser.CONNECT_IP1, mngUser.CONNECT_IP2, mngUser.CONNECT_IP3,
 			mngUser.USERGROUP_ID, mngUser.WRK_TP, userGroup.USERGROUP_NM AS userGroupNm, mngCode.CODE_NAME AS wrkNm,
-			/*
-			case when mngUser.TP_NM = 'A' then 'Ambulance'
-				 when mngUser.TP_NM = 'T' then 'Telehealth'
-				 when mngUser.TP_NM = 'H' then 'Health Manager'
-				 when mngUser.TP_NM = 'N' then 'Nursing'
-		         else '' END AS tpNm,
-			*/
 			mngUser.TP_NM, mngUser.LST_LOGIN_DT, mngUser.GRP_ID, mngUser.GRP_LV,
 		    (SELECT GRP_NM FROM T_WLK_MNG_GRP WHERE GRP_ID = mngUser.GRP_ID) AS GRP_NM
 		FROM   t_wlk_MNG_USER mngUser
@@ -640,4 +633,31 @@
 		VALUES(#{userId}, now(), #{wght}, #{hght} , cast((cast(#{wst} as unsigned) / 2.54) as  varchar(10)), #{wst},'checkup','Y', now(), #{adminId}, now(), #{adminId})
 	</insert>
 
+	<select id="selectValidMinMax" resultType="java.util.Map">
+		SELECT valid_min, valid_max, meta_data_code,
+			   case when meta_data_eng_name = 'Height' then 'hght'
+					when meta_data_eng_name = 'Weight' then 'wght'
+					when meta_data_eng_name = 'WC' then 'wst'
+					when meta_data_eng_name = 'SBP' then 'sbp'
+					when meta_data_eng_name = 'DBP' then 'dbp'
+					when meta_data_eng_name = 'Serum Creatinine' then 'sc'
+					when meta_data_eng_name = 'GFR' then 'gfr'
+					when meta_data_eng_name = 'Uric Acid' then 'urAcd'
+					when meta_data_eng_name = 'BUN' then 'bun'
+					when meta_data_eng_name = 'SGOT' then 'ast'
+					when meta_data_eng_name = 'SGPT' then 'alt'
+					when meta_data_eng_name = 'γ-GTP' then 'gtp'
+					when meta_data_eng_name = 'Total Protein' then 'tprtn'
+					when meta_data_eng_name = 'Bilirubin' then 'blrbn'
+					when meta_data_eng_name = 'ALP' then 'alp'
+					when meta_data_eng_name = 'Total Cholesterol' then 'tc'
+					when meta_data_eng_name = 'HDL-C' then 'hdl'
+					when meta_data_eng_name = 'LDL-C' then 'ldl'
+					when meta_data_eng_name = 'Triglyceride' then 'trgly'
+					when meta_data_eng_name = 'FBG' then 'fbs'
+					when meta_data_eng_name = 'HbA1C' then 'hba1c'
+					else '' end meta_data_name
+		FROM t_wlk_report_meta
+		WHERE META_DATA_CODE NOT IN ('15100000','15200000','16100000','16200000','21000000','51000000','61000000','62000000','91000000','91000002','14000000')
+	</select>
 </mapper>

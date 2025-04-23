@@ -2,12 +2,14 @@ package com.moadata.bdms.admin.controller;
 
 import com.moadata.bdms.common.base.controller.BaseController;
 import com.moadata.bdms.admin.service.AdminService;
+import com.moadata.bdms.model.vo.CheckupVO;
 import com.moadata.bdms.model.vo.UserVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class AdminController extends BaseController {
 	@Resource(name = "adminService")
 	private AdminService adminService;
 
-	@RequestMapping(value="/setting", method = RequestMethod.GET)
+	@RequestMapping(value = "/setting", method = RequestMethod.GET)
 	public String setting(HttpServletRequest request, ModelMap model) {
 
 		String grpId = "G0010";
@@ -45,7 +47,7 @@ public class AdminController extends BaseController {
 
 		try {
 			userVO.setSortColumn(userVO.getSidx());
-			userVO.setPageIndex(Integer.parseInt(userVO.getPage()) -1);
+			userVO.setPageIndex(Integer.parseInt(userVO.getPage()) - 1);
 			userVO.setRowNo(userVO.getPageIndex() * userVO.getRows());
 
 			resultList = adminService.selectAdminList(userVO);
@@ -54,7 +56,7 @@ public class AdminController extends BaseController {
 			map.put("records", records);
 			map.put("total", records == 0 ? 1 : Math.ceil(records / (double) userVO.getRows()));
 			map.put("rows", resultList);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			isError = true;
 			message = e.getMessage();
@@ -73,8 +75,8 @@ public class AdminController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/adminAdd", method=RequestMethod.POST)
-	public @ResponseBody Map<String, Object> userAdd(@ModelAttribute("user")UserVO user)throws Exception{
+	@RequestMapping(value = "/adminAdd", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> userAdd(@ModelAttribute("user") UserVO user) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		boolean isError = false;
@@ -85,11 +87,11 @@ public class AdminController extends BaseController {
 			// 중복 체크
 			int checkUser = adminService.selectAdminIdCnt(user.getUserId());
 
-			if(checkUser > 0) {
+			if (checkUser > 0) {
 				isError = true;
 				message = "This ID has already been registered.";
 			} else {
-				if(StringUtil.isEmpty(user.getUserType())) {
+				if (StringUtil.isEmpty(user.getUserType())) {
 					user.setUserType("UT03"); //운영자
 				}
 				user.setRegistId(vo.getUserId());
@@ -103,7 +105,7 @@ public class AdminController extends BaseController {
 				adminService.insertAdmin(user);
 
 				//이력 추가.
-				Map<String,String> param = new HashMap<String,String>();
+				Map<String, String> param = new HashMap<String, String>();
 				param.put("hisType", "HT16");
 				param.put("batchId", "");
 				param.put("prssType", "HS06");
@@ -117,12 +119,12 @@ public class AdminController extends BaseController {
 				message = "Added.";
 			}
 
-		} catch(Exception e) {
+		} catch (Exception e) {
 			LOGGER.error(e.toString());
 			isError = true;
 			map.put("message", e.getMessage());
 			//이력 추가.
-			Map<String,String> param = new HashMap<String,String>();
+			Map<String, String> param = new HashMap<String, String>();
 			param.put("hisType", "HT16");
 			param.put("batchId", "");
 			param.put("prssType", "HS06");
@@ -157,7 +159,7 @@ public class AdminController extends BaseController {
 			adminService.updateAdmin(user);
 
 			//이력 추가.
-			Map<String,String> param = new HashMap<String,String>();
+			Map<String, String> param = new HashMap<String, String>();
 			param.put("hisType", "HT16");
 			param.put("batchId", "");
 			param.put("prssType", "HS08");
@@ -176,7 +178,7 @@ public class AdminController extends BaseController {
 			message = e.getMessage();
 
 			//이력 추가.
-			Map<String,String> param = new HashMap<String,String>();
+			Map<String, String> param = new HashMap<String, String>();
 			param.put("hisType", "HT16");
 			param.put("batchId", "");
 			param.put("prssType", "HS08");

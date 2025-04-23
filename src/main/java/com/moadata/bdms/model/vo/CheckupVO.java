@@ -6,7 +6,6 @@ import java.util.Map;
 import com.moadata.bdms.common.base.vo.BaseSearchObject;
 import org.apache.ibatis.type.Alias;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

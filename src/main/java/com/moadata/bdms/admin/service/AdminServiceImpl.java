@@ -68,5 +68,4 @@ public class AdminServiceImpl implements AdminService {
 		}
 		adminDao.updateAdmin(user);
 	}
-
 }
