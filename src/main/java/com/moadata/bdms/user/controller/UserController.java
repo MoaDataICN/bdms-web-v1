@@ -1,13 +1,9 @@
 package com.moadata.bdms.user.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -17,16 +13,10 @@ import javax.servlet.http.HttpSession;
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.common.util.StringUtil;
 import com.moadata.bdms.group.service.GroupService;
-import com.moadata.bdms.model.dto.MyResetPwDTO;
-import com.moadata.bdms.model.dto.UserDtlGeneralVO;
-import com.moadata.bdms.model.dto.UserSearchDTO;
-import com.moadata.bdms.model.dto.UserUpdateDTO;
+import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.*;
-import com.moadata.bdms.tracking.service.TrackingService;
 import org.springframework.beans.factory.annotation.Value;
 import com.moadata.bdms.model.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -34,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.moadata.bdms.common.base.controller.BaseController;
 import com.moadata.bdms.common.exception.ProcessException;
-//import com.moadata.hsmng.common.intercepter.Auth;
-//import com.moadata.hsmng.history.service.HistoryInfoService;
 import com.moadata.bdms.support.code.service.CodeService;
 import com.moadata.bdms.support.menu.service.MenuService;
 import com.moadata.bdms.user.service.UserService;
@@ -52,12 +40,6 @@ public class UserController extends BaseController {
 //	@Value("#{config['product.option']}")
 //	private String productOption;
 
-    // 임시 조회
-	@Resource(name = "trackingService")
-	private TrackingService trackingService;
-
-
-
 	@Resource(name = "userService")
 	private UserService userService;
 	
@@ -73,41 +55,29 @@ public class UserController extends BaseController {
 	@Resource(name = "groupService")
 	private GroupService groupService;
 
-    // 확인 필요
-//	@Value("${admin.grpId}")
-//	private String grpId;
-//
-//	@Value("${admin.grpLv}")
-//	private String grpLv;
-
-	@Value("${admin.userId}")
-	private String userId;
-
     @Value("${file.save.dir.linux}")
     private String linuxPreOpenFilePath;
 
     @Value("${file.save.dir.windows}")
     private String windowPreOpenFilePath;
 
-	@GetMapping("/userSearch")
+	@RequestMapping(value = "/userSearch", method = RequestMethod.GET)
 	public String userSearch(ModelMap model, HttpServletRequest request) {
 		// 세션에 저장 된, 사용자의 정보를 바탕으로 조회를 수행
 		// GRP_ID, GRP_LV 를 세션에 저장하며, 이를 바탕으로 조회 조건 및 레벨이 달라짐
 
 		HttpSession session = request.getSession(false);
-		UserVO user = (UserVO) session.getAttribute("user");
+		UserVO adminVO = (UserVO) session.getAttribute("user");
 
-		String grpId = user.getGrpId();
-		String grpLv = user.getGrpLv();
+		String grpId = adminVO.getGrpId();
+		String grpLv = adminVO.getGrpLv();
 
 		System.out.println("grpId : " + grpId);
 		System.out.println("grpLv : " + grpLv);
 
-		if(grpLv != null && grpLv.equals("1")) {
+		if (grpLv != null && grpLv.equals("1")) {
 			// 최상위 관리자인 경우
 			List<GroupVO> groupList = groupService.selectLowLevelGroups(grpId);
-//			List<UserVO> inChargeList = groupService.selectLowLevelAdmins(grpId);  // grp.GRP_NM -> my.GRP_TP
-
 			List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
 
 			if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
@@ -117,16 +87,10 @@ public class UserController extends BaseController {
 				}
 			}
 
-			model.addAttribute("inChargeNmList", inChargeNmList);
 			model.addAttribute("grpLv", grpLv);  // 원래 코드
-
+			model.addAttribute("inChargeNmList", inChargeNmList);
 			model.addAttribute("groupList", groupList);
-//			model.addAttribute("inChargeList", inChargeList);
-
-		} else if(grpLv != null && grpLv.equals("2")) {
-			model.addAttribute("inChargeId", userId);
 		}
-
 		return "user/userSearch";
 	}
 
@@ -136,7 +100,7 @@ public class UserController extends BaseController {
 		Map<String, Object> map = new HashMap<>();
 
 		System.out.println("==============================");
-		System.out.println(userSearchDTO.getInChargeId());
+		System.out.println(userSearchDTO.getInChargeNm());
 		System.out.println(userSearchDTO.getInChargeNm());
 		System.out.println("==============================");
 
@@ -150,7 +114,9 @@ public class UserController extends BaseController {
 			userSearchDTO.setRowNo(userSearchDTO.getPageIndex() * userSearchDTO.getRows());
 
 			resultList = userService.selectUserSearch(userSearchDTO);
+
 			int records = resultList.size() == 0 ? 0 : resultList.get(0).getCnt();
+
 			map.put("page", userSearchDTO.getPageIndex() + 1);
 			map.put("records", records);
 			map.put("total", records == 0 ? 1 : Math.ceil(records / (double) userSearchDTO.getRows()));
@@ -167,8 +133,89 @@ public class UserController extends BaseController {
 		return map;
 	}
 
-	@RequestMapping(value = "/detail/{tab}", method = RequestMethod.POST)
-	public String getUserDetail(@PathVariable String tab, @RequestParam String reqId, Model model, HttpServletRequest request) {
+	@ResponseBody
+	@RequestMapping(value = "/selectUserDtlHealthAlerts", method = RequestMethod.POST)
+	public Map<String, Object> selectUserDtlHealthAlerts(@ModelAttribute UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
+		Map<String, Object> map = new HashMap<>();
+
+		String message = "";
+		boolean isError = false;
+		List<UserDtlHealthAlertsDTO> resultList;
+
+		try {
+			userDtlHealthAlertsDTO.setSortColumn(userDtlHealthAlertsDTO.getSidx());
+			userDtlHealthAlertsDTO.setPageIndex(Integer.parseInt(userDtlHealthAlertsDTO.getPage()) -1);
+			userDtlHealthAlertsDTO.setRowNo(userDtlHealthAlertsDTO.getPageIndex() * userDtlHealthAlertsDTO.getRows());
+
+			resultList = userService.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
+
+			int records = resultList.size() == 0 ? 0 : resultList.get(0).getCnt();
+
+			map.put("page", userDtlHealthAlertsDTO.getPageIndex() + 1);
+			map.put("records", records);
+			map.put("total", records == 0 ? 1 : Math.ceil(records / (double) userDtlHealthAlertsDTO.getRows()));
+			map.put("rows", resultList);
+		} catch(Exception e) {
+			e.printStackTrace();
+			isError = true;
+			message = e.getMessage();
+		}
+
+		map.put("isError", isError);
+		map.put("message", message);
+
+		return map;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/healthAlertsCnt/all", method = RequestMethod.POST)
+	public Map<String, Object> getAllHealthAlertsCnt(@RequestParam("userId") String userId,
+													HttpServletRequest request) {
+
+		HttpSession session = request.getSession(false);
+		UserVO adminVO = (UserVO) session.getAttribute("user");
+
+		String grpId = adminVO.getGrpId();
+		String grpLv = adminVO.getGrpLv();
+
+		System.out.println("grpId : " + grpId);
+		System.out.println("grpLv : " + grpLv);
+
+		Map<String, Object> response = new HashMap<>();
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("userId", userId);
+			param.put("grpLv", grpLv);
+
+			List<Map<String, Object>> cntList = userService.selectAllHealthAlertsCnt(param);
+
+			Map<String, Long> healthAlertsCntList = new HashMap<>();
+			String[] expectedAltTypes = {"A", "F", "H", "SL", "B", "T", "ST"};
+			for (String altTp : expectedAltTypes) {
+				healthAlertsCntList.put(altTp, 0L);
+			}
+
+			for (Map<String, Object> row : cntList) {
+				String altTp = (String) row.get("ALT_TP");
+				Long altCount = ((Number) row.get("ALT_COUNT")).longValue();
+				healthAlertsCntList.put(altTp, altCount);
+			}
+
+			response.put("success", true);
+			response.put("healthAlertsCntMap", healthAlertsCntList);
+
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", e.getMessage());
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/healthAlertsCnt/last24h", method = RequestMethod.POST)
+	public Map<String, Object> getLast24hHealthAlertsCnt(@RequestParam("userId") String userId,
+														HttpServletRequest request) {
 
 		HttpSession session = request.getSession(false);
 		UserVO user = (UserVO) session.getAttribute("user");
@@ -178,49 +225,237 @@ public class UserController extends BaseController {
 
 		System.out.println("grpId : " + grpId);
 		System.out.println("grpLv : " + grpLv);
-		System.out.println("reqId : " + reqId);
-		UserDtlGeneralVO userDtlGeneralVO = userService.selectUserDtlGeneral(reqId);
-		System.out.println(userService.selectUserDtlGeneral(reqId).toString());
 
-		model.addAttribute("reqId", reqId);
+		Map<String, Object> response = new HashMap<>();
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("userId", userId);
+			param.put("grpLv", grpLv);
+			param.put("today", LocalDate.now().toString());
+
+			List<Map<String, Object>> cntList = userService.selectLast24hHealthAlertsCnt(param);
+
+			Map<String, Long> healthAlertsCntList = new HashMap<>();
+			String[] expectedAltTypes = {"A", "F", "H", "SL", "B", "T", "ST"};
+			for (String altTp : expectedAltTypes) {
+				healthAlertsCntList.put(altTp, 0L);
+			}
+
+			for (Map<String, Object> row : cntList) {
+				String altTp = (String) row.get("ALT_TP");
+				Long altCount = ((Number) row.get("ALT_COUNT")).longValue();
+				healthAlertsCntList.put(altTp, altCount);
+			}
+
+			response.put("success", true);
+			response.put("healthAlertsCntMap", healthAlertsCntList);
+
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", e.getMessage());
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/updateAltStt", method = RequestMethod.POST)
+	public Map<String, Object> updateAltStt(@RequestParam String trkId, @RequestParam("newAltStt") String altStt) {
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("trkId", trkId);
+			param.put("altStt", altStt);
+
+			userService.updateAltStt(param);
+
+			response.put("success", true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("success", false);
+			response.put("message", e.getMessage());
+		}
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/selectUserDtlServiceRequests", method = RequestMethod.POST)
+	public Map<String, Object> selectUserDtlServiceRequests(@ModelAttribute UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
+		Map<String, Object> map = new HashMap<>();
+
+		String message = "";
+		boolean isError = false;
+		List<UserDtlServiceRequestsDTO> resultList;
+
+		try {
+			userDtlServiceRequestsDTO.setSortColumn(userDtlServiceRequestsDTO.getSidx());
+			userDtlServiceRequestsDTO.setPageIndex(Integer.parseInt(userDtlServiceRequestsDTO.getPage()) -1);
+			userDtlServiceRequestsDTO.setRowNo(userDtlServiceRequestsDTO.getPageIndex() * userDtlServiceRequestsDTO.getRows());
+
+			resultList = userService.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
+
+			int records = resultList.size() == 0 ? 0 : resultList.get(0).getCnt();
+
+			map.put("page", userDtlServiceRequestsDTO.getPageIndex() + 1);
+			map.put("records", records);
+			map.put("total", records == 0 ? 1 : Math.ceil(records / (double) userDtlServiceRequestsDTO.getRows()));
+			map.put("rows", resultList);
+		} catch(Exception e) {
+			e.printStackTrace();
+			isError = true;
+			message = e.getMessage();
+		}
+
+		map.put("isError", isError);
+		map.put("message", message);
+
+		return map;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/serviceRequestsCnt/all", method = RequestMethod.POST)
+	public Map<String, Object> getAllServiceRequestsCnt(@RequestParam("userId") String userId,
+													HttpServletRequest request) {
+
+		HttpSession session = request.getSession(false);
+		UserVO adminVO = (UserVO) session.getAttribute("user");
+
+		String grpId = adminVO.getGrpId();
+		String grpLv = adminVO.getGrpLv();
+
+		System.out.println("grpId : " + grpId);
+		System.out.println("grpLv : " + grpLv);
+
+		Map<String, Object> response = new HashMap<>();
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("userId", userId);
+			param.put("grpLv", grpLv);
+
+			List<Map<String, Object>> cntList = userService.selectAllServiceRequestsCnt(param);
+
+			Map<String, Long> serviceRequestsCntList = new HashMap<>();
+			String[] expectedReqTypes = {"N", "A", "T"};
+			for (String reqTp : expectedReqTypes) {
+				serviceRequestsCntList.put(reqTp, 0L);
+			}
+
+			for (Map<String, Object> row : cntList) {
+				String reqTp = (String) row.get("REQ_TP");
+				Long reqCount = ((Number) row.get("REQ_COUNT")).longValue();
+				serviceRequestsCntList.put(reqTp, reqCount);
+			}
+
+			response.put("success", true);
+			response.put("serviceRequestsCntMap", serviceRequestsCntList);
+
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", e.getMessage());
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/serviceRequestsCnt/last24h", method = RequestMethod.POST)
+	public Map<String, Object> getLast24hServiceRequestsCnt(@RequestParam("userId") String userId,
+														HttpServletRequest request) {
+
+		HttpSession session = request.getSession(false);
+		UserVO user = (UserVO) session.getAttribute("user");
+
+		String grpId = user.getGrpId();
+		String grpLv = user.getGrpLv();
+
+		System.out.println("grpId : " + grpId);
+		System.out.println("grpLv : " + grpLv);
+
+		Map<String, Object> response = new HashMap<>();
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("userId", userId);
+			param.put("grpLv", grpLv);
+			param.put("today", LocalDate.now().toString());
+
+			List<Map<String, Object>> cntList = userService.selectLast24hServiceRequestsCnt(param);
+
+			Map<String, Long> serviceRequestsCntList = new HashMap<>();
+			String[] expectedReqTypes = {"N", "A", "T"};
+			for (String reqTp : expectedReqTypes) {
+				serviceRequestsCntList.put(reqTp, 0L);
+			}
+
+			for (Map<String, Object> row : cntList) {
+				String reqTp = (String) row.get("REQ_TP");
+				Long reqCount = ((Number) row.get("REQ_COUNT")).longValue();
+				serviceRequestsCntList.put(reqTp, reqCount);
+			}
+
+			response.put("success", true);
+			response.put("serviceRequestsCntMap", serviceRequestsCntList);
+
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", e.getMessage());
+		}
+
+		return response;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/updateReqStt", method = RequestMethod.POST)
+	public Map<String, Object> updateReqStt(@RequestParam String reqId, @RequestParam("newReqStt") String reqStt) {
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("reqId", reqId);
+			param.put("reqStt", reqStt);
+
+			userService.updateReqStt(param);
+
+			response.put("success", true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("success", false);
+			response.put("message", e.getMessage());
+		}
+		return response;
+	}
+
+	@RequestMapping(value = "/detail/{tab}", method = RequestMethod.POST)
+	public String getUserDetail(@PathVariable String tab, @RequestParam String userId,
+								UserDtlHealthAlertsDTO userDtlHealthAlertsDTO,
+								UserDtlServiceRequestsDTO userDtlServiceRequestsDTO,
+								Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		UserVO adminVO = (UserVO) session.getAttribute("user");
+
+		String grpId = adminVO.getGrpId();
+		String grpLv = adminVO.getGrpLv();
+
+		System.out.println("grpId : " + grpId);
+		System.out.println("grpLv : " + grpLv);
+
+		UserDtlGeneralVO userDtlGeneralVO = userService.selectUserDtlGeneral(userId);  // 사용자 조회
+		System.out.println(userService.selectUserDtlGeneral(userId).toString());
+
+//		model.addAttribute("grpLv", "2");  // 테스트용
+		model.addAttribute("grpLv", grpLv);  // 원래 코드
+//		model.addAttribute("userId", userId);
 		model.addAttribute("userDtlGeneral", userDtlGeneralVO);
 
 		switch (tab) {
             case "general":
                 System.out.println("tab : general");
 
-				/**
-				String adminGrpLv = grpLv;  // 로그인한 관리자 grpLv
-				String userGrpLv = userDtlGeneralVO.getGrpLv();  // 대상 사용자 grpLv
-
-				List<String> inChargeNmList = null;
-
-				if (Integer.parseInt(userGrpLv) > Integer.parseInt(adminGrpLv)) {
-					// 대상 사용자의 grpLv가 관리자 grpLv보다 낮을 때 → 대상 사용자보다 높은 grpLv의 담당자만 조회
-					inChargeNmList = userService.selectHigherInChargeNm(userGrpLv);
-
-					if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
-                        for (String inChargeNm : inChargeNmList) {
-                            System.out.println("IN_CHARGE_NM : " + inChargeNm);
-                        }
-                    } else {
-                        System.out.println("해당 이름으로 찾은 IN_CHARGE_NM가 없습니다.");
-                    }
-				}
-
-				model.addAttribute("inChargeNmList", inChargeNmList);
-				model.addAttribute("grpLv", grpLv);
-				**/
-
 				// GRP_LV가 '1'인 경우만 전체 담당자명 조회
                 List<UserSearchDTO> inChargeNmList = null;
 
-				System.out.println();
-				System.out.println("grpLv : " + grpLv);
-				System.out.println();
-
 				// 최상위 관리자인 경우
-				if(grpLv != null && grpLv.equals("1")) {  // 테스트용
+				if (grpLv != null && grpLv.equals("1")) {  // 테스트용
 					inChargeNmList = userService.selectAllInChargeNm(); // 테스트용
 
                     if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
@@ -232,84 +467,24 @@ public class UserController extends BaseController {
                 }
 
                 model.addAttribute("inChargeNmList", inChargeNmList);
-				model.addAttribute("grpLv", grpLv);  // 원래 코드
-//				model.addAttribute("grpLv", "2");  // 테스트용
 
                 return "user/userDtlGeneral";
             case "health-alerts":
                 System.out.println("tab : health-alerts");
 
-				Map<String, Object> param1 = new HashMap<>();
-//				param1.put("today", LocalDate.now().toString());  // 오늘 날짜 (필요 시 yyyy-MM-dd 포맷으로 맞춰줘)
-				param1.put("today", "2025-03-24");
+				userDtlHealthAlertsDTO.setUserId(userId);  // userId 넘겨줌
 
-				if (grpLv != null && grpLv.equals("1")) {
-					param1.put("grpId", grpId);
-				} else {
-					param1.put("inChargeId", userId);
-				}
-
-				// health alerts count
-				List<Map<String, Object>> healthAlertCntList1 = trackingService.selectTodayHealthAlertCnt(param1);
-				Map<String, Long> healthAlertCntMap1 = new HashMap<>();
-				for(Map<String, Object> row : healthAlertCntList1) {
-					String altTp = (String)row.get("ALT_TP");
-					Long altCount = ((Number)row.get("ALT_COUNT")).longValue();
-					healthAlertCntMap1.put(altTp, altCount);
-				}
-
-				// user request count (Ambulance, Nurse 등)
-				List<Map<String, Object>> userRequestCntList = trackingService.selectTodayUserRequestCnt(param1);
-				Map<String, Map<String, Long>> userRequestCntMap1 = new HashMap<>();
-				for(Map<String, Object> row : userRequestCntList) {
-					String reqTp = (String)row.get("REQ_TP");
-					String reqStt = (String)row.get("REQ_STT");
-					Long reqCount = ((Number)row.get("REQ_COUNT")).longValue();
-
-					userRequestCntMap1.putIfAbsent(reqTp, new HashMap<>());
-					userRequestCntMap1.get(reqTp).put(reqStt, reqCount);
-				}
-
-				model.addAttribute("healthAlertCntMap", healthAlertCntMap1);
-				model.addAttribute("userRequestCntMap", userRequestCntMap1);
+				List<UserDtlHealthAlertsDTO> healthAlertsList = userService.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
+				model.addAttribute("healthAlertsList", healthAlertsList);
 
 				return "user/userDtlHealthAlerts";
 			case "service-requests":
 				System.out.println("tab : service-requests");
 
-				Map<String, Object> param2 = new HashMap<>();
-//				param2.put("today", LocalDate.now().toString());  // 오늘 날짜 (필요 시 yyyy-MM-dd 포맷으로 맞춰줘)
-				param2.put("today", "2025-03-24");
+				userDtlServiceRequestsDTO.setUserId(userId);  // userId 넘겨줌
 
-				if (grpLv != null && grpLv.equals("1")) {
-					param2.put("grpId", grpId);
-				} else {
-					param2.put("inChargeId", userId);
-				}
-
-				// health alerts count
-				List<Map<String, Object>> healthAlertCntList2 = trackingService.selectTodayHealthAlertCnt(param2);
-				Map<String, Long> healthAlertCntMap2 = new HashMap<>();
-				for(Map<String, Object> row : healthAlertCntList2) {
-					String altTp = (String)row.get("ALT_TP");
-					Long altCount = ((Number)row.get("ALT_COUNT")).longValue();
-					healthAlertCntMap2.put(altTp, altCount);
-				}
-
-				// user request count (Ambulance, Nurse 등)
-				List<Map<String, Object>> userRequestCntList2 = trackingService.selectTodayUserRequestCnt(param2);
-				Map<String, Map<String, Long>> userRequestCntMap2 = new HashMap<>();
-				for(Map<String, Object> row : userRequestCntList2) {
-					String reqTp = (String)row.get("REQ_TP");
-					String reqStt = (String)row.get("REQ_STT");
-					Long reqCount = ((Number)row.get("REQ_COUNT")).longValue();
-
-					userRequestCntMap2.putIfAbsent(reqTp, new HashMap<>());
-					userRequestCntMap2.get(reqTp).put(reqStt, reqCount);
-				}
-
-				model.addAttribute("healthAlertCntMap", healthAlertCntMap2);
-				model.addAttribute("userRequestCntMap", userRequestCntMap2);
+				List<UserDtlServiceRequestsDTO> serviceRequestsList = userService.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
+				model.addAttribute("serviceRequestsList", serviceRequestsList);
 
 				return "user/userDtlServiceRequests";
 			case "input-checkup-data":
@@ -323,51 +498,22 @@ public class UserController extends BaseController {
         }
 	}
 
-	// 개발 중
-	@ResponseBody
-	@RequestMapping(value = "/selectHealthAlert", method = RequestMethod.POST)
-	public Map<String, Object> selectHealthAlert(
-			@RequestParam(required = false) String searchBgnDe,
-			@RequestParam(required = false) String searchEndDe,
-			@RequestParam(required = false) String altTp,
-			@RequestParam(required = false) String inChargeId,
-			@RequestParam(required = false) String inChargeIds,
-			@RequestParam(required = false) String reqId,
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer size
-	) {
-		System.out.println("searchBgnDe : " + searchBgnDe);
-		System.out.println("searchEndDe : " + searchEndDe);
-		System.out.println("altTp : " + altTp);
-		System.out.println("inChargeId : " + inChargeId);
-		System.out.println("inChargeIds : " + inChargeIds);
-		System.out.println("reqId : " + reqId);
-		System.out.println("page : " + page);
-		System.out.println("size : " + size);
-
-		Map<String, Object> result = new HashMap<>();
-		result.put("page", 1);           // 페이지 번호
-		result.put("total", 1);          // 전체 페이지 수
-		result.put("records", 0);        // 전체 레코드 수
-		result.put("rows", new ArrayList<>());  // 비어 있는 리스트라도 줘야 jqGrid 오류 안 남
-
-		return result;
-	}
-
 	/**
 	 * 관리자에 의한 사용자 비밀번호 초기화
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/resetPwByAdmin", method = RequestMethod.POST)
 	public Map<String, Object> resetPwByAdmin(@RequestParam("userId") String userId,
-											  @RequestParam("newPw") String newPw) {
+											  @RequestParam("newPw") String newPw,
+											  HttpServletRequest request) {
 		Map<String, Object> response = new HashMap<>();
 		boolean isError = false;
 		String message = "";
 
 		try {
 			// 현재 로그인한 관리자 정보
-			UserVO adminVO = (UserVO) getRequestAttribute("user");
+			HttpSession session = request.getSession(false);
+			UserVO adminVO = (UserVO) session.getAttribute("user");
 
 			// 새 비밀번호 암호화
 			String encryptedNewPw = EncryptUtil.encryptSha(newPw);
@@ -428,7 +574,7 @@ public class UserController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "/updateGeneral", method = RequestMethod.POST)
-	public Map<String, Object> updateGeneral(@ModelAttribute UserUpdateDTO userUpdateDTO) {
+	public Map<String, Object> updateGeneral(@ModelAttribute UserUpdateDTO userUpdateDTO, HttpServletRequest request) {
 		Map<String, Object> response = new HashMap<>();
 
 		String message = "";
@@ -442,7 +588,10 @@ public class UserController extends BaseController {
 		}
 
 		try {
-			userUpdateDTO.setUptId(userId);  // 현재 접속한 uid를 넣어야 함
+			HttpSession session = request.getSession(false);
+			UserVO adminVO = (UserVO) session.getAttribute("user");
+
+			userUpdateDTO.setUptId(adminVO.getUserId());  // 현재 접속한 uid를 넣어야 함
 
 			// 1. 사용자 일반 정보 UPDATE
 			boolean generalUpdated = userService.updateUserGeneral(userUpdateDTO);
@@ -487,13 +636,34 @@ public class UserController extends BaseController {
 	}
 
 
+	@ResponseBody
+	@RequestMapping(value = "/selectInChargeNmList", method = RequestMethod.POST)
+	public List<UserSearchDTO> selectInChargeNmList(@RequestParam(value = "inChargeNm") String inChargeNm) {
+		if (inChargeNm != null && !inChargeNm.trim().isEmpty()) {
+			return userService.selectInChargeNmList(inChargeNm);
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	@RequestMapping(value = "/chargeSearchPopup", method = RequestMethod.GET)
+	public String chargeSearchPopup(Model model) {
+		List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
+
+		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
+			for (UserSearchDTO inChargeNm : inChargeNmList) {
+				System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
+				System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
+			}
+		}
+
+		model.addAttribute("inChargeNmList", inChargeNmList);
+
+		return "user/chargeSearchPopup";
+	}
+
 	@RequestMapping(value = "/resetPwStartPopup", method = RequestMethod.GET)
 	public String resetPwStartPopup(Model model) {
-//		UserVO user = (UserVO) getRequestAttribute("user");
-//		UserVO userInfo = userService.selectUserInfoDetail(user.getUserId());
-//
-//		model.addAttribute("userinfo", userInfo);
-
 		return "user/resetPwStartPopup";
 	}
 

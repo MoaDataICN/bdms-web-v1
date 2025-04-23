@@ -3,10 +3,7 @@ package com.moadata.bdms.user.service;
 import java.util.List;
 import java.util.Map;
 
-import com.moadata.bdms.model.dto.MyResetPwDTO;
-import com.moadata.bdms.model.dto.UserDtlGeneralVO;
-import com.moadata.bdms.model.dto.UserSearchDTO;
-import com.moadata.bdms.model.dto.UserUpdateDTO;
+import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.CheckupVO;
 import com.moadata.bdms.model.vo.UserVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,29 +14,37 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserService {
 	public List<UserSearchDTO> selectUserSearch(UserSearchDTO userSearchDTO);
 
-	/**
-	 * 사용자 목록
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public List<UserVO> selectUserList(UserVO user);
+	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO);
 
-	public UserDtlGeneralVO selectUserDtlGeneral(String reqId);
+	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param);
+
+	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param);
+
+	public void updateAltStt(Map<String, Object> param);
+
+	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO);
+
+	public List<Map<String, Object>> selectAllServiceRequestsCnt(Map<String, Object> param);
+
+	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param);
+
+	public void updateReqStt(Map<String, Object> param);
+
+	public UserDtlGeneralVO selectUserDtlGeneral(String userId);
 
 	boolean updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO);
 
 	boolean updateUserGeneral(UserUpdateDTO userUpdateDTO);
 
+	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm);
+
 	public List<UserSearchDTO> selectAllInChargeNm();
-//	public List<String> selectHigherInChargeNm(String grpLv);
 
 	boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO);
 
 	boolean insertUserBody(UserUpdateDTO userUpdateDTO);
 
-
-
+	public List<UserVO> selectUserList(UserVO user);
 
 	/**
 	 * 사용자 상세

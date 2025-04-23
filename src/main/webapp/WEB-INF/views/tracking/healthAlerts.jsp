@@ -7,6 +7,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+<script src="../../resources/js/common/preparationPopup.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 
 <style>
@@ -339,7 +340,7 @@
 
 
         $('#healthAlertList').jqGrid({
-            url : '${contextPath}/tracking/selectHealthAlert',
+            url : '${contextPath}/0',
             mtype : "POST",
             datatype: "json",
             jsonReader : {repeatitems: false},
@@ -504,5 +505,9 @@
         if(e.keyCode == '13'){
             fnSearch();
         }
+    });
+
+    $(document).on('click', '.detail-btn', function () {
+        showPreparationPopup();
     });
 </script>

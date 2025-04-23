@@ -59,7 +59,8 @@ const shadowCirclePlugin = {
 
 
 const getOrCreateTooltip = (chart) => {
-    let tooltipEl = chart.canvas.parentNode.querySelector('div');
+    //let tooltipEl = chart.canvas.parentNode.querySelector('div');
+    let tooltipEl = chart.canvas.parentNode.querySelector('div.tooltip');
 
     if (!tooltipEl) {
         tooltipEl = document.createElement('div');
@@ -144,6 +145,11 @@ const externalTooltipHandler = (context) => {
         });
 
         const tableRoot = tooltipEl.querySelector('table');
+
+        if (!tableRoot) {
+            console.warn("❌ Tooltip table not found");
+            return;
+        }
 
         while (tableRoot.firstChild) {
             tableRoot.firstChild.remove();

@@ -3,7 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
-
+    #serviceRequests_pager {
+        display:none;
+    }
 </style>
 
 <div class="second-tap-menu mt-12px">
@@ -13,16 +15,11 @@
     <button type="button" class="second-tap-btn" data-tab="input-checkup-data"><spring:message code='common.tapMenu.inputCheckupData'/></button>
 </div>
 
-
-
-<div class="temp-block-wrap">  <!-- temp-block-wrap S -->
-
-
-    <!-- Today's health alerts staus 묶음 -->
     <div class="alerts-wrap mt-30px">
+        <!-- Mini userDtlGeneral -->
         <div class="mt-16px table-data-wrap">
             <p class="second-title-status">(${userDtlGeneral.userId}) ${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
-            <p class="title-status mr-12px">- <span class="bold-t-01" id="temp-item-sum">{0}</span> Health alerts have been detected in the last 24 hours.</p>
+            <p class="title-status mr-12px">-<span class="bold-t-01" id="serviceRequests_cntTotal">{0}</span><spring:message code="serviceRequestsTap.description"/></p>
         </div>
 
         <div class="alerts-grid mt-12px">
@@ -33,11 +30,11 @@
                 -->
                 <canvas id="serviceRequests_myChart" height="310" style="overflow:visible !important"></canvas>
                 <div class="chart-tap-group">
-                    <button type="button" class="chart-tap-btn left active">All</button>
-                    <button type="button" class="chart-tap-btn right">Last 24h</button>
+                    <button type="button" class="chart-tap-btn left active" id="serviceRequestsChartAllBtn">All</button>
+                    <button type="button" class="chart-tap-btn right" id="serviceRequestsChartLast24Btn">Last 24h</button>
                 </div>
             </div>
-            <!-- Today's health-chart 우측 아이템 묶음-->
+            <!-- 아이템 묶음-->
             <div class="alerts-grid04">
                 <!-- 아이템 -->
                 <div class="alerts-item">
@@ -48,7 +45,7 @@
                         <div class="alerts-item-text01">
                             Nursing
                         </div>
-                        <div class="alerts-item-text02" id="temp-item-01">
+                        <div class="alerts-item-text02" id="serviceRequests_cntN">
                             20
                         </div>
                     </div>
@@ -62,7 +59,7 @@
                         <div class="alerts-item-text01">
                             Ambulance
                         </div>
-                        <div class="alerts-item-text02" id="temp-item-02">
+                        <div class="alerts-item-text02" id="serviceRequests_cntA">
                             38
                         </div>
                     </div>
@@ -74,9 +71,9 @@
                     </div>
                     <div class="alerts-text-group">
                         <div class="alerts-item-text01">
-                            Consultation
+                            TeleHealth
                         </div>
-                        <div class="alerts-item-text02" id="temp-item-03">
+                        <div class="alerts-item-text02" id="serviceRequests_cntT">
                             72
                         </div>
                     </div>
@@ -96,17 +93,17 @@
                         </div>
                         <div class="row-input">
                             <div class="p-r">
-                                <input type="text" class="date-input input-txt02" id="healthAlerts_dateDisplay1" placeholder="ALL" readonly="">
-                                <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker1')" alt="달력 아이콘">
-                                <input type="date" id="healthAlerts_datePicker1" class="hidden-date" onchange="updateDate('healthAlerts_datePicker1', 'healthAlerts_dateDisplay1')">
+                                <input type="text" class="date-input input-txt02" id="serviceRequestsBgnDe" placeholder="ALL" readonly="">
+                                <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('serviceRequests_datePicker1')" alt="달력 아이콘">
+                                <input type="date" id="serviceRequests_datePicker1" class="hidden-date" onchange="updateDate('serviceRequests_datePicker1', 'serviceRequestsBgnDe')">
                             </div>
                             <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
                             <div class="p-r">
-                                <input type="text" class="date-input input-txt02" id="healthAlerts_dateDisplay2" placeholder="ALL" readonly="">
-                                <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker2')" alt="달력 아이콘">
-                                <input type="date" id="healthAlerts_datePicker2" class="hidden-date" onchange="updateDate('healthAlerts_datePicker2', 'healthAlerts_dateDisplay2')">
+                                <input type="text" class="date-input input-txt02" id="serviceRequestsEndDe" placeholder="ALL" readonly="">
+                                <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('serviceRequests_datePicker2')" alt="달력 아이콘">
+                                <input type="date" id="serviceRequests_datePicker2" class="hidden-date" onchange="updateDate('serviceRequests_datePicker2', 'serviceRequestsEndDe')">
                             </div>
-                            <div class="day-button-wrap" id="healthAlerts_date">
+                            <div class="day-button-wrap" id="serviceRequests_date">
                                 <button class="data-select-btn" data-period="all">All</button>
                                 <button class="data-select-btn" data-period="today">Today</button>
                                 <button class="data-select-btn" data-period="7-day">7day</button>
@@ -120,14 +117,14 @@
                 <div class="row-md-100">
                     <div class="row-wrap mb-0px">
                         <div class="input-label01">
-                            Alert type
+                            Service Type
                         </div>
                         <div class="row-input">
                             <div class="day-button-wrap02" id="serviceRequests_reqTp">
-                                <button class="data-select-btn active" data-filter="all">All</button>
-                                <button class="data-select-btn" data-filter="nursing">Nursing</button>
-                                <button class="data-select-btn" data-filter="ambulance">Ambulance</button>
-                                <button class="data-select-btn" data-filter="consultation">Consultation</button>
+                                <button class="data-select-btn active" data-filter="reqTpAll">All</button>
+                                <button class="data-select-btn" data-filter="N">Nursing</button>
+                                <button class="data-select-btn" data-filter="A">Ambulance</button>
+                                <button class="data-select-btn" data-filter="T">TeleHealth</button>
                             </div>
                         </div>
                     </div>
@@ -140,244 +137,55 @@
             <div class="submit-ui-wrap">
             </div>
             <div class="submit-ui-wrap">
-                <button type="button" class="gray-submit-btn">
+                <button type="button" class="gray-submit-btn" onclick="serviceRequests_fnClear()">
                     <img src="/resources/images/reset-icon.svg" class="icon22">
                     <span>Reset</span>
                 </button>
         
-                <button type="button" class="point-submit-btn" id="healthAlertsSearchBtn" onclick="healthAlerts_fnSearch()">
+                <button type="button" class="point-submit-btn" onclick="serviceRequests_fnSearch()">
                     <img src="/resources/images/search-icon.svg" class="icon22">
                     <span>Search</span>
                 </button>
             </div>
         </div>
 
-        <!-- Today health board Table
-        <div class="table-wrap mt-14px" style="width:100%;">
-            <table id="healthAlerts_alertGrid" style="width:100%;"></table>
-            <div id="healthAlerts_alertGridPager"></div>
-            <div id="healthAlerts_customPager" class="page-group mb-22px mt-10px"></div>
+    <div class="table-wrap mt-36px">
+        <div class="mt-16px table-data-wrap">
+            <p class="second-title-status">
+                <span class="bold-t-01" id="serviceRequestsCurrentRowsCnt">0</span>
+                <spring:message code="common.outOf"/>
+                <span class="bold-t-01" id="serviceRequestsTotalResultsCnt">0</span>
+                <spring:message code="common.results"/>
+            </p>
+            <div class="table-option-wrap">
+                <div class="dropdown02">
+                    <button class="dropdown-search input-line-b" id="serviceRequests_gridDropdownBtn"><spring:message code="common.viewResults" arguments="10" /> <span><img class="icon20"
+                                                                                            alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                    <div class="dropdown-content" id="serviceRequests_viewCntDropdown">
+                        <a data-cnt="100"><spring:message code="common.viewResults" arguments="100" /></a>
+                        <a data-cnt="50"><spring:message code="common.viewResults" arguments="50" /></a>
+                        <a data-cnt="10"><spring:message code="common.viewResults" arguments="10" /></a>
+                    </div>
+                </div>
+            </div>
         </div>
-        -->
 
+        <!-- userDtlServiceRequests Grid -->
+        <div class="table-wrap mt-14px" style="width:100%;">
+            <div class="w-line01 mt-8px"></div>
+            <div class="main-table">
+                <div class="tableWrapper">
+                    <table id="serviceRequests_grid" style="width:100%;"></table>
+                    <div id="serviceRequests_pager"></div>
+                    <div id="userDtlCustomPager" class="page-group mb-22px mt-10px"></div>
+                </div>
+            </div>
+        </div>
 
-
-<!-- Today health board Table -->
-<div class="table-wrap mt-30px">
-    <div class="main-table mt-10px">
-        <table class="tbl_h">
-            <colgroup>
-                <col style="width:5%">
-                <col style="width:30%">
-                <col style="width:10%">
-                <col>
-                <col>
-                <col style="width:6%">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>no.
-                        <button type="button">
-                            <img src="assets/images/arrow-top-bottom.svg" class="icon16">
-                        </button>
-                    </th>
-                    <th>requested time
-                        <button type="button">
-                            <img src="assets/images/arrow-top-bottom.svg" class="icon16">
-                        </button>
-                    </th>
-                    <th>service type
-                        <button type="button">
-                            <img src="assets/images/arrow-top-bottom.svg" class="icon16">
-                        </button>
-                    </th>
-                    <th>
-                        group
-                        <button type="button">
-                            <img src="assets/images/arrow-top-bottom.svg" class="icon16">
-                        </button>
-                    </th>
-                    <th>in charge
-                        <button type="button">
-                            <img src="assets/images/arrow-top-bottom.svg" class="icon16">
-                        </button>
-                    </th>
-                    <th>check</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="left">10</td>
-                    <td class="left">2025-04-01 15:24:32</td>
-                    <td class="left">Sleep</td>
-                    <td class="left">power b</td>
-                    <td class="left">james girl</td>
-                    <td class="left">
-                        <button type="button" class="detail-btn"><span>confirmed</span></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 페이지 넘버링-->
-    <div class="page-group mb-22px mt-10px">
-        <a href="#">
-            <div class="page-num-box">
-                <img src="assets/images/arrow-num-left.svg" class="icon16">
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box active">
-                1
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                2
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                3
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                4
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                5
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                6
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                7
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                8
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                9
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                10
-            </div>
-        </a>
-        <a href="#">
-            <div class="page-num-box">
-                <img src="assets/images/arrow-num-right.svg" class="icon16">
-            </div>
-        </a>
-    </div>
-</div>
-
+        <form name="excelForm" method="POST">
+            <input type="hidden" id="serviceRequests_sortColumn" name="sortColumn" value="reqDt"/>
+            <input type="hidden" id="serviceRequests_sord" name="sord" value="DESC"/>
+        </form>
     </div>
 
 <div class="space-30"></div>
-
-
-</div>  <!-- temp-block-wrap E -->
