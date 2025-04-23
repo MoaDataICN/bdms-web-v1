@@ -7,6 +7,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
 <script src="../../resources/js/grid/pager.js"></script>
+<script src="../../resources/js/grid/userDtlPager.js"></script>
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bdms_common.css">
@@ -25,7 +26,7 @@
 <link rel="stylesheet" href="/resources/css/bdms_color.css">
 
 <style>
-    #userRequestPager {
+    #userSearch_pager {
         display:none;
     }
 
@@ -135,49 +136,41 @@
                 </div>
                 <div class="row-wrap">
                     <div class="input-label01">
-                        <spring:message code='common.uid'/>
+                        <spring:message code='common.sex'/>
                     </div>
-                    <div class="row-input">
-                        <input type="text" class="input-txt02 hold" id="userId" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                    <div class="dropdown">
+                        <button class="dropdown-search" id="userSearch_sxDropdown"><spring:message code='common.all'/><span><img class="icon20" alt=""
+                                                                              src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                        <div class="dropdown-content">
+                            <a onclick="userSearch_updateDropdown($('#userSearch_sxDropdown'), $(this).text())"><spring:message code='common.all'/></a>
+                            <a onclick="userSearch_updateDropdown($('#userSearch_sxDropdown'), $(this).text())"><spring:message code='common.sex.f'/></a>
+                            <a onclick="userSearch_updateDropdown($('#userSearch_sxDropdown'), $(this).text())"><spring:message code='common.sex.m'/></a>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="row-md-100">
-                <div class="row-wrap">
-                    <div class="input-label01">
-                        <spring:message code='common.sex'/>
-                    </div>
-                    <div class="dropdown">
-                        <button class="dropdown-search" id="sx"><spring:message code='common.all'/><span><img class="icon20" alt=""
-                                                                              src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                        <div class="dropdown-content">
-                            <a onclick="$('#sx').text($(this).text())"><spring:message code='common.all'/></a>
-                            <a onclick="$('#sx').text($(this).text())"><spring:message code='common.sex.f'/></a>
-                            <a onclick="$('#sx').text($(this).text())"><spring:message code='common.sex.m'/></a>
-                        </div>
-                    </div>
-                </div>
                 <div class="row-wrap">
                     <c:if test="${fn:length(inChargeNmList) > 0}">
                         <div class="input-label01">
                             <spring:message code='common.inCharge'/>
                         </div>
                         <div class="dropdown">
-                            <button class="dropdown-search" id="inChargeNm"><spring:message code='common.all'/><span><img class="icon20" alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                            <button class="dropdown-search" id="userSearch_inChargeNm">
+                                <spring:message code='common.all'/>
+                            </button>
+                            <!--
                             <div class="dropdown-content">
-                                <a data-inchargeid="All" onclick="$('#inChargeNm').text($(this).text())"><spring:message code='common.all'/></a>
+                                <a data-inchargeid="All" onclick="userSearch_updateDropdown($('#userSearch_inChargeNmDropdown'), $(this).text())"><spring:message code='common.all'/></a>
                                 <c:forEach var="item" items="${inChargeNmList}">
-                                    <a data-inchargeid="${item.inChargeId}" onclick="$('#inChargeNm').text($(this).text())">${item.inChargeNm}</a>
+                                    <a data-inchargeid="${item.inChargeId}" onclick="userSearch_updateDropdown($('#userSearch_inChargeNmDropdown'), $(this).text())">${item.inChargeNm}</a>
                                 </c:forEach>
                             </div>
+                            -->
                         </div>
                     </c:if>
                 </div>
-            </div>
-
-            <div class="row-md-100">
                 <div class="row-wrap">
                     <div class="input-label01">
                         <spring:message code='common.birthDt'/>
@@ -187,21 +180,65 @@
                                oninput="limitLength(this, 30);" required>
                     </div>
                 </div>
+            </div>
+
+            <div class="row-md-100">
                 <div class="row-wrap">
                     <c:if test="${fn:length(groupList) > 0}">
                         <div class="input-label01">
                             <spring:message code='common.group'/>
                         </div>
                         <div class="dropdown">
-                            <button class="dropdown-search" id="grpTp"><spring:message code='common.all'/><span><img class="icon20" alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                            <button class="dropdown-search" id="userSearch_grpTpDropdown"><spring:message code='common.all'/><span><img class="icon20" alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
-                                <a data-grpid="All" onclick="$('#grpTp').text($(this).text())"><spring:message code='common.all'/></a>
-                                <a data-grpid="<spring:message code='common.group.1'/>" onclick="$('#grpTp').text($(this).text())"><spring:message code='common.group.1'/></a>
-                                <a data-grpid="<spring:message code='common.group.2'/>" onclick="$('#grpTp').text($(this).text())"><spring:message code='common.group.2'/></a>
-                                <a data-grpid="<spring:message code='common.group.3'/>" onclick="$('#grpTp').text($(this).text())"><spring:message code='common.group.3'/></a>
+                                <a data-grpid="All" onclick="userSearch_updateDropdown($('#userSearch_grpTpDropdown'), $(this).text())"><spring:message code='common.all'/></a>
+                                <a data-grpid="<spring:message code='common.group.1'/>" onclick="userSearch_updateDropdown($('#userSearch_grpTpDropdown'), $(this).text())"><spring:message code='common.group.1'/></a>
+                                <a data-grpid="<spring:message code='common.group.2'/>" onclick="userSearch_updateDropdown($('#userSearch_grpTpDropdown'), $(this).text())"><spring:message code='common.group.2'/></a>
+                                <a data-grpid="<spring:message code='common.group.3'/>" onclick="userSearch_updateDropdown($('#userSearch_grpTpDropdown'), $(this).text())"><spring:message code='common.group.3'/></a>
                             </div>
                         </div>
                     </c:if>
+                </div>
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code='common.serviceTp'/>
+                    </div>
+                    <div class="row-input">
+                        <div class="day-button-wrap02" id="userSearch_reqTp">
+                            <button class="data-select-btn serviceBtns active" data-filter="serviceTpExists"><spring:message code='common.exists'/></button>
+                            <button class="data-select-btn serviceBtns" data-filter="serviceTpNA"><spring:message code='common.serviceTp.NA'/></button>
+                            <!--
+                            <button class="data-select-btn serviceBtns active" data-filter="serviceTpAll"><spring:message code='common.all'/></button>
+                            <button class="data-select-btn serviceBtns" data-filter="N"><spring:message code='common.serviceTp.N'/></button>
+                            <button class="data-select-btn serviceBtns" data-filter="A"><spring:message code='common.serviceTp.A'/></button>
+                            <button class="data-select-btn serviceBtns" data-filter="T"><spring:message code='common.serviceTp.T'/></button>
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        <spring:message code='common.alertTp'/>
+                    </div>
+                    <div class="row-input">
+                        <div class="day-button-wrap02" id="userSearch_altTp">
+                            <button class="data-select-btn active" data-filter="alertTpExists"><spring:message code='common.exists'/></button>
+                            <button class="data-select-btn" data-filter="alertTpNA"><spring:message code='common.alertTp.NA'/></button>
+                            <!--
+                            <button class="data-select-btn active" data-filter="alertTpAll"><spring:message code='common.all'/></button>
+                            <button class="data-select-btn" data-filter="A"><spring:message code='common.alertTp.A'/></button>
+                            <button class="data-select-btn" data-filter="F"><spring:message code='common.alertTp.F'/></button>
+                            <button class="data-select-btn" data-filter="H"><spring:message code='common.alertTp.H'/></button>
+                            <button class="data-select-btn" data-filter="SL"><spring:message code='common.alertTp.SL'/></button>
+                            <button class="data-select-btn" data-filter="B"><spring:message code='common.alertTp.B'/></button>
+                            <button class="data-select-btn" data-filter="T"><spring:message code='common.alertTp.T'/></button>
+                            <button class="data-select-btn" data-filter="ST"><spring:message code='common.alertTp.ST'/></button>
+                            -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -228,56 +265,12 @@
                             <input type="date" id="datePicker2" class="hidden-date"
                                    onchange="updateDate('datePicker2', 'searchEndDe')">
                         </div>
-                        <div class="day-button-wrap" id="search_date">
+                        <div class="day-button-wrap" id="userSearch_date">
                             <button class="data-select-btn" data-period="all">All</button>
                             <button class="data-select-btn" data-period="today">Today</button>
                             <button class="data-select-btn" data-period="7-day">7day</button>
                             <button class="data-select-btn active" data-period="30-day">30day</button>
                             <button class="data-select-btn" data-period="90-day">90day</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row-md-100">
-                <div class="row-wrap">
-                    <div class="input-label01">
-                        <spring:message code='common.serviceTp'/>
-                    </div>
-                    <div class="row-input">
-                        <div class="day-button-wrap02">
-                            <button class="data-select-btn serviceBtns active" data-filter="serviceTpExists"><spring:message code='common.exists'/></button>
-                            <button class="data-select-btn serviceBtns" data-filter="serviceTpNA"><spring:message code='common.serviceTp.NA'/></button>
-                            <!--
-                            <button class="data-select-btn serviceBtns active" data-filter="serviceTpAll"><spring:message code='common.all'/></button>
-                            <button class="data-select-btn serviceBtns" data-filter="N"><spring:message code='common.serviceTp.N'/></button>
-                            <button class="data-select-btn serviceBtns" data-filter="A"><spring:message code='common.serviceTp.A'/></button>
-                            <button class="data-select-btn serviceBtns" data-filter="T"><spring:message code='common.serviceTp.T'/></button>
-                            -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row-md-100">
-                <div class="row-wrap">
-                    <div class="input-label01">
-                        <spring:message code='common.alertTp'/>
-                    </div>
-                    <div class="row-input">
-                        <div class="day-button-wrap02">
-                            <button class="data-select-btn alertBtns active" data-filter="alertTpExists"><spring:message code='common.exists'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="alertTpNA"><spring:message code='common.alertTp.NA'/></button>
-                            <!--
-                            <button class="data-select-btn alertBtns active" data-filter="alertTpAll"><spring:message code='common.all'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="A"><spring:message code='common.alertTp.A'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="F"><spring:message code='common.alertTp.F'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="H"><spring:message code='common.alertTp.H'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="SL"><spring:message code='common.alertTp.SL'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="B"><spring:message code='common.alertTp.B'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="T"><spring:message code='common.alertTp.T'/></button>
-                            <button class="data-select-btn alertBtns" data-filter="ST"><spring:message code='common.alertTp.ST'/></button>
-                            -->
                         </div>
                     </div>
                 </div>
@@ -289,12 +282,12 @@
         <div class="submit-ui-wrap">
         </div>
         <div class="submit-ui-wrap">
-            <button type="button" class="gray-submit-btn" id="reset" onclick="search_fnClear()">
+            <button type="button" class="gray-submit-btn" onclick="userSearch_fnClear()">
                 <img src="/resources/images/reset-icon.svg" class="icon22">
                 <span><spring:message code='common.btn.reset'/></span>
             </button>
 
-            <button type="button" class="point-submit-btn" id="search" onclick="search_fnSearch()">
+            <button type="button" class="point-submit-btn" id="search" onclick="userSearch_fnSearch()">
                 <img src="/resources/images/search-icon.svg" class="icon22">
                 <span><spring:message code='common.btn.search'/></span>
             </button>
@@ -304,16 +297,16 @@
     <div class="table-wrap mt-36px">
         <div class="mt-16px table-data-wrap">
             <p class="second-title-status">
-                <span class="bold-t-01" id="currentRowsCnt">0</span>
+                <span class="bold-t-01" id="searchCurrentRowsCnt">0</span>
                 <spring:message code='common.outOf'/>
-                <span class="bold-t-01" id="totalResultsCnt">0</span>
+                <span class="bold-t-01" id="searchTotalResultsCnt">0</span>
                 <spring:message code='common.results'/>
             </p>
             <div class="table-option-wrap">
                 <div class="dropdown02">
-                    <button class="dropdown-search input-line-b" id="gridDropdownBtn"><spring:message code='common.viewResults' arguments="10" /> <span><img class="icon20"
+                    <button class="dropdown-search input-line-b" id="userSearch_gridDropdownBtn"><spring:message code='common.viewResults' arguments="10" /> <span><img class="icon20"
                                                                                             alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                    <div class="dropdown-content" id="search_viewCntDropdown">
+                    <div class="dropdown-content" id="userSearch_viewCntDropdown">
                         <a data-cnt="100"><spring:message code='common.viewResults' arguments="100" /></a>
                         <a data-cnt="50"><spring:message code='common.viewResults' arguments="50" /></a>
                         <a data-cnt="10"><spring:message code='common.viewResults' arguments="10" /></a>
@@ -324,8 +317,8 @@
         <div class="w-line01 mt-8px"></div>
         <div class="main-table">
             <div class="tableWrapper">
-                <table id="userSearchTable"></table>
-                <div id="userRequestPager"></div>
+                <table id="userSearch_grid"></table>
+                <div id="userSearch_pager"></div>
                 <div id="customPager" class="page-group mb-22px mt-10px"></div>
             </div>
         </div>
@@ -360,9 +353,13 @@
         </div>
     </div>
 
+    <!-- 팝업 삽입 영역 -->
+    <div class="charge-search-popup-container">
+    </div>
+
     <form name="excelForm" method="POST">
-        <input type="hidden" id="sortColumn" name="sortColumn" value="reqDt"/>
-        <input type="hidden" id="sord" name="sord" value="DESC"/>
+        <input type="hidden" id="userSearch_sortColumn" name="sortColumn" value="reqDt"/>
+        <input type="hidden" id="userSearch_sort" name="sord" value="DESC"/>
     </form>
 </main>
 
@@ -373,6 +370,7 @@
         active: "<spring:message code='common.active'/>",
         suspended: "<spring:message code='common.suspended'/>",
         readyToDelete: "<spring:message code='common.readyToDelete'/>",
+        all: "<spring:message code='common.all'/>",
         select: "<spring:message code='common.select'/>"
     };
 
@@ -381,110 +379,116 @@
     let currentPageGroup = 1;
 
     // 기본 Items 개수
-    var rowNumsVal = 10;
+    let rowNumsVal = 10;
 
-    let reqId = "${reqId}";
-    let inChargeId = "${inChargeId}";
+    const gridPagingState = {
+        userSearch_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        },
+        healthAlerts_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        },
+        serviceRequests_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        }
+        // 추가할 그리드는 여기에 계속 추가
+    };
 
-    // userDtlGeneral : 기존 값 저장
-    let userDtlGeneral = {};
+    let userId = "${userId}";
+    let inChargeId = "";
+    let inChargeNm = "";
 
-    function extractUserDtlGeneralFromDOM() {
-        userDtlGeneral = {
-            userNm: $("#general_userNm").val() || "-",
-            emailId: $("#general_emailId").val() || "-",
-            mobile: $("#general_mobile").val() || "",
-            userId: $("#general_userId").val() || "-",
-            brthDt: $("#general_brthDt").val() || "",
-            height: $("#general_height").val() || "",
-            registDt: $("#general_registDt").val() || "-",
-            weight: $("#general_weight").val() || "",
-            lastAccess: $("#general_lastAccess").val() || "-",
-            addr: $("#general_addr").val() || "",
-            wdDt: $("#general_wdDt").val() || "",
-            mmo: $("#general_mmo").val() || "",
-            uptDt: $("#general_uptDt").val() || "-",
-            uptId: $("#general_uptId").val() || "-",
-            sx: $("#general_sxDropdown").contents().filter(function () {
-                return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select,
-            inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
-                return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select,
-            grpTp: $("#general_grpTpDropdown").contents().filter(function () {
-                return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select,
-            wdYn: $("#general_statusDropdown").contents().filter(function () {
-                return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select
-        };
+    // 담당자명 팝업 열기
+    $(document).on('click', '#userSearch_inChargeNm', function () {
+        $(".charge-search-popup-container").load("/user/chargeSearchPopup", function () {
+            $('#chargeSearchPopup').fadeIn();
+        });
+    });
+
+    function userSearch_updateDropdown($button, newText) {
+        const $textNode = $button.contents().filter(function () {
+            return this.nodeType === 3; // 텍스트 노드만 선택
+        }).first();
+
+        if ($textNode.length) {
+            $textNode[0].nodeValue = newText + ' ';
+        } else {
+            $button.prepend(document.createTextNode(newText + ' '));
+        }
     }
 
     // 검색 조건 초기화
-    function search_fnClear() {
-        $('#searchBgnDe').val('');
-        $('#searchEndDe').val('');
+    function userSearch_fnClear() {
+        // 텍스트 필드 초기화
         $('#userNm').val('');
         $('#emailId').val('');
-        $('#userId').val('');
+        $('#searchBgnDe').val(moment().subtract(30, 'days').format('YYYY-MM-DD'));
+        $('#searchEndDe').val(moment().format('YYYY-MM-DD'));
         $('#mobile').val('');
-        $("#sx").text('All');
+        $('#userSearch_inChargeNm').text("All");
         $('#brthDt').val('');
-        $('#inChargeNm').text('All');
-        $('#grpTp').text('All');
-        $('.serviceBtns.active').removeClass('active');
-        $('.serviceBtns')[0].classList.add('active');
-        $('.alertBtns.active').removeClass('active');
-        $('.alertBtns')[0].classList.add('active');
-        $('#search_date .data-select-btn.active')[3].click();
+        //$('#userId').val('');
+
+        // 드롭다운 내부 <a> 클릭으로 All 초기화 (텍스트 & 속성 다 처리됨)
+        $('#userSearch_sxDropdown').siblings('.dropdown-content').find('a:contains("All")').click();
+        //$('#userSearch_inChargeNmDropdown').siblings('.dropdown-content').find('a[data-inchargeid="All"]').click();
+        //$('#userSearch_inChargeNmDropdown').siblings('.dropdown-content').find('a[data-inchargeid="All"]').click();
+        $('#userSearch_grpTpDropdown').siblings('.dropdown-content').find('a[data-grpid="All"]').click();
+
+        // 버튼 상태 초기화
+        $('#userSearch_reqTp .data-select-btn').removeClass('active');
+        $('#userSearch_reqTp .data-select-btn[data-filter="serviceTpExists"]').addClass('active');
+
+        $('#userSearch_altTp .data-select-btn').removeClass('active');
+        $('#userSearch_altTp .data-select-btn[data-filter="alertTpExists"]').addClass('active');
+
+        $('#userSearch_date .data-select-btn').removeClass('active');
+        $('#userSearch_date .data-select-btn[data-period="30-day"]').addClass('active');
+
+        // 검색 실행
+        userSearch_fnSearch();
     }
 
     // 검색 조건 설정
-    function search_setSearchParam() {
+    function userSearch_setSearchParam() {
         return {
-            inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
-            searchBgnDe : $('#searchBgnDe').val()+' 00:00:00',
-            searchEndDe : $('#searchEndDe').val()+' 23:59:59',
+            //inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
+            searchBgnDe : '',
+            searchEndDe : $('#searchEndDe').val() + ' 23:59:59',
             userNm : $('#userNm').val(),
             emailId : $('#emailId').val(),
             userId : $('#userId').val(),
             mobile : $('#mobile').val().replaceAll('-',''),
-            sx : $('#sx').text() != "All" ? $('#sx').text().slice(0,1) : "ALL",
+            sx : $('#userSearch_sxDropdown').text().trim() !== "All" ? $('#userSearch_sxDropdown').text().trim().charAt(0) : "",
             brthDt : $('#brthDt').val(),
-            inChargeNm: $('#inChargeNm').text().trim() !== "All" ? $('#inChargeNm').text().trim() : "",
-            grpTp : $('#grpTp').text().trim() !== "All" ? $('#grpTp').text().trim() : "",
+            inChargeNm : $('#userSearch_inChargeNm').text().trim() !== "All" ? $('#userSearch_inChargeNm').text().trim() : "",
+            //inChargeNm: $('#userSearch_inChargeNmDropdown').text().trim() !== "All" ? $('#userSearch_inChargeNmDropdown').text().trim() : "",
+            grpTp : $('#userSearch_grpTpDropdown').text().trim() !== "All" ? $('#userSearch_grpTpDropdown').text().trim() : "",
             // 기존 reqTp/altTp → Exists, N/A로 단순화
             reqTp: $('.serviceBtns.active').data('filter') === 'serviceTpExists'
                 ? "Exists"
                 : "N/A",
-            altTp: $('.alertBtns.active').data('filter') === 'alertTpExists'
+            altTp: $('#userSearch_altTp .data-select-btn.active').data('filter') === 'alertTpExists'
                 ? "Exists"
-                : "N/A",
-            /* serviceBtns, alertBtns : 다중 선택
-            reqTp : $('.serviceBtns.active').data('filter') != 'serviceTpAll' ? $('.serviceBtns.active')
-                .map(function() {
-                    return "\"" + $(this).data('filter') + "\"";
-                })
-                .get()
-                .join(',') : "'N','A','T'",
-            altTp : $('.alertBtns.active').data('filter') != 'alertTpAll' ? $('.alertBtns.active')
-                .map(function() {
-                    return "\"" + $(this).data('filter') + "\"";
-                })
-                .get()
-                .join(',') : ""
-            */
+                : "N/A"
         };
     }
 
     // 검색
-    function search_fnSearch(){
-        $('#userSearchTable').jqGrid('setGridParam', {
+    function userSearch_fnSearch(){
+    console.log(userSearch_setSearchParam());
+        $('#userSearch_grid').jqGrid('setGridParam', {
             url: '/user/selectUserSearch',
             datatype: 'json',
-            postData : search_setSearchParam()
+            postData: userSearch_setSearchParam()
         });
-        $('#userSearchTable').trigger('reloadGrid', [{page:1, current:true}]);
+        $('#userSearch_grid').trigger('reloadGrid', [{page:1, current:true}]);
     }
 
     $(document).ready(function() {
@@ -497,19 +501,23 @@
         $('#searchBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
         $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
 
-        $('#userSearchTable').jqGrid({
-            url : '/user/selectUserSearch',
-            mtype : "POST",
+        $('#userSearch_grid').jqGrid({
+            url: '/user/selectUserSearch',
+            mtype: "POST",
             datatype: "json",
-            jsonReader : {repeatitems: false},
-            postData: search_setSearchParam(),
-            colModel : [
-                { label: 'UID', name: 'userId', width:300, sortable : true},
-                { label: 'Registration Date', name: 'registDt', width:200, sortable : true},
+            jsonReader: {repeatitems: false},
+            postData: userSearch_setSearchParam(),
+            colModel: [
+                //{ label: 'UID', name: 'userId', width:300, sortable : true},
+                { label: 'Registration Date', name: 'registDt', width: 200, sortable: true,
+                    formatter: function(cellValue, options, rowObject) {
+                        return cellValue ? cellValue.substring(0, 10) : '-';
+                    }
+                },
                 { label: 'User Name', name: 'userNm', width:130, sortable : false},
                 { label: 'Phone', name: 'mobile', width:130, sortable : false, formatter: function(cellValue, options, rowObject) {
-                        var cleaned = ('' + cellValue).replace(/\D/g, '');
-                        var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+                        let cleaned = ('' + cellValue).replace(/\D/g, '');
+                        let match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
                         if (match) {
                             return match[1] + '-' + match[2] + '-' + match[3];
                         }
@@ -587,7 +595,7 @@
                     sortable: false,
                     formatter: function(cellValue, options, rowObject) {
                         return `
-                            <button type="button" class="detail-btn open-slide-btn" data-reqid="` + rowObject.reqId + `">
+                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
                                 <span>detail</span>
                                 <img src="/resources/images/arrow-right-nomal.svg" class="icon18">
                             </button>
@@ -599,31 +607,30 @@
             page: 1,
             autowidth: true,
             height: 'auto',
-            rowNum : rowNumsVal,
+            rowNum: rowNumsVal,
             rowList:[10,50,100],
-            sortable : true,
-            sortname : 'reqDt',
-            sortorder : 'DESC',
+            sortable: true,
+            sortname: 'reqDt',
+            sortorder: 'DESC',
             shrinkToFit: true,
             rownumbers: true,
-            loadonce : false,
-            pager : '#userRequestPager',
+            loadonce: false,
+            pager: '#userSearch_pager',
             viewrecords: true,
             loadComplete: function(data) {
-            console.log("전체 데이터 rows : " + data.rows);
-                $('#totalResultsCnt').text(data.records);
-                $('#currentRowsCnt').text(data.rows.length);
-                createCustomPager('userSearchTable');
+                $('#searchTotalResultsCnt').text(data.records);
+                $('#searchCurrentRowsCnt').text(data.rows.length);
+                createCustomPager('userSearch_grid');
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             gridComplete: function() {
-                createCustomPager('userSearchTable');
+                createCustomPager('userSearch_grid');
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             onSortCol: function (index, columnIndex, sortOrder) {
                 //alert(index);
-                $("#sortColumn").val(index);
-                $("#sord").val(sortOrder);
+                $("#userSearch_sortColumn").val(index);
+                $("#userSearch_sord").val(sortOrder);
             }
         })
     })
@@ -644,87 +651,58 @@
     }
 
     // 검색일 계산
-    $(document).on('click', '#search_date .data-select-btn', function(){
+    $(document).on('click', '#userSearch_date .data-select-btn', function(){
         console.log('✅ search data-select-btn clicked!');
-        $('#search_date .data-select-btn').removeClass('active');
+
+        $('#userSearch_date .data-select-btn').removeClass('active');
 
         $(this).addClass('active');
 
         let period = $(this).data('period');
 
-        if(period === 'all') {
+        if (period === 'all') {
             $('#searchBgnDe').val('');
-        } else if(period === 'today') {
+        } else if (period === 'today') {
             $('#searchBgnDe').val(moment().format('YYYY-MM-DD'));
-            $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
+            $('#searchEndDe').val(moment().format('YYYY-MM-DD'));
         } else {
-            var pDay = parseInt(period.replaceAll('-day',''), 10);
+            let pDay = parseInt(period.replaceAll('-day',''), 10);
 
             $('#searchEndDe').val(moment().format('YYYY-MM-DD'));
 
-            var calcDt = moment().subtract(pDay, 'days').format('YYYY-MM-DD');
+            let calcDt = moment().subtract(pDay, 'days').format('YYYY-MM-DD');
             $('#searchBgnDe').val(calcDt);
         }
     })
 
     // serviceBtns : 단일 선택
-    $(document).on('click', '.serviceBtns', function () {
-        $('.serviceBtns').removeClass('active');  // 모든 버튼에서 active 제거
+    $(document).on('click', '#userSearch_reqTp .data-select-btn', function () {
+        $('#userSearch_reqTp .data-select-btn').removeClass('active');  // 모든 버튼에서 active 제거
         $(this).addClass('active');  // 클릭된 버튼에만 active 추가
     });
 
-    // alertBtns : 단일 선택
-    $(document).on('click', '.alertBtns', function () {
-        $('.alertBtns').removeClass('active');  // 모든 버튼에서 active 제거
+    // #userSearch_altTp .data-select-btn.active : 단일 선택
+    $(document).on('click', '#userSearch_altTp .data-select-btn', function () {
+        $('#userSearch_altTp .data-select-btn').removeClass('active');  // 모든 버튼에서 active 제거
         $(this).addClass('active');  // 클릭된 버튼에만 active 추가
     });
 
-    /* serviceBtns, alertBtns : 다중 선택
-    $(document).on('click','.serviceBtns', function(){
-        if($('.serviceBtns.active').length === 1 && $('.serviceBtns.active')[0] == this){
-            return;
-        }
-
-        if(this.dataset['filter'] === 'serviceTpAll') {
-            $('.serviceBtns').removeClass('active');
-
-            $(this).addClass('active');
-        } else {
-            $('[data-filter="serviceTpAll"]').removeClass('active');
-            $(this).toggleClass('active');
-        }
-    })
-
-    $(document).on('click','.alertBtns', function(){
-        if($('.alertBtns.active').length === 1 && $('.alertBtns.active')[0] == this){
-            return;
-        }
-
-        if(this.dataset['filter'] === 'alertTpAll') {
-            $('.alertBtns').removeClass('active');
-
-            $(this).addClass('active');
-        } else {
-            $('[data-filter="alertTpAll"]').removeClass('active');
-            $(this).toggleClass('active');
-        }
-    })
-    */
-
-    $('.table-wrap #search_viewCntDropdown a').click(function(){
+    $('.table-wrap #userSearch_viewCntDropdown a').click(function(){
         let cnt = $(this).data('cnt');
 
         rowNumsVal = cnt;
-        $('#gridDropdownBtn').text($(this).text());
-        $("#userSearchTable").setGridParam({ rowNum: cnt });
-        search_fnSearch();
+        $('#userSearch_gridDropdownBtn').text($(this).text());
+        $("#userSearch_grid").setGridParam({ rowNum: cnt });
+        userSearch_fnSearch();
     })
 
+/* 바로 검색
     $('.input-txt02').keyup(function(e){
         if(e.keyCode == '13'){
-            search_fnSearch();
+            userSearch_fnSearch();
         }
     });
+*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////// slide ////////////////////////////////////////////////////////
@@ -749,72 +727,108 @@
         closePopup();
     });
 
-function loadUserDetailTab(tab = 'general') {
-    fetch("/user/detail/" + tab, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({ reqId })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('❌ Error : ' + tab);
-        return response.text();
-    })
-    .then(html => {
-        $('.slide-popup-container').html(html);
+    function loadUserDetailTab(tab = 'general') {
+        fetch("/user/detail/" + tab, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ userId })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('❌ Error : ' + tab);
+            return response.text();
+        })
+        .then(html => {
+            $('.slide-popup-container').html(html);
 
-        if (tab === 'general') {
-            readonly();
-            extractUserDtlGeneralFromDOM("#customerPopup .slide-popup-container");
-            updateDeletionDateInfo();
-        } else if (tab === 'health-alerts') {
-            healthAlerts_fnSearch();
-            drawHealthAlertChart();
-            initHealthAlertGrid();
-        } else if (tab === 'service-requests') {
-            drawServiceRequestsChart();
-        } else if (tab === 'input-checkup-data') {
-            initDropzone();
-            initInputCheckupDataTab();
-        }
-
-    })
-    .catch(error => {
-        $.confirm({
-            title: 'Error',
-            content: 'Failed to load tab content.',
-            type: 'red',
-            typeAnimated: true,
-            buttons: {
-                OK: {
-                    btnClass: 'btn-red',
-                    action: function(){ console.error(error); }
-                }
+            if (tab === 'general') {
+                readonly();
+                extractUserDtlGeneralFromDOM("#customerPopup .slide-popup-container");
+                updateDeletionDateInfo();
+            } else if (tab === 'health-alerts') {
+                drawHealthAlertsChart('all');
+                initHealthAlertsGrid();
+            } else if (tab === 'service-requests') {
+                drawServiceRequestsChart('all');
+                initServiceRequestsGrid();
+            } else if (tab === 'input-checkup-data') {
+                initDropzone();
+                inputCheckup_fnClear();
             }
+        })
+        .catch(error => {
+            $.confirm({
+                title: 'Error',
+                content: 'Failed to load tab content.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    OK: {
+                        btnClass: 'btn-red',
+                        action: function(){ console.error(error); }
+                    }
+                }
+            });
         });
+    }
+
+    $(document).on("click", ".detail-btn.open-slide-btn", function () {
+        userId = $(this).data("uid");
+
+        openPopup();
+        loadUserDetailTab('general');  // 기본 탭 로딩
     });
-}
 
-$(document).on("click", ".open-slide-btn", function () {
-    reqId = $(this).data("reqid");
+    $(document).on('click', '.second-tap-btn', function () {
+        $('.second-tap-btn').removeClass('active');
+        $(this).addClass('active');
 
-    openPopup();
-    loadUserDetailTab('general');  // 기본 탭 로딩
-});
+        let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
+        loadUserDetailTab(tab);
+    });
 
-
-$(document).on('click', '.second-tap-btn', function () {
-    $('.second-tap-btn').removeClass('active');
-    $(this).addClass('active');
-
-    let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
-    loadUserDetailTab(tab);
-});
-
+    // logout
+    $(document).on('click','.logout_icon30', function(){
+        window.location.href='<c:url value="/login/logout"/>';
+    });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////// General ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // userDtlGeneral : 기존 값 저장
+    let userDtlGeneral = {};
+
+    function extractUserDtlGeneralFromDOM() {
+        userDtlGeneral = {
+            userNm: $("#general_userNm").val() || "-",
+            emailId: $("#general_emailId").val() || "-",
+            mobile: $("#general_mobile").val() || "",
+            userId: $("#general_userId").val() || "-",
+            brthDt: $("#general_brthDt").val() || "",
+            height: $("#general_height").val() || "",
+            registDt: $("#general_registDt").val() || "-",
+            weight: $("#general_weight").val() || "",
+            lastAccess: $("#general_lastAccess").val() || "-",
+            addr: $("#general_addr").val() || "",
+            wdDt: $("#general_wdDt").val() || "",
+            mmo: $("#general_mmo").val() || "",
+            uptDt: $("#general_uptDt").val() || "-",
+            uptId: $("#general_uptId").val() || "-",
+            sx: $("#general_sxDropdown").contents().filter(function () {
+                return this.nodeType === 3;
+            }).text().trim() || userSearch_messages.select,
+            inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
+                return this.nodeType === 3;
+            }).text().trim() || userSearch_messages.select,
+            grpTp: $("#general_grpTpDropdown").contents().filter(function () {
+                return this.nodeType === 3;
+            }).text().trim() || userSearch_messages.select,
+            wdYn: $("#general_statusDropdown").contents().filter(function () {
+                return this.nodeType === 3;
+            }).text().trim() || userSearch_messages.select
+        };
+    }
 
     // 입력창 잠금
     function readonly() {
@@ -827,48 +841,6 @@ $(document).on('click', '.second-tap-btn', function () {
         $('#customerPopup input:not(.hold), #customerPopup textarea:not(.hold)').removeAttr('readonly');
         $('#customerPopup .dropdown-search, #customerPopup .dropdown-content a').not('.readonly-dropdown').removeClass('hold');
     }
-
-/* 삭제
-    $(document).on("click", ".open-slide-btn", function () {
-        reqId = $(this).data("reqid");
-
-        fetch("/user/detail/general", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({ reqId })  // form-urlencoded 형식으로 전송
-        })
-        .then(response => {
-            if (!response.ok) throw new Error("❌ Error : open-slide-btn");
-
-            return response.text();  // JSP 렌더링 결과가 HTML이니까
-        })
-        .then(html => {
-            document.querySelector("#customerPopup .slide-popup-container").innerHTML = html;
-
-            openPopup();
-            readonly();
-
-            extractUserDtlGeneralFromDOM("#customerPopup .slide-popup-container");
-
-            updateDeletionDateInfo();
-        })
-        .catch(error => {
-            $.alert({
-                title: 'Error',
-                content: 'Failed to load tab content.',
-                type: 'red',
-                typeAnimated: true,
-                buttons: {
-                    OK: {
-                        btnClass: 'btn-red'
-                    }
-                }
-            });
-        });
-    });
-*/
 
     // editBtn : 사용자 정보 변경 버튼
     $(document).on('click', '#editBtn', function () {
@@ -938,14 +910,11 @@ $(document).on('click', '.second-tap-btn', function () {
 
         const popup = document.getElementById(popupId);
 
-        console.log("✅ wrapper 클릭됨 : " + wrapperId);
-        console.log("👉 클릭 대상 : " + e.target);
-
         if (e.target.closest('.popup-show')) {
-            console.log("🚫 팝업 내부 클릭 : 닫기 무시");
+            console.log("🚫 popup-show 내부 클릭 : 닫기 무시");
             return;
         } else {
-            console.log("✅ 팝업 외부 클릭 : 닫기 실행");
+            console.log("✅ popup-show 외부 클릭 : 닫기 실행");
             $('.popup-close').click();
         }
     });
@@ -991,7 +960,7 @@ $(document).on('click', '.second-tap-btn', function () {
                         OK: {
                             btnClass: 'btn-green',
                             action: function(){
-                                // 확인 눌렀을 때 실행할 동작 (필요 시)
+                                // 확인 눌렀을 때 실행할 동작
                             }
                         }
                     }
@@ -1030,8 +999,8 @@ $(document).on('click', '.second-tap-btn', function () {
         });
     });
 
-    // resetBtn : 전체 필드 복원 버튼
-    $(document).on("click", "#resetBtn", function () {
+    // 사용자 정보 입력 초기화
+    function general_fnClear() {
         function resetDropdownText(id, value) {
             $("#" + id).contents().filter(function () {
                 return this.nodeType === 3;
@@ -1057,7 +1026,7 @@ $(document).on('click', '.second-tap-btn', function () {
         resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userSearch_messages.select);
         resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userSearch_messages.select);
         resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userSearch_messages.select);
-    });
+    }
 
     let calculatedWdDt = "";  // 변경 될 삭제 예정일
     let calculatedWdYn = "";  // 변경 될 탈퇴 상태
@@ -1137,11 +1106,11 @@ $(document).on('click', '.second-tap-btn', function () {
             updateDeletionDateInfo();
         }
 
-        checkIfUserDataChanged();
+        general_checkDataChanged();
     });
 
     // 변경사항 확인
-    function checkIfUserDataChanged() {
+    function general_checkDataChanged() {
         let editedValues = {
             mobile: $('#general_mobile').val()?.trim() || '',
             brthDt: $('#general_brthDt').val()?.trim() || '',
@@ -1167,7 +1136,7 @@ $(document).on('click', '.second-tap-btn', function () {
             $('#general_brthDt')
                 .addClass('required-input');
 
-            $('#saveChangesBtn')
+            $('#general_saveChangesBtn')
                 .removeClass('red-submit-btn')
                 .addClass('hold-submit-btn')
                 .prop("disabled", true);
@@ -1186,21 +1155,21 @@ $(document).on('click', '.second-tap-btn', function () {
         });
 
         if (isChanged) {
-            $('#saveChangesBtn')
+            $('#general_saveChangesBtn')
                 .removeClass('hold-submit-btn')
                 .addClass('red-submit-btn')
                 .prop("disabled", false);
         } else {
-            $('#saveChangesBtn')
+            $('#general_saveChangesBtn')
                 .removeClass('red-submit-btn')
                 .addClass('hold-submit-btn')
                 .prop("disabled", true);
         }
     }
 
-    $(document).on('input', '#general_mobile, #general_brthDt, #general_height, #general_weight, #general_addr, #general_mmo', checkIfUserDataChanged);
+    $(document).on('input', '#general_mobile, #general_brthDt, #general_height, #general_weight, #general_addr, #general_mmo', general_checkDataChanged);
 
-    function setUserUpdateParam() {
+    function userSearch_setUserUpdateParam() {
         return {
             mobile: $("#general_mobile").val()?.trim() || "",
             sx: (() => {
@@ -1231,8 +1200,8 @@ $(document).on('click', '.second-tap-btn', function () {
         };
     }
 
-    // saveChangesBtn : 사용자 정보 변경 요청 버튼
-    $(document).on("click", "#saveChangesBtn", function () {
+    // general_saveChangesBtn : 사용자 정보 변경 요청 버튼
+    $(document).on("click", "#general_saveChangesBtn", function () {
         $(".check-pw-popup-container").load("/user/checkPwStartPopup", function () {
             $('#checkPwStartPopup').fadeIn();
         });
@@ -1330,7 +1299,7 @@ $(document).on('click', '.second-tap-btn', function () {
     });
 
     function updateUserGeneralInfo() {
-        const updateData = setUserUpdateParam();
+        let updateData = userSearch_setUserUpdateParam();
 
         console.log(updateData);
 
@@ -1347,8 +1316,6 @@ $(document).on('click', '.second-tap-btn', function () {
             return response.json();
         })
         .then(response => {
-            console.log("✅ 사용자 정보 수정 결과 : " + response);
-
             $.confirm({
                 title: 'Success',
                 content: 'User information has been successfully updated.',
@@ -1358,14 +1325,14 @@ $(document).on('click', '.second-tap-btn', function () {
                     OK: {
                         btnClass: 'btn-green',
                         action: function(){
-                            $(".open-slide-btn[data-reqid='" + reqId + "']").click();
+                            $(".open-slide-btn[data-uid='" + userId + "']").click();
                         }
                     }
                 }
             });
 
             // 버튼 상태 복원
-            $("#saveChangesBtn")
+            $("#general_saveChangesBtn")
                 .removeClass("red-submit-btn")
                 .addClass("hold-submit-btn")
                 .prop("disabled", true);
@@ -1392,152 +1359,190 @@ $(document).on('click', '.second-tap-btn', function () {
 ///////////////////////////////////////////////////// healthAlerts /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Alert & Service Summation S
-function calc(targetEl, val) {
-    $({ val : 0 }).animate({ val : val }, {
-        duration: 500,
-        step: function() {
-            var num = numberWithCommas(Math.floor(this.val));
-            $("#"+targetEl).text(num);
-        },
-        complete: function() {
-            var num = numberWithCommas(Math.floor(this.val));
-            $("#"+targetEl).text(num);
-        }
-    });
-}
-
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-// Alert & Service Summation E
-
-let sum = 0;
-
-function summation(arr) {
-    let sum = 0;
-    arr.forEach((num) => { sum += num; })
-    return sum
-}
-
-function drawHealthAlertChart() {
-    let myCt = document.getElementById('healthAlerts_myChart');
-    if (!myCt) {
-        console.warn("Canvas with id 'healthAlerts_myChart' not found.");
-        return;
+    // Alert & Service Summation S
+    function calc(targetEl, val) {
+        $({ val : 0 }).animate({ val : val }, {
+            duration: 500,
+            step: function() {
+                let num = numberWithCommas(Math.floor(this.val));
+                $("#"+targetEl).text(num);
+            },
+            complete: function() {
+                let num = numberWithCommas(Math.floor(this.val));
+                $("#"+targetEl).text(num);
+            }
+        });
     }
 
-    let healthAlerts = extractUserDtlHealthAlertFromDOM("#customerPopup .slide-popup-container");
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-    new Chart(myCt, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(healthAlerts),
-            datasets: [
-                {
-                    label: '',
-                    data: Object.values(healthAlerts),
-                    backgroundColor: [
-                        'rgba(82, 158, 232, 1)',
-                        'rgba(160, 205, 255, 1)',
-                        'rgba(255, 202, 134, 1)',
-                        'rgba(238, 147, 144, 1)',
-                        'rgba(251, 228, 137, 1)',
-                        'rgba(216, 216, 216, 1)'
-                    ]
-                }
-            ]
-        },
-        options: {
-            borderColor: 'transparent',
-            borderWidth: 0,
-            maintainAspectRatio: false,
-            responsive: true,
-            cutout: '70%',
-            layout: {
-                padding: {
-                    right: 50,
-                    bottom: 10,
-                    top: 10
-                }
+    let sum = 0;
+
+    function summation(arr) {
+        let sum = 0;
+        arr.forEach((num) => { sum += num; })
+        return sum
+    }
+
+    // Alert & Service Summation E
+
+    let healthAlertsChart = null;
+
+    function drawHealthAlertsChart(period) {
+        let healthAlertsCtx = document.getElementById('healthAlerts_myChart');
+        if (!healthAlertsCtx) {
+            console.warn("Canvas with id 'healthAlerts_myChart' not found.");
+            return;
+        }
+
+        // 기존 차트가 있다면 파괴
+        if (healthAlertsChart) {
+            healthAlertsChart.destroy();
+        }
+
+        let healthAlertsChartUrl = period === 'all'
+            ? '/user/healthAlertsCnt/all'
+            : '/user/healthAlertsCnt/last24h';
+
+        $.ajax({
+            url: healthAlertsChartUrl,
+            method: 'POST',
+            data: { userId: userId },
+            success: function (response) {
+                let healthAlertsCntMap = response.healthAlertsCntMap;
+
+                console.log("✅ healthAlertsCntMap");
+                console.log(healthAlertsCntMap);
+
+                $("#healthAlerts_cntTotal").text((healthAlertsCntMap['A'] || 0) + (healthAlertsCntMap['F'] || 0) +
+                                                (healthAlertsCntMap['H'] || 0) + (healthAlertsCntMap['SL'] || 0) +
+                                                (healthAlertsCntMap['B'] || 0) + (healthAlertsCntMap['T'] || 0) +
+                                                (healthAlertsCntMap['ST'] || 0));
+                $("#healthAlerts_cntAF").text((healthAlertsCntMap['A'] || 0) + (healthAlertsCntMap['F'] || 0));
+                $("#healthAlerts_cntH").text(healthAlertsCntMap['H'] || 0);
+                $("#healthAlerts_cntSL").text(healthAlertsCntMap['SL'] || 0);
+                $("#healthAlerts_cntB").text(healthAlertsCntMap['B'] || 0);
+                $("#healthAlerts_cntT").text(healthAlertsCntMap['T'] || 0);
+                $("#healthAlerts_cntST").text(healthAlertsCntMap['ST'] || 0);
+
+                healthAlertsChart = new Chart(healthAlertsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(healthAlertsCntMap),
+                        datasets: [
+                            {
+                                label: '',
+                                data: Object.values(healthAlertsCntMap),
+                                backgroundColor: [
+                                    'rgba(82, 158, 232, 1)',
+                                    'rgba(160, 205, 255, 1)',
+                                    'rgba(255, 202, 134, 1)',
+                                    'rgba(238, 147, 144, 1)',
+                                    'rgba(251, 228, 137, 1)',
+                                    'rgba(216, 216, 216, 1)'
+                                ]
+                            }
+                        ]
+                    },
+                    options: {
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        cutout: '70%',
+                        layout: {
+                            padding: {
+                                right: 50,
+                                bottom: 10,
+                                top: 10
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: "right",
+                                labels: {
+                                    boxWidth: 26,
+                                    boxHeight: 26,
+                                    padding: 14,
+                                    usePointStyle: true,
+                                    pointStyle: 'rectRounded',
+                                    font: {
+                                        size: 14
+                                    },
+                                    generateLabels: (chart) => {
+                                        const datasets = chart.data.datasets;
+                                        return datasets[0].data.map((data, i) => ({
+                                            text: chart.data.labels[i] + '(' + data + ')',
+                                            strokeStyle: 'rgba(0,0,0,0)',
+                                            lineWidth: 0,
+                                            fillStyle: datasets[0].backgroundColor[i],
+                                            index: i,
+                                            pointStyle: 'rectRounded'
+                                        }));
+                                    },
+                                    borderWidth: 0
+                                },
+                                fullSize: true,
+                                align: "center"
+                            },
+                            tooltip: {
+                                enabled: false,
+                                position: 'nearest',
+                                external: externalTooltipHandler
+                            },
+                            datalabels: {
+                                color: 'rgba(86, 86, 86, 1)',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                },
+                                formatter: (value) => value
+                            },
+                            shadowCirclePlugin: {
+                                shadowColor: 'rgba(0, 0, 0, 0.1)',
+                                shadowBlur: 3,
+                                shadowOffsetX: 5,
+                                shadowOffsetY: 3,
+                                shadowFill: '#fff'
+                            }
+                        }
+                    },
+                    plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
+                });
             },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: "right",
-                    labels: {
-                        boxWidth: 26,
-                        boxHeight: 26,
-                        padding: 14,
-                        usePointStyle: true,
-                        pointStyle: 'rectRounded',
-                        font: {
-                            size: 14
-                        },
-                        generateLabels: (chart) => {
-                            const datasets = chart.data.datasets;
-                            return datasets[0].data.map((data, i) => ({
-                                text: chart.data.labels[i] + '(' + data + ')',
-                                strokeStyle: 'rgba(0,0,0,0)',
-                                lineWidth: 0,
-                                fillStyle: datasets[0].backgroundColor[i],
-                                index: i,
-                                pointStyle: 'rectRounded'
-                            }));
-                        },
-                        borderWidth: 0
-                    },
-                    fullSize: true,
-                    align: "center"
-                },
-                tooltip: {
-                    enabled: false,
-                    position: 'nearest',
-                    external: externalTooltipHandler
-                },
-                datalabels: {
-                    color: 'rgba(86, 86, 86, 1)',
-                    font: {
-                        size: 12,
-                        weight: 'bold'
-                    },
-                    formatter: (value) => value
-                },
-                shadowCirclePlugin: {
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 3,
-                    shadowOffsetX: 5,
-                    shadowOffsetY: 3,
-                    shadowFill: '#fff'
-                }
+            error: function (error) {
+                $.confirm({
+                    title: 'Error',
+                    content: 'Failed to load tab content.',
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            btnClass: 'btn-red',
+                            action: function(){ console.error(error); }
+                        }
+                    }
+                });
             }
-        },
-        plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
-    });
-}
+        });
+    }
 
-// Grid S
-// 조회 대상 컬럼 전체 등록
-var expectedResult = ["attchId", "attchMngId", "attchSt", "crId", "attchSize", "originalFileName"];
+    // initHealthAlertsGrid S
+    function initHealthAlertsGrid() {
+        $('#healthAlertsBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#healthAlertsEndDe').val(moment().format('YYYY-MM-DD'))
 
-// 기본 Items 개수
-var rowNumsVal = 10;
-
-var inChargeList = new Array();
-<c:forEach items="${inChargeList}" var="item">
-    inChargeList.push("'${item.userId}'")
-</c:forEach>
-
-// JQGRID INIT
-function initHealthAlertGrid() {
-    var grid = $("#healthAlerts_alertGrid").jqGrid({
-        url: '/tracking/selectHealthAlert',
-        datatype: 'json',
-        mtype: 'POST',
-        colModel : [
-            { label: 'Detected Time', name: 'dctDt', width:240, sortable : true},
-            { label: 'Alert Type', name: 'altTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
+        let healthAlerts_grid = $("#healthAlerts_grid").jqGrid({
+            url: '/user/selectUserDtlHealthAlerts',
+            datatype: 'json',
+            jsonReader: {repeatitems: false},
+            mtype: 'POST',
+            colModel : [
+                { label: 'Detected Time', name: 'dctDt', width:240, sortable : true},
+                { label: 'Alert Type', name: 'altTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
                     switch(cellValue) {
                         case 'A' :
                             return 'Activity';
@@ -1565,201 +1570,690 @@ function initHealthAlertGrid() {
                             break;
                     }
                 }},
-            { label: 'UID', name: 'userId', width:300, sortable : true},
-            { label: 'User Name', name: 'userNm', width:130, sortable : false},
-            { label: 'Phone', name: 'mobile', width:130, sortable : false, formatter: function(cellValue, options, rowObject) {
-                    var cleaned = ('' + cellValue).replace(/\D/g, '');
-                    var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
-                    if (match) {
-                        return match[1] + '-' + match[2] + '-' + match[3];
+                { label: 'Alert Reason', name: 'altRmrk', width:130, sortable : false},
+                { label: 'Group', name: 'grpNm', width:130, sortable : true},
+                { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
+                {
+                    label: 'Check',
+                    name: 'altStt',
+                    width: 100,
+                    sortable: false,
+                    formatter: function(cellValue, options, rowObject) {
+                        if (cellValue === 0 || cellValue === '0') {
+                            return `
+                                <button type="button" class="detail-btn alt-check-btn" data-tid="` + rowObject.trkId + `" data-stt="0">
+                                    <span>unconfirmed</span>
+                                </button>
+                            `;
+                        } else if (cellValue === 1 || cellValue === '1') {
+                            return `
+                                <button type="button" class="detail-btn alt-check-btn active" data-tid="` + rowObject.trkId + `" data-stt="1">
+                                    <span>confirmed</span>
+                                </button>
+                            `;
+                        } else {
+                            return `<button type="button" class="detail-btn"><span>-</span></button>`;
+                        }
                     }
-                    return cellValue;
-                }},
-            { label: 'Date Of Birth', name: 'brthDt', width:130, sortable : false},
-            { label: 'Sex', name: 'sx', width:60, sortable : true, formatter: function(cellValue, options, rowObject) {
-                    if(cellValue === 'M') {
-                        return '<img src="/resources/images/man-icon.svg" class="icon24 img-c">'
-                    } else {
-                        return '<img src="/resources/images/girl-icon.svg" class="icon24 img-c">';
-                    }
-                }},
-            { label: 'Group', name: 'grpNm', width:130, sortable : true},
-            { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
-            { label: 'Details', name: 'userId', width:100, sortable : false, formatter : function(cellValue, options, rowObject){
-                    return `<button type="button" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
-                }},
-        ],
-        viewrecords: true,
-        autowidth : true,
-        shrinkToFit: true,
-        height: 'auto',
-        rowNum: rowNumsVal,
-        rownumbers: true,
-        pager: "#healthAlerts_alertGridPager",
-        jsonReader: {
-            root: "rows",          // 데이터 리스트
-            page: "page",          // 현재 페이지
-            total: "total",
-            records: "records"        // 전체 개수
-        },
-        sortable : true,
-        sortname : 'dctDt',
-        sortorder : 'DESC',
-        postData: {
+                },
+            ],
             page: 1,
-            size: rowNumsVal,
-            searchBgnDe: today,
-            altTp : "'A','F','H','SL','B','T','ST'",
-            inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
-            inChargeIds : inChargeList.length > 0 ? '('+inChargeList.join()+')' : null,
-        },
-        loadComplete: function(data) {
-            createCustomPager('healthAlerts_alertGrid');
-            console.log(data);
-            $(this).jqGrid('setLabel', 'rn', 'No.');
-        },
-        gridComplete: function() {
-            createCustomPager('healthAlerts_alertGrid');
-            $(this).jqGrid('setLabel', 'rn', 'No.');
+            autowidth : true,
+            height: 'auto',
+            rowNum: gridPagingState.healthAlerts_grid.rowNumsVal,
+            rowList: [10, 50, 100],
+            sortable : true,
+            sortname : 'dctDt',
+            sortorder : 'DESC',
+            shrinkToFit: true,
+            rownumbers: true,
+            pager: "#healthAlerts_pager",
+            postData: healthAlerts_setSearchParam(),
+            viewrecords: true,
+            loadComplete: function(data) {
+                $('#healthAlertsTotalResultsCnt').text(data.records);
+                $('#healthAlertsCurrentRowsCnt').text(data.rows.length);
+                createUserDtlCustomPager('healthAlerts_grid');
+                $(this).jqGrid('setLabel', 'rn', 'No.');
+            },
+            gridComplete: function() {
+                createUserDtlCustomPager('healthAlerts_grid');
+                $(this).jqGrid('setLabel', 'rn', 'No.');
+            },
+            onSortCol: function (index, columnIndex, sortOrder) {
+                //alert(index);
+                $("#healthAlerts_sortColumn").val(index);
+                $("#healthAlerts_sord").val(sortOrder);
+            }
+        });
+    };
+    // initHealthAlertsGrid E
+
+    function healthAlerts_fnSearch(){
+        $('#healthAlerts_grid').jqGrid('setGridParam', {
+            url: '/user/selectUserDtlHealthAlerts',
+            datatype: 'json',
+            postData: healthAlerts_setSearchParam()
+        });
+        $('#healthAlerts_grid').trigger('reloadGrid', [{page:1, current:true}]);
+    }
+
+    function healthAlerts_setSearchParam() {
+        let healthAlerts_startDate = $('#healthAlertsBgnDe').val();
+        let healthAlerts_endDate = $('#healthAlertsEndDe').val();
+
+        console.log("healthAlerts_startDate : " + healthAlerts_startDate);
+        console.log("healthAlerts_endDate : " + healthAlerts_endDate);
+
+        let altTp = $('#healthAlerts_altTp .data-select-btn.active').map(function () {
+                return '"' + $(this).data('filter') + '"';
+            }).get().join(',');
+
+            // alertTpAll이면 전체 알림으로 처리
+            if (altTp.includes('"alertTpAll"')) {
+                altTp = '"A","F","H","SL","B","T","ST"';
+            } else if (altTp.includes('"AF"')) {
+                altTp = '"A","F"';
+            }
+
+        return {
+            userId: userId,
+            searchBgnDe: $('#healthAlertsBgnDe').val() + ' 00:00:00',
+            searchEndDe: $('#healthAlertsEndDe').val() + ' 23:59:59',
+            altTp: altTp
+        };
+    }
+
+    function healthAlerts_fnClear() {
+        $('#healthAlertsBgnDe').val('');
+        $('#healthAlertsEndDe').val('');
+        $('#healthAlerts_date .data-select-btn')[3].click();
+        $('#healthAlerts_altTp .data-select-btn')[0].click();
+
+        // 차트 리셋
+        if (healthAlertsChart) {
+            healthAlertsChart.destroy();
+            healthAlertsChart = null;
+        }
+
+        // 차트와 그리드 새로 불러오기
+        drawHealthAlertsChart('all');
+        healthAlerts_fnSearch();
+    }
+
+    $(document).on('click', '#healthAlerts_date .data-select-btn', function () {
+        console.log('✅ healthAlerts data-select-btn clicked!');
+        $('#healthAlerts_date .data-select-btn').removeClass('active');
+        $(this).addClass('active');
+
+        let period = $(this).data('period');
+
+        if (period === 'all') {
+            $('#healthAlertsBgnDe').val('');
+        } else if (period === 'today') {
+            $('#healthAlertsBgnDe').val(moment().format('YYYY-MM-DD'));
+            $('#healthAlertsEndDe').val(moment().format('YYYY-MM-DD'));
+        } else {
+            let pDay = parseInt(period.replace('-day', ''), 10);
+
+            $('#healthAlertsEndDe').val(moment().format('YYYY-MM-DD'));
+
+            let calcDt = moment().subtract(pDay, 'days').format('YYYY-MM-DD');
+            $('#healthAlertsBgnDe').val(calcDt);
         }
     });
-};
-// Grid E
 
-
-function extractUserDtlHealthAlertFromDOM() {
-    return {
-        'Activify/Falls': Number($("#healthAlerts_cntAF").text().replace(/,/g, "")) || 0,
-        'Heart Rate': Number($("#healthAlerts_cntH").text().replace(/,/g, "")) || 0,
-        'Sleep': Number($("#healthAlerts_cntSL").text().replace(/,/g, "")) || 0,
-        'Blood Oxygen': Number($("#healthAlerts_cntB").text().replace(/,/g, "")) || 0,
-        'Temperature': Number($("#healthAlerts_cntT").text().replace(/,/g, "")) || 0,
-        'Stress': Number($("#healthAlerts_cntST").text().replace(/,/g, "")) || 0
-    };
-}
-</script>
-
-<script type="text/javascript">
-
-    //const today = moment().format('YYYY-MM-DD');
-    var today = '2025-03-24';
-
-function healthAlerts_fnSearch(){
-    $('#healthAlerts_alertGrid').jqGrid('setGridParam', {
-        url: '${contextPath}/tracking/selectHealthAlert',
-        datatype: 'json',
-        postData : healthAlerts_setSearchParam()
-    });
-    $('#healthAlerts_alertGrid').trigger('reloadGrid', [{page:1, current:true}]);
-}
-
-function healthAlerts_setSearchParam() {
-    let startDate = $('#healthAlerts_dateDisplay1').val();
-    let endDate = $('#healthAlerts_dateDisplay2').val();
-
-console.log("healthAlerts_startDate" + startDate);
-console.log("healthAlerts_endDate" + endDate);
-
-    let altTpVal = $('#healthAlerts_altTp .data-select-btn.active').data('filter');
-
-    return {
-        searchBgnDe: startDate || null,
-        searchEndDe: endDate || null,
-        altTp : $('#healthAlerts_altTp .data-select-btn.active').data('filter') != 'alertTpAll'
-            ? '"' + $('#healthAlerts_altTp .data-select-btn.active').data('filter') + '"'
-            : "'AF','H','SL','B','T','ST'",
-        reqId : reqId,
-        inChargeId: inChargeId != null && inChargeId !== '' ? inChargeId : null,
-        inChargeIds: inChargeList.length > 0 ? '(' + inChargeList.join() + ')' : null
-    };
-}
-
-$(document).on('click', '#healthAlerts_date .data-select-btn', function () {
-    console.log('✅ healthAlerts healthAlerts clicked!');
-    $('#healthAlerts_date .data-select-btn').removeClass('active');
-    $(this).addClass('active');
-
-    let period = $(this).data('period');
-
-    if (period === 'all') {
-        $('#healthAlerts_dateDisplay1').val('');
-        $('#healthAlerts_dateDisplay2').val('');
-    } else if (period === 'today') {
-        $('#healthAlerts_dateDisplay1').val(today);
-        $('#healthAlerts_dateDisplay2').val(today);
-    } else {
-        let pDay = parseInt(period.replace('-day', ''), 10);
-
-        let baseDate = moment(today, 'YYYY-MM-DD');
-        let endDate = baseDate.format('YYYY-MM-DD');
-        let calcDt = baseDate.clone().subtract(pDay, 'days').format('YYYY-MM-DD');
-
-        $('#healthAlerts_dateDisplay1').val(calcDt);    // 시작일
-        $('#healthAlerts_dateDisplay2').val(endDate);   // 종료일
-    }
-});
-
-
-$(document).on('click', '#healthAlerts_altTp .data-select-btn', function () {
-    $('#healthAlerts_altTp .data-select-btn').removeClass('active');
-    $(this).addClass('active');
-});
-
-
-    // Grid Filter Toggle
-    $(document).on('click','.alerts-table-ui .buttonWrapper button', function(){
-        if($('.alerts-table-ui .buttonWrapper button.active').length === 1 && $('.alerts-table-ui .buttonWrapper button.active')[0] == this){
+    // healthAlerts_altTp : 다중 선택
+    $(document).on("click", "#healthAlerts_altTp .data-select-btn", function() {
+        if($("#healthAlerts_altTp .data-select-btn.active").length === 1 && $("#healthAlerts_altTp .data-select-btn.active")[0] == this) {
             return;
         }
 
-        if(this.dataset['filter'] === 'all') {
-            $('.alerts-table-ui .buttonWrapper button').removeClass('active');
+        if(this.dataset['filter'] === 'alertTpAll') {
+            $('#healthAlerts_altTp .data-select-btn').removeClass("active");
 
-            $(this).addClass('active');
+            $(this).addClass("active");
         } else {
-            $('[data-filter="all"]').removeClass('active');
-            $(this).toggleClass('active');
+            $('[data-filter="alertTpAll"]').removeClass("active");
+            $(this).toggleClass("active");
         }
 
         healthAlerts_fnSearch();
+    });
+
+    $(document).on('click', '#healthAlertsChartAllBtn', function () {
+        console.log("✅ healthAlertsChartAllBtn");
+
+        if ($(this).hasClass('active')) return;
+
+        $(this).addClass('active');
+        $('#healthAlertsChartLast24Btn').removeClass('active');
+
+        drawHealthAlertsChart('all');
+    });
+
+    $(document).on('click', '#healthAlertsChartLast24Btn', function () {
+        console.log("✅ healthAlertsChartLast24Btn");
+
+        if ($(this).hasClass('active')) return;
+
+        $(this).addClass('active');
+        $('#healthAlertsChartAllBtn').removeClass('active');
+
+        drawHealthAlertsChart('last24h');
+    });
+
+
+    $('.table-wrap #healthAlerts_viewCntDropdown a').click(function(){
+        let cnt = $(this).data('cnt');
+
+        gridPagingState['healthAlerts_grid'].rowNumsVal = cnt;
+        $('#healthAlerts_gridDropdownBtn').text($(this).text());
+        $("#healthAlerts_grid").setGridParam({ rowNum: cnt });
+        healthAlerts_fnSearch();
     })
 
+    $(document).on("click", ".detail-btn.alt-check-btn", function () {
+        let $btn = $(this);
+        let trkId = $btn.attr("data-tid");
+        let altStt = $btn.attr("data-stt");
+        let newAltStt = altStt === "0" ? "1" : "0";
 
+        fetch("/user/updateAltStt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({ trkId, newAltStt })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("❌ Error : /user/updateAltStt");
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                $btn.attr("data-stt", newAltStt);
 
+                if (newAltStt === "1") {
+                    $btn.addClass("active");
+                    $btn.html('<span>confirmed</span>');
+                } else {
+                    $btn.removeClass("active");
+                    $btn.html('<span>unconfirmed</span>');
+                }
+            } else {
+                $.confirm({
+                    title: 'Error',
+                    content: 'Failed to update alert status',
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            btnClass: 'btn-red',
+                            action: function(){ console.error(data.message); }
+                        }
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            $.confirm({
+                title: 'Error',
+                content: error.message || 'A network error has occurred.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    OK: {
+                        btnClass: 'btn-red',
+                        action: function(){}
+                    }
+                }
+            });
+        });
+    });
 
-$('.dropdown-content a').click(function(){
-    let cnt = $(this).data('cnt');
+/* 바로 검색
+    $('.input-txt02').keyup(function(e){
+        if(e.keyCode == '13'){
+            healthAlerts_fnSearch();
+        }
+    });
+*/
 
-    rowNumsVal = cnt;
-    $('#gridDropdownBtn').text($(this).text());
-    $("#healthAlerts_alertGrid").setGridParam({ rowNum: cnt });
-    healthAlerts_fnSearch();
-})
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////// serviceRequests ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//logout 임다.
-$(document).on('click','.logout_icon30', function(){
-    window.location.href='<c:url value="/login/logout"/>';
-})
-</script>
+    let serviceRequestsChart = null;
 
-<script type="text/javascript">
+    function drawServiceRequestsChart(period) {
+        let serviceRequestsCtx = document.getElementById('serviceRequests_myChart');
+        if (!serviceRequestsCtx) {
+            console.warn("Canvas with id 'serviceChart' not found.");
+            return;
+        }
+
+        // 기존 차트가 있다면 파괴
+        if (serviceRequestsChart) {
+            serviceRequestsChart.destroy();
+        }
+
+        let serviceRequestsChartUrl = period === 'all'
+            ? '/user/serviceRequestsCnt/all'
+            : '/user/serviceRequestsCnt/last24h';
+
+        $.ajax({
+            url: serviceRequestsChartUrl,
+            method: 'POST',
+            data: { userId: userId },
+            success: function (response) {
+                let serviceRequestsCntMap = response.serviceRequestsCntMap;
+
+                console.log("✅ serviceRequestsCntMap");
+                console.log(serviceRequestsCntMap);
+
+                $("#serviceRequests_cntTotal").text((serviceRequestsCntMap['N'] || 0) +
+                                                    (serviceRequestsCntMap['A'] || 0) +
+                                                    (serviceRequestsCntMap['T'] || 0));
+                $("#serviceRequests_cntN").text(serviceRequestsCntMap['N'] || 0);
+                $("#serviceRequests_cntA").text(serviceRequestsCntMap['A'] || 0);
+                $("#serviceRequests_cntT").text(serviceRequestsCntMap['T'] || 0);
+
+                serviceRequestsChart = new Chart(serviceRequestsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(serviceRequestsCntMap),
+                        datasets: [
+                            {
+                                label: '',
+                                data: Object.values(serviceRequestsCntMap),
+                                backgroundColor: [
+                                    'rgba(82, 158, 232, 1)',
+                                    'rgba(160, 205, 255, 1)',
+                                    'rgba(255, 202, 134, 1)',
+                                    'rgba(238, 147, 144, 1)',
+                                    'rgba(251, 228, 137, 1)',
+                                    'rgba(216, 216, 216, 1)'
+                                ]
+                            }
+                        ]
+                    },
+                    options: {
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        cutout: '70%',
+                        layout: {
+                            padding: {
+                                right: 50,
+                                bottom: 10,
+                                top: 10
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: "right",
+                                labels: {
+                                    boxWidth: 26,
+                                    boxHeight: 26,
+                                    padding: 14,
+                                    usePointStyle: true,
+                                    pointStyle: 'rectRounded',
+                                    font: {
+                                        size: 14
+                                    },
+                                    generateLabels: (chart) => {
+                                        const datasets = chart.data.datasets;
+                                        return datasets[0].data.map((data, i) => ({
+                                            text: chart.data.labels[i] + '(' + data + ')',
+                                            strokeStyle: 'rgba(0,0,0,0)',
+                                            lineWidth: 0,
+                                            fillStyle: datasets[0].backgroundColor[i],
+                                            index: i,
+                                            pointStyle: 'rectRounded'
+                                        }));
+                                    },
+                                    borderWidth: 0
+                                },
+                                fullSize: true,
+                                align: "center"
+                            },
+                            tooltip: {
+                                enabled: false,
+                                position: 'nearest',
+                                external: externalTooltipHandler
+                            },
+                            datalabels: {
+                                color: 'rgba(86, 86, 86, 1)',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                },
+                                formatter: (value) => value
+                            },
+                            shadowCirclePlugin: {
+                                shadowColor: 'rgba(0, 0, 0, 0.1)',
+                                shadowBlur: 3,
+                                shadowOffsetX: 5,
+                                shadowOffsetY: 3,
+                                shadowFill: '#fff'
+                            }
+                        }
+                    },
+                    plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
+                });
+            },
+            error: function (error) {
+                $.confirm({
+                    title: 'Error',
+                    content: 'Failed to load tab content.',
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            btnClass: 'btn-red',
+                            action: function(){ console.error(error); }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // initServiceRequestsGrid S
+    function initServiceRequestsGrid() {
+        $('#serviceRequestsBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#serviceRequestsEndDe').val(moment().format('YYYY-MM-DD'))
+
+        let serviceRequests_grid = $("#serviceRequests_grid").jqGrid({
+            url: '/user/selectUserDtlServiceRequests',
+            datatype: 'json',
+            jsonReader: {repeatitems: false},
+            mtype: 'POST',
+            colModel : [
+                { label: 'Requested Time', name: 'reqDt', width:240, sortable : true},
+                { label: 'Service Type', name: 'reqTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
+                    switch(cellValue) {
+                        case 'N' :
+                            return 'Nursing';
+                            break;
+                        case 'A' :
+                            return 'Ambulance';
+                            break;
+                        case 'T' :
+                            return 'TeleHealth';
+                            break;
+                        default :
+                            return cellValue;
+                            break;
+                    }
+                }},
+                { label: 'Group', name: 'grpNm', width:130, sortable : true},
+                { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
+                {
+                    label: 'Check',
+                    name: 'reqStt',
+                    width: 100,
+                    sortable: false,
+                    formatter: function(cellValue, options, rowObject) {
+                        if (cellValue === 0 || cellValue === '0') {
+                             return `
+                                <button type="button" class="detail-btn req-check-btn" data-rid="` + rowObject.reqId + `" data-stt="0">
+                                    <span>unconfirmed</span>
+                                </button>
+                            `;
+                        } else if (cellValue === 1 || cellValue === '1') {
+                            return `
+                                <button type="button" class="detail-btn req-check-btn active" data-rid="` + rowObject.reqId + `" data-stt="1">
+                                    <span>confirmed</span>
+                                </button>
+                            `;
+                        } else {
+                            return `<button type="button" class="detail-btn"><span>-</span></button>`;
+                        }
+                    }
+                },
+            ],
+            page: 1,
+            autowidth : true,
+            height: 'auto',
+            rowNum: gridPagingState.serviceRequests_grid.rowNumsVal,
+            rowList: [10, 50, 100],
+            sortable : true,
+            sortname : 'reqDt',
+            sortorder : 'DESC',
+            shrinkToFit: true,
+            rownumbers: true,
+            pager: "#serviceRequests_pager",
+            postData: serviceRequests_setSearchParam(),
+            viewrecords: true,
+            loadComplete: function(data) {
+                $('#serviceRequestsTotalResultsCnt').text(data.records);
+                $('#serviceRequestsCurrentRowsCnt').text(data.rows.length);
+                createUserDtlCustomPager('serviceRequests_grid');
+                $(this).jqGrid('setLabel', 'rn', 'No.');
+            },
+            gridComplete: function() {
+                createUserDtlCustomPager('serviceRequests_grid');
+                $(this).jqGrid('setLabel', 'rn', 'No.');
+            },
+            onSortCol: function (index, columnIndex, sortOrder) {
+                //alert(index);
+                $("#serviceRequests_sortColumn").val(index);
+                $("#serviceRequests_sord").val(sortOrder);
+            }
+        });
+    };
+    // initServiceRequestsGrid E
+
+    function serviceRequests_fnSearch(){
+        $('#serviceRequests_grid').jqGrid('setGridParam', {
+            url: '/user/selectUserDtlServiceRequests',
+            datatype: 'json',
+            postData: serviceRequests_setSearchParam()
+        });
+        $('#serviceRequests_grid').trigger('reloadGrid', [{page:1, current:true}]);
+    }
+
+    function serviceRequests_setSearchParam() {
+        let serviceRequests_startDate = $('#serviceRequestsBgnDe').val();
+        let serviceRequests_endDate = $('#serviceRequestsEndDe').val();
+
+        console.log("serviceRequests_startDate : " + serviceRequests_startDate);
+        console.log("serviceRequests_endDate : " + serviceRequests_endDate);
+
+        let reqTp = $('#serviceRequests_reqTp .data-select-btn.active').map(function () {
+                return '"' + $(this).data('filter') + '"';
+            }).get().join(',');
+
+            // reqTpAll이면 전체 알림으로 처리
+            if (reqTp.includes('"reqTpAll"')) {
+                reqTp = '"N","A","T"';
+            }
+
+        return {
+            userId: userId,
+            searchBgnDe: $('#serviceRequestsBgnDe').val() + ' 00:00:00',
+            searchEndDe: $('#serviceRequestsEndDe').val() + ' 23:59:59',
+            reqTp: reqTp
+        };
+    }
+
+    function serviceRequests_fnClear() {
+        $('#serviceRequestsBgnDe').val('');
+        $('#serviceRequestsEndDe').val('');
+        $('#serviceRequests_date .data-select-btn')[3].click();
+        $('#serviceRequests_reqTp .data-select-btn')[0].click();
+
+        // 차트 리셋
+        if (serviceRequestsChart) {
+            serviceRequestsChart.destroy();
+            serviceRequestsChart = null;
+        }
+
+        // 차트와 그리드 새로 불러오기
+        drawServiceRequestsChart('all');
+        serviceRequests_fnSearch();
+    }
+
+    $(document).on('click', '#serviceRequests_date .data-select-btn', function () {
+        console.log('✅ serviceRequests data-select-btn clicked!');
+
+        $('#serviceRequests_date .data-select-btn').removeClass('active');
+        $(this).addClass('active');
+
+        let period = $(this).data('period');
+
+        if (period === 'all') {
+            $('#serviceRequestsBgnDe').val('');
+        } else if (period === 'today') {
+            $('#serviceRequestsBgnDe').val(moment().format('YYYY-MM-DD'));
+            $('#serviceRequestsEndDe').val(moment().format('YYYY-MM-DD'));
+        } else {
+            let pDay = parseInt(period.replace('-day', ''), 10);
+
+            $('#serviceRequestsEndDe').val(moment().format('YYYY-MM-DD'));
+
+            let calcDt = moment().subtract(pDay, 'days').format('YYYY-MM-DD');
+            $('#serviceRequestsBgnDe').val(calcDt);
+        }
+    });
+
+    // serviceRequests_reqTp : 다중 선택
+    $(document).on("click", "#serviceRequests_reqTp .data-select-btn", function() {
+        if($("#serviceRequests_reqTp .data-select-btn.active").length === 1 && $("#serviceRequests_reqTp .data-select-btn.active")[0] == this) {
+            return;
+        }
+
+        if(this.dataset['filter'] === 'reqTpAll') {
+            $('#serviceRequests_reqTp .data-select-btn').removeClass("active");
+
+            $(this).addClass("active");
+        } else {
+            $('[data-filter="reqTpAll"]').removeClass("active");
+            $(this).toggleClass("active");
+        }
+
+        serviceRequests_fnSearch();
+    });
+
+    $(document).on('click', '#serviceRequestsChartAllBtn', function () {
+        console.log("✅ serviceRequestsChartAllBtn");
+
+        if ($(this).hasClass('active')) return;
+
+        $(this).addClass('active');
+        $('#serviceRequestsChartLast24Btn').removeClass('active');
+
+        drawServiceRequestsChart('all');
+    });
+
+    $(document).on('click', '#serviceRequestsChartLast24Btn', function () {
+        console.log("✅ serviceRequestsChartLast24Btn");
+
+        if ($(this).hasClass('active')) return;
+
+        $(this).addClass('active');
+        $('#serviceRequestsChartAllBtn').removeClass('active');
+
+        drawServiceRequestsChart('last24h');
+    });
+
+    $('.table-wrap #serviceRequests_viewCntDropdown a').click(function(){
+        let cnt = $(this).data('cnt');
+
+        gridPagingState['serviceRequests_grid'].rowNumsVal = cnt;
+        $('#serviceRequests_gridDropdownBtn').text($(this).text());
+        $("#serviceRequests_grid").setGridParam({ rowNum: cnt });
+        serviceRequests_fnSearch();
+    })
+
+    $(document).on("click", ".detail-btn.req-check-btn", function () {
+        let $btn = $(this);
+        let reqId = $btn.attr("data-rid");
+        let reqStt = $btn.attr("data-stt");
+        let newReqStt = reqStt === "0" ? "1" : "0";
+
+        fetch("/user/updateReqStt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({ reqId, newReqStt })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("❌ Error : /user/updateReqStt");
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                $btn.attr("data-stt", newReqStt);
+
+                if (newReqStt === "1") {
+                    $btn.addClass("active");
+                    $btn.html('<span>confirmed</span>');
+                } else {
+                    $btn.removeClass("active");
+                    $btn.html('<span>unconfirmed</span>');
+                }
+            } else {
+                $.confirm({
+                    title: 'Error',
+                    content: 'Failed to update request status',
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+                        OK: {
+                            btnClass: 'btn-red',
+                            action: function(){ console.error(data.message); }
+                        }
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            $.confirm({
+                title: 'Error',
+                content: error.message || 'A network error has occurred.',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    OK: {
+                        btnClass: 'btn-red',
+                        action: function(){}
+                    }
+                }
+            });
+        });
+    });
+
+/* 바로 검색
+    $('.input-txt02').keyup(function(e){
+        if(e.keyCode == '13'){
+            serviceRequests_fnSearch();
+        }
+    });
+*/
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////// inputCheckUpData ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function downform(){
-        var _url = "${contextPath}/user/downform";
-        var _jsonData = {
+        let _url = "${contextPath}/user/downform";
+        let _jsonData = {
             name: 'moadata',
             url: 'www.moadata.co.kr'
         };
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                var _data = this.response;
-                var _blob = new Blob([_data], {type : 'text/csv'});
+                let _data = this.response;
+                let _blob = new Blob([_data], {type : 'text/csv'});
 
-                var link = document.createElement('a');
+                let link = document.createElement('a');
                 link.href = window.URL.createObjectURL(_blob);
                 link.download = 'twalk_downData.csv';
                 link.click();
@@ -1783,7 +2277,7 @@ $(document).on('click','.logout_icon30', function(){
             Dropzone.instances.forEach(instance => instance.destroy());
         }
 
-        var dropzoneFile=new Dropzone("#dropzone-file",{
+        let dropzoneFile = new Dropzone("#dropzone-file",{
             url:'${contextPath}/user/getChckUpExcelImport',
             maxFilesize:5000000,
             parallelUploads:2,     //한번에 올릴 파일 수
@@ -1807,12 +2301,12 @@ $(document).on('click','.logout_icon30', function(){
                     console.log("responseText End.");
 
                     //제목의 길이 체크
-                    var tlen = responseText.resultList[0].length;
-                    var vlen = responseText.resultList[1].length;
+                    let tlen = responseText.resultList[0].length;
+                    let vlen = responseText.resultList[1].length;
 
                     if (tlen == vlen){
-                        for(var k = 0; k < vlen; k++){
-                            var resval = responseText.resultList[0][k]+"";
+                        for(let k = 0; k < vlen; k++){
+                            let resval = responseText.resultList[0][k]+"";
                             if (resval.trim().indexOf("hght") >= 0){$("#inputCheckup_hght").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("wght") >= 0){$("#inputCheckup_wght").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("wst")>= 0){$("#inputCheckup_wst").val(responseText.resultList[1][k])}
@@ -1838,8 +2332,8 @@ $(document).on('click','.logout_icon30', function(){
                             //기본정보
                             if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#inputCheckup_chckType").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Checkup result")>= 0){$("#inputCheckup_chckResult").val(responseText.resultList[1][k])}
-                            if (resval.trim().indexOf("Checkup center")>= 0){$("#chckCt").val(responseText.resultList[1][k])}
-                            if (resval.trim().indexOf("Doctor")>= 0){$("#chckDctr").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup center")>= 0){$("#inputCheckup_chckCt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Doctor")>= 0){$("#inputCheckup_chckDctr").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#inputCheckup_chckDt").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Date Of Birth")>= 0){$("#inputCheckup_brthDt").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Gender")>= 0){
@@ -1868,7 +2362,7 @@ $(document).on('click','.logout_icon30', function(){
                 this.on("drop", function(e) {
                     console.log("count : " + this.getAcceptedFiles().length);
                     if (this.getAcceptedFiles().length >= 1) {
-                        var files = this.getAcceptedFiles();
+                        let files = this.getAcceptedFiles();
                         this.removeFile(files[0]);
                     }
                 });
@@ -1877,13 +2371,13 @@ $(document).on('click','.logout_icon30', function(){
     }
 
     function inputCheckup_fnClear() {
-        $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#chckDctr").val('');
-        $("#inputCheckup_brthDt").val(''); $("#inputCheckup_gender").val(''); $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#chckCt').val('');
-        $('#inputCheckup_hght').val(''); $('#inputCheckup_wght').val(''); $('#inputCheckup_wst').val(''); $('#inputCheckup_sbp').val(''); $('#inputCheckup_dbp').val('');
-        $('#inputCheckup_fbs').val(''); $('#inputCheckup_hba1c').val(''); $('#inputCheckup_tc').val(''); $('#inputCheckup_hdl').val(''); $('#inputCheckup_ldl').val('');
-        $('#inputCheckup_trgly').val(''); $('#inputCheckup_sc').val(''); $('#inputCheckup_gfr').val(''); $('#inputCheckup_urAcd').val(''); $('#inputCheckup_bun').val('');
-        $('#inputCheckup_alt').val(''); $('#inputCheckup_ast').val(''); $('#inputCheckup_gtp').val(''); $('#inputCheckup_tprtn').val(''); $('#inputCheckup_blrbn').val('');
-        $('#inputCheckup_alp').val(''); $('#inputCheckup_comment').val('');
+        $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#inputCheckup_chckDctr").val('');
+        $("#inputCheckup_brthDt").val('');   $("#inputCheckup_gender").val('');     $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#inputCheckup_chckCt').val('');
+        $('#inputCheckup_hght').val('');     $('#inputCheckup_wght').val('');       $('#inputCheckup_wst').val('');    $('#inputCheckup_sbp').val('');    $('#inputCheckup_dbp').val('');
+        $('#inputCheckup_fbs').val('');      $('#inputCheckup_hba1c').val('');      $('#inputCheckup_tc').val('');     $('#inputCheckup_hdl').val('');    $('#inputCheckup_ldl').val('');
+        $('#inputCheckup_trgly').val('');    $('#inputCheckup_sc').val('');         $('#inputCheckup_gfr').val('');    $('#inputCheckup_urAcd').val('');  $('#inputCheckup_bun').val('');
+        $('#inputCheckup_alt').val('');      $('#inputCheckup_ast').val('');        $('#inputCheckup_gtp').val('');    $('#inputCheckup_tprtn').val('');  $('#inputCheckup_blrbn').val('');
+        $('#inputCheckup_alp').val('');      $('#inputCheckup_comment').val('');
         $('.sex-btn-f').removeClass('active');
         $('.sex-btn').removeClass('active');
     }
@@ -1893,8 +2387,8 @@ $(document).on('click','.logout_icon30', function(){
             userId : userDtlGeneral.userId,
             chckType : $("#inputCheckup_chckType").val(),
             chckResult : $("#inputCheckup_chckResult").val(),
-            chckCt : $("#inputCheckup_chckDt").val(),
-            chckDctr : $("#chckDct").val(),
+            chckCt : $("#inputCheckup_chckCt").val(),
+            chckDctr : $("#inputCheckup_chckDctr").val(),
             chckDt : $("#inputCheckup_chckDt").val(),
             brthDt : $("#inputCheckup_brthDt").val(),
             gender : $("#inputCheckup_gender").val(),
@@ -1926,26 +2420,36 @@ $(document).on('click','.logout_icon30', function(){
         };
     }
 
+    var validData;
     $(document).ready(function() {
         inputCheckup_fnClear();
+
+        $.ajax({
+            type: 'POST',
+            url: '${contextPath}/user/selectValidMinMax',
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                if(data.isError){
+                    $.alert(data.message);
+                    console.log('ERROR', data.message);
+                }else{
+                    console.log('SUCCESS', data.row);
+                    validData = data.row;
+                }
+            }
+        });
     })
 
     function validation(){
         return true;
     }
 
-function initInputCheckupDataTab() {
-    // 초기화
-    inputCheckup_fnClear();
-
-    // 이벤트 바인딩 (중복 방지 위해 off로 제거 후 다시 on)
-    $(document).off('click', '#checkupreset').on('click', '#checkupreset', function () {
+    $(document).on('click','#checkupreset', function(){
         inputCheckup_fnClear();
     });
 
-    $(document).off('click', '#checkupsave').on('click', '#checkupsave', function () {
-console.log(inputCheckup_setAddParam());
-
+    $(document).on('click','#checkupsave', function(){
         $.confirm({
             title: '',
             content: 'Would you like to save an checkup data?',
@@ -1957,65 +2461,47 @@ console.log(inputCheckup_setAddParam());
                             url: '${contextPath}/user/checkupAdd',
                             data: inputCheckup_setAddParam(),
                             dataType: 'json',
-                            success: function (data) {
-                                if (data.isError) {
+                            success: function(data) {
+                                if(data.isError){
                                     $.alert(data.message);
                                     console.log('ERROR', data.message);
-                                } else {
+                                }else{
                                     inputCheckup_fnClear();
                                     $.alert(data.message);
-                                    healthAlerts_fnSearch();
                                 }
                             }
                         });
                     }
                 },
-                Cancel: function () {}
+                Cancel: function () {
+                }
             }
         });
     });
-}
 
-    $('.table-wrap .dropdown-content a').click(function(){
-        let cnt = $(this).data('cnt');
-
-        rowNumsVal = cnt;
-        $('#gridDropdownBtn').text($(this).text());
-        $("#healthAlertList").setGridParam({ rowNum: cnt });
-        healthAlerts_fnSearch();
-    })
-
-    $('.input-txt02').keyup(function(e){
-        if(e.keyCode == '13'){
-            healthAlerts_fnSearch();
+    $(document).on('click', '.sex-btn-f', function() {
+        if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            $("#inputCheckup_gender").val('M');
+            $('.sex-btn').addClass('active');
+        } else {
+            $(this).addClass('active');
+            $("#inputCheckup_gender").val('F');
+            $('.sex-btn').removeClass('active');
         }
     });
 
-$(document).on('click', '.sex-btn-f', function() {
-    console.log("여자");
-    if($(this).hasClass('active')){
-        $(this).removeClass('active');
-        $("#inputCheckup_gender").val('M');
-        $('.sex-btn').addClass('active');
-    } else {
-        $(this).addClass('active');
-        $("#inputCheckup_gender").val('F');
-        $('.sex-btn').removeClass('active');
-    }
-});
-
-$(document).on('click', '.sex-btn', function() {
-    console.log("남자");
-    if($(this).hasClass('active')){
-        $(this).removeClass('active');
-        $("#inputCheckup_gender").val('F');
-        $('.sex-btn-f').addClass('active');
-    } else {
-        $(this).addClass('active');
-        $("#inputCheckup_gender").val('M');
-        $('.sex-btn-f').removeClass('active');
-    }
-});
+    $(document).on('click', '.sex-btn', function() {
+        if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            $("#inputCheckup_gender").val('F');
+            $('.sex-btn-f').addClass('active');
+        } else {
+            $(this).addClass('active');
+            $("#inputCheckup_gender").val('M');
+            $('.sex-btn-f').removeClass('active');
+        }
+    });
 
 /* 실시간으로 모든 필드의 입력 값이 있으면 버튼을 바꿈
 $(document).on('click', '#inputCheckup_dataFields input', function() {
@@ -2041,138 +2527,5 @@ $(document).on('click', '#inputCheckup_dataFields input', function() {
     }
 });
 */
-
-</script>
-
-<script type="text/javascript">
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////// temp /////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $(document).on('click', '.temp-block-wrap button:not(.data-select-btn)', function () {
-        $.confirm({
-            title: 'This feature is under preparation.',
-            content: ' ',
-            type: 'blue',
-            typeAnimated: true,
-            buttons: {
-                OK: {
-                    btnClass: 'btn-blue',
-                    action: function(){
-                        // 확인 눌렀을 때 실행할 동작 (필요 시)
-                    }
-                }
-            }
-        });
-    });
-
-function drawServiceRequestsChart() {
-    let ctx = document.getElementById('serviceRequests_myChart');
-    if (!ctx) {
-        console.warn("Canvas with id 'serviceChart' not found.");
-        return;
-    }
-
-    let labels = ['Nursing', 'Ambulance', 'Consultation'];
-    let data = [
-        Math.floor(Math.random() * 30) + 10,
-        Math.floor(Math.random() * 30) + 10,
-        Math.floor(Math.random() * 30) + 10
-    ];
-
-    $("#temp-item-01").text(data[0]);
-    $("#temp-item-02").text(data[1]);
-    $("#temp-item-03").text(data[2]);
-    $("#temp-item-sum").text(data.reduce((a, b) => a + b, 0));
-
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: '',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(82, 158, 232, 1)',   // Nursing
-                        'rgba(255, 202, 134, 1)',  // Ambulance
-                        'rgba(238, 147, 144, 1)'   // Consultation
-                    ]
-                }
-            ]
-        },
-        options: {
-            borderColor: 'transparent',
-            borderWidth: 0,
-            maintainAspectRatio: false,
-            responsive: true,
-            cutout: '70%',
-            layout: {
-                padding: {
-                    right: 50,
-                    bottom: 10,
-                    top: 10
-                }
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: "right",
-                    labels: {
-                        boxWidth: 26,
-                        boxHeight: 26,
-                        padding: 14,
-                        usePointStyle: true,
-                        pointStyle: 'rectRounded',
-                        font: {
-                            size: 14
-                        },
-                        generateLabels: (chart) => {
-                            let datasets = chart.data.datasets;
-                            return datasets[0].data.map((data, i) => ({
-                                text: chart.data.labels[i] + '(' + data + ')',
-                                strokeStyle: 'rgba(0,0,0,0)',
-                                lineWidth: 0,
-                                fillStyle: datasets[0].backgroundColor[i],
-                                index: i,
-                                pointStyle: 'rectRounded'
-                            }));
-                        },
-                        borderWidth: 0
-                    },
-                    fullSize: true,
-                    align: "center"
-                },
-                tooltip: {
-                    enabled: false,
-                    position: 'nearest',
-                    external: externalTooltipHandler // 네가 쓰던 툴팁 있으면 그대로 써!
-                },
-                datalabels: {
-                    color: 'rgba(86, 86, 86, 1)',
-                    font: {
-                        size: 12,
-                        weight: 'bold'
-                    },
-                    formatter: (value) => value
-                },
-                shadowCirclePlugin: {
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 3,
-                    shadowOffsetX: 5,
-                    shadowOffsetY: 3,
-                    shadowFill: '#fff'
-                }
-            }
-        },
-        plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
-    });
-}
-
-$(document).on('click', '#serviceRequests_reqTp .data-select-btn', function () {
-    $('#serviceRequests_reqTp .data-select-btn').removeClass('active');
-    $(this).addClass('active');
-
-    let selected = $(this).data('filter');
-});
 
 </script>

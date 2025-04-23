@@ -8,6 +8,7 @@
 
 <script src="../../resources/js/grid/pager.js"></script>
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+<script src="../../resources/js/common/preparationPopup.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 
 <style>
@@ -491,5 +492,9 @@
         if(e.keyCode == '13'){
             fnSearch();
         }
+    });
+
+    $(document).on('click', '.detail-btn', function () {
+        showPreparationPopup();
     });
 </script>

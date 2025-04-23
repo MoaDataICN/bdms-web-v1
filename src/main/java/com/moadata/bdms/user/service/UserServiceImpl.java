@@ -12,10 +12,7 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
-import com.moadata.bdms.model.dto.MyResetPwDTO;
-import com.moadata.bdms.model.dto.UserDtlGeneralVO;
-import com.moadata.bdms.model.dto.UserSearchDTO;
-import com.moadata.bdms.model.dto.UserUpdateDTO;
+import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.*;
 
 import com.moadata.bdms.model.vo.CheckupVO;
@@ -82,9 +79,48 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDtlGeneralVO selectUserDtlGeneral(String reqId) {
+	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
+		return userDao.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param) {
+		return userDao.selectAllHealthAlertsCnt(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param) {
+		return userDao.selectLast24hHealthAlertsCnt(param);
+	}
+
+	@Override
+	public void updateAltStt(Map<String, Object> param) {
+        userDao.updateAltStt(param);
+    }
+
+	@Override
+	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
+		return userDao.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllServiceRequestsCnt(Map<String, Object> param) {
+		return userDao.selectAllServiceRequestsCnt(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param) {
+		return userDao.selectLast24hServiceRequestsCnt(param);
+	}
+	@Override
+	public void updateReqStt(Map<String, Object> param) {
+		userDao.updateReqStt(param);
+	}
+
+	@Override
+	public UserDtlGeneralVO selectUserDtlGeneral(String userId) {
 		try {
-			UserDtlGeneralVO userDtl = userDao.selectUserDtlGeneral(reqId);
+			UserDtlGeneralVO userDtl = userDao.selectUserDtlGeneral(userId);
 
 			if (userDtl.getUserNm() != null && !userDtl.getUserNm().isEmpty()) {
 				userDtl.setUserNm(EncryptUtil.decryptText(userDtl.getUserNm()));
@@ -136,6 +172,17 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm) {
+		try {
+			List<UserSearchDTO> inChargeList = userDao.selectInChargeNmList(inChargeNm);
+			return inChargeList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override

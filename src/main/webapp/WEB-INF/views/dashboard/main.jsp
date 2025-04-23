@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="../../resources/js/chart/doughnutChart.js"></script>
+<script src="../../resources/js/common/preparationPopup.js"></script>
 
 <style>
     .ui-jqgrid-htable {
@@ -949,4 +950,7 @@
     <%--    window.location.href='<c:url value="/login/logout"/>';--%>
     <%--})--%>
 
+    $(document).on('click', '.detail-btn', function () {
+        showPreparationPopup();
+    });
 </script>

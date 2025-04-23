@@ -306,11 +306,11 @@
     </div>
 
     <div class="submit-ui-wrap">
-        <button type="button" id="resetBtn" class="gray-submit-btn">
+        <button type="button" class="gray-submit-btn" onclick="general_fnClear()">
             <img src="/resources/images/reset-icon.svg" class="icon22">
             <span><spring:message code='common.reset'/></span>
         </button>
-        <button type="button" id="saveChangesBtn" class="hold-submit-btn" disabled>
+        <button type="button" id="general_saveChangesBtn" class="hold-submit-btn" disabled>
             <img src="/resources/images/save-icon.svg" class="icon22">
             <span><spring:message code='common.saveChanges'/></span>
         </button>

@@ -3,7 +3,7 @@
 
 <mapper namespace="user">
 	<select id="selectUserSearch" parameterType="UserSearchDTO" resultType="UserSearchDTO">
-		SELECT
+		SELECT SQL_CALC_FOUND_ROWS
 			req.USER_ID,
 			MAX(my.REGIST_DT) AS REGIST_DT,
 			MAX(my.USER_NM) AS USER_NM,
@@ -77,9 +77,11 @@
 		<if test="brthDt != null and brthDt != ''">
 			AND my.BRTH_DT = #{brthDt}
 		</if>
+		<!--
 		<if test="inChargeId != null and inChargeId != ''">
 			AND my.IN_CHARGE_ID = #{inChargeId}
 		</if>
+		-->
 		<if test="inChargeNm != null and inChargeNm != ''">
 			AND admin.USER_NM = #{inChargeNm}
 		</if>
@@ -119,142 +121,212 @@
 		</choose>
 		LIMIT #{rowNo}, #{rows}
 	</select>
-	<select id="selectUserSearchCnt" parameterType="UserSearchDTO" resultType="int">
-		SELECT
-			count(*)
+	<select id="selectUserSearchTotalRecords" parameterType="UserSearchDTO" resultType="int">
+		SELECT FOUND_ROWS();
+	</select>
+
+	<select id="selectUserDtlHealthAlerts" parameterType="UserDtlHealthAlertsDTO" resultType="UserDtlHealthAlertsDTO">
+		SELECT SQL_CALC_FOUND_ROWS
+			alt.TRK_ID,
+			alt.USER_ID,
+			alt.DCT_DT,
+			alt.ALT_TP,
+			alt.ALT_RMRK,
+			my.GRP_TP,
+			admin.USER_NM AS IN_CHARGE_NM,
+			alt.ALT_STT
 		FROM
+			t_walk.t_wlk_mng_alt alt
+		INNER JOIN
+			t_walk.t_wlk_my my ON alt.USER_ID = my.USER_ID
+		LEFT JOIN
 			(
 				SELECT
-					req.USER_ID
+					USER_ID, USER_NM
 				FROM
-					t_wlk_mng_req req
-				LEFT OUTER JOIN
-					t_wlk_my my ON req.USER_ID = my.USER_ID
-				LEFT OUTER JOIN
-					t_wlk_mng_alt alt ON req.ALRM_ID = alt.ALRM_ID
-				INNER JOIN
-					t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
-				INNER JOIN
-					t_wlk_mng_grp grp ON grp.GRP_ID = admin.GRP_ID
-				WHERE
-					1=1
-				<if test="inChargeIds != null and inChargeIds != ''">
-					-- 담당자에 맞는 조회
-					-- 상위 담당자인 경우, 하위 담당자들의 USER_ID를 조회 시에 전부 넣어주고,
-					-- 하위 담당자(고객 바로 상위)의 경우, 본인의 USER_ID를 넣어서 조회한다.
-					AND my.IN_CHARGE_ID IN ${inChargeIds}
-				</if>
-				<if test="searchBgnDe != null and searchBgnDe != ''">
-					AND my.REGIST_DT <![CDATA[>=]]> #{searchBgnDe}
-				</if>
-				<if test="searchEndDe != null and searchEndDe != ''">
-					AND my.REGIST_DT <![CDATA[<=]]> #{searchEndDe}
-				</if>
-				<if test="reqTp == 'Exists'">
-					AND req.REQ_TP IS NOT NULL AND req.REQ_TP != ''
-				</if>
-				<if test="reqTp == 'N/A'">
-					AND (req.REQ_TP IS NULL OR req.REQ_TP = '')
-				</if>
-				<if test="altTp == 'Exists'">
-					AND alt.ALT_TP IS NOT NULL AND alt.ALT_TP != ''
-				</if>
-				<if test="altTp == 'N/A'">
-					AND (alt.ALT_TP IS NULL OR alt.ALT_TP = '')
-				</if>
-				<if test="userNm != null and userNm != ''">
-					AND my.USER_NM = #{userNm}
-				</if>
-				<if test="emailId != null and emailId != ''">
-					AND my.EMAIL_ID LIKE CONCAT('%',#{emailId},'%')
-				</if>
-				<if test="userId != null and userId != ''">
-					AND my.USER_ID LIKE CONCAT('%',#{userId},'%')
-				</if>
-				<if test="mobile != null and mobile != ''">
-					AND my.MOBILE = #{mobile}
-				</if>
-				<if test="sx != null and sx != '' and sx != 'ALL'">
-					AND my.SX = #{sx}
-				</if>
-				<if test="brthDt != null and brthDt != ''">
-					AND my.BRTH_DT = #{brthDt}
-				</if>
-				<if test="inChargeId != null and inChargeId != ''">
-					AND my.IN_CHARGE_ID = #{inChargeId}
-				</if>
-				<if test="inChargeNm != null and inChargeNm != ''">
-					AND admin.USER_NM = #{inChargeNm}
-				</if>
-				<if test="grpTp != null and grpTp != ''">
-					AND my.GRP_TP = #{grpTp}
-				</if>
-				GROUP BY req.USER_ID
-			) userCnt
-	</select>
-
-	<!-- 사용자 목록 -->
-	<select id="selectUserList" parameterType="userVO" resultType="userVO">
-		SELECT  SQL_CALC_FOUND_ROWS
-				UID, USER_ID, USER_NM, EMAIL_ADDR, PHONE_NO, DATE_FORMAT(LOGIN_DT, '%Y-%m-%d %T') AS LOGIN_DT, LOGIN_YN, DEPT_NM, LOCK_YN, LOCK_YN AS oldLockYn, USE_YN,
-			 	USER_TYPE, USER_DESC, REGIST_ID, DATE_FORMAT(REGIST_DT, '%Y-%m-%d %T') AS REGIST_DT, MODIFY_ID, DATE_FORMAT(MODIFY_DT, '%Y-%m-%d %T') AS MODIFY_DT,
-                CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP
-		FROM t_wlk_MNG_USER
-		<where>
-		<if test='searchString != null and searchString != "" '>
-			AND USER_ID LIKE CONCAT('%', #{searchString}, '%')
+					t_walk.t_wlk_mng_user
+			) admin ON my.IN_CHARGE_ID = admin.USER_ID
+		WHERE
+			1=1
+		<if test="userId != null and userId != ''">
+			AND my.USER_ID = #{userId}
 		</if>
-
-		<if test='userNm != null and userNm != "" '>
-			OR USER_NM LIKE CONCAT('%', #{userNm}, '%')
+		<if test="searchBgnDe != null and searchBgnDe != ''">
+			AND alt.DCT_DT <![CDATA[>=]]> #{searchBgnDe}
 		</if>
-
-		</where>
+		<if test="searchEndDe != null and searchEndDe != ''">
+			AND alt.DCT_DT <![CDATA[<=]]> #{searchEndDe}
+		</if>
+		<if test="altTp != null and altTp != ''">
+			AND alt.ALT_TP IN (${altTp})
+		</if>
 		ORDER BY
-		<choose>
-			<when test='sortColumn == "userId"'>
-				USER_ID
-			</when>
-			<when test='sortColumn == "userNm"'>
-				USER_NM
-			</when>
-			<when test='sortColumn == "useYn"'>
-				USE_YN
-			</when>
-			<when test='sortColumn == "lockYn"'>
-				LOCK_YN
-			</when>
-			<when test='sortColumn == "userDesc"'>
-				USER_DESC
-			</when>
-			<when test='sortColumn == "userType"'>
-				USER_TYPE
-			</when>
-			<when test='sortColumn == "loginDt"'>
-				LOGIN_DT
-			</when>
-			<when test='sortColumn == "registDt"'>
-				REGIST_DT
-			</when>
-			<when test='sortColumn == "modifyDt"'>
-				MODIFY_DT
-			</when>
-		</choose>
-		<choose>
-			<when test='sord == "DESC" or sord == "desc"'>
-				 DESC
-			</when>
-			<otherwise>
-				 ASC
-			</otherwise>
-		</choose>
+			alt.DCT_DT DESC
 		LIMIT #{rowNo}, #{rows}
 	</select>
+	<select id="selectUserDtlHealthAlertsTotalRecords" parameterType="UserDtlHealthAlertsDTO" resultType="int">
+		SELECT FOUND_ROWS();
+	</select>
+
+	<select id="selectAllHealthAlertsCnt" resultType="java.util.Map" parameterType="java.util.Map">
+		-- 담당자가 조회하는 경우, 전체 관리자가 조회하는 경우에 대한 분기처리가 필요
+		SELECT
+			alt.ALT_TP,
+			COUNT(*) AS ALT_COUNT
+		FROM
+			t_walk.t_wlk_mng_alt alt
+		INNER JOIN
+			t_walk.t_wlk_my my ON alt.USER_ID = my.USER_ID
+		LEFT JOIN (
+			SELECT USER_ID, USER_NM, GRP_LV
+			FROM t_walk.t_wlk_mng_user
+		) admin ON my.IN_CHARGE_ID = admin.USER_ID
+		WHERE
+			admin.GRP_LV >= #{grpLv}
+		AND
+			my.USER_ID = #{userId}
+		GROUP BY
+			alt.ALT_TP
+	</select>
+
+	<select id="selectLast24hHealthAlertsCnt" resultType="java.util.Map" parameterType="java.util.Map">
+		-- 담당자가 조회하는 경우, 전체 관리자가 조회하는 경우에 대한 분기처리가 필요
+		SELECT
+			alt.ALT_TP,
+			COUNT(*) AS ALT_COUNT
+		FROM
+			t_walk.t_wlk_mng_alt alt
+		INNER JOIN
+			t_walk.t_wlk_my my ON alt.USER_ID = my.USER_ID
+		LEFT JOIN (
+			SELECT USER_ID, USER_NM, GRP_LV
+			FROM t_walk.t_wlk_mng_user
+		) admin ON my.IN_CHARGE_ID = admin.USER_ID
+		WHERE
+			alt.DCT_DT >= NOW() - INTERVAL 1 DAY
+		AND
+			admin.GRP_LV >= #{grpLv}
+		AND
+			my.USER_ID = #{userId}
+		GROUP BY
+			alt.ALT_TP
+	</select>
+
+	<update id="updateAltStt" parameterType="java.util.Map">
+		UPDATE
+			t_walk.t_wlk_mng_alt
+		SET
+			ALT_STT = #{altStt}
+		WHERE
+			TRK_ID = #{trkId}
+	</update>
+
+	<select id="selectUserDtlServiceRequests" parameterType="UserDtlServiceRequestsDTO" resultType="UserDtlServiceRequestsDTO">
+		SELECT SQL_CALC_FOUND_ROWS
+			req.REQ_ID,
+			req.USER_ID,
+			req.REQ_DT,
+			req.REQ_TP,
+			my.GRP_TP,
+			admin.USER_NM AS IN_CHARGE_NM,
+			req.REQ_STT
+		FROM
+			t_walk.t_wlk_mng_req req
+		INNER JOIN
+			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
+		LEFT JOIN
+			(
+				SELECT
+					USER_ID, USER_NM
+				FROM
+					t_walk.t_wlk_mng_user
+			) admin ON my.IN_CHARGE_ID = admin.USER_ID
+		WHERE
+			1 = 1
+		<if test="userId != null and userId != ''">
+			AND req.USER_ID = #{userId}
+		</if>
+		<if test="searchBgnDe != null and searchBgnDe != ''">
+			AND req.REQ_DT <![CDATA[>=]]> #{searchBgnDe}
+		</if>
+		<if test="searchEndDe != null and searchEndDe != ''">
+			AND req.REQ_DT <![CDATA[<=]]> #{searchEndDe}
+		</if>
+		<if test="reqTp != null and reqTp != ''">
+			AND req.REQ_TP IN (${reqTp})
+		</if>
+		<if test="reqStt != null and reqStt != ''">
+			AND req.REQ_STT = #{reqStt}
+		</if>
+		<if test="inChargeId != null and inChargeId != ''">
+			AND admin.USER_ID = #{inChargeId}
+		</if>
+		<if test="inChargeIds != null and inChargeIds != ''">
+			AND admin.USER_ID IN (${inChargeIds})
+		</if>
+		ORDER BY
+			req.REQ_DT DESC
+		LIMIT #{rowNo}, #{rows}
+	</select>
+	<select id="selectUserDtlServiceRequestsTotalRecords" parameterType="UserDtlServiceRequestsDTO" resultType="int">
+		SELECT FOUND_ROWS();
+	</select>
+
+	<select id="selectAllServiceRequestsCnt" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			req.REQ_TP,
+			COUNT(*) AS REQ_COUNT
+		FROM
+			t_walk.t_wlk_mng_req req
+		INNER JOIN
+			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
+		LEFT JOIN (
+			SELECT USER_ID, USER_NM, GRP_LV
+			FROM t_walk.t_wlk_mng_user
+		) admin ON my.IN_CHARGE_ID = admin.USER_ID
+		WHERE
+			admin.GRP_LV >= #{grpLv}
+		AND
+			my.USER_ID = #{userId}
+		GROUP BY
+			req.REQ_TP
+	</select>
+
+	<select id="selectLast24hServiceRequestsCnt" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			req.REQ_TP,
+			COUNT(*) AS REQ_COUNT
+		FROM
+			t_walk.t_wlk_mng_req req
+		INNER JOIN
+			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
+		LEFT JOIN (
+			SELECT USER_ID, USER_NM, GRP_LV
+			FROM t_walk.t_wlk_mng_user
+		) admin ON my.IN_CHARGE_ID = admin.USER_ID
+		WHERE
+			req.REQ_DT >= NOW() - INTERVAL 1 DAY
+		AND
+			admin.GRP_LV >= #{grpLv}
+		AND
+			my.USER_ID = #{userId}
+		GROUP BY
+			req.REQ_TP
+	</select>
+
+	<update id="updateReqStt" parameterType="java.util.Map">
+		UPDATE
+			t_walk.t_wlk_mng_req
+		SET
+			REQ_STT = #{reqStt}
+		WHERE
+			REQ_ID = #{reqId}
+	</update>
 
 	<select id="selectUserDtlGeneral" parameterType="String" resultType="UserDtlGeneralVO">
 		SELECT
 			my.USER_NM, my.EMAIL_ID,
-			my.MOBILE, req.USER_ID,
+			my.MOBILE, my.USER_ID,
 			my.SX, admin.USER_NM AS IN_CHARGE_NM,
 			my.BRTH_DT, my.GRP_TP,
 			twtb.HEIGHT, my.REGIST_DT AS REGIST_DT,
@@ -262,46 +334,44 @@
 			my.ADDR, my.WD_DT, my.WD_YN,
 			my.mmo,
 			my.UPT_DT, my.UPT_ID,
-			req.REQ_ID, admin.GRP_LV
+			admin.GRP_LV
 		FROM
-			t_walk.t_wlk_mng_req req
-		LEFT OUTER JOIN
-			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
+			t_walk.t_wlk_my my
 		LEFT OUTER JOIN
 			(
 				SELECT
 					USER_ID, HEIGHT, WEIGHT
 				FROM
-				(
-					SELECT
-						USER_ID, HEIGHT, WEIGHT,
-						ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
-					FROM
-						t_walk.t_wlk_td_body
-				) twtb_latest
-				WHERE rn = 1
+					(
+						SELECT
+							USER_ID, HEIGHT, WEIGHT,
+							ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
+						FROM
+							t_walk.t_wlk_td_body
+					) twtb_latest
+					WHERE rn = 1
 			) twtb ON my.USER_ID = twtb.USER_ID
 		LEFT OUTER JOIN
 			(
 				SELECT
 					USER_ID, REGIST_DT
 				FROM
-					(
+				(
 					SELECT
 						USER_ID, REGIST_DT,
 						ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
 					FROM
 						t_walk.t_wlk_cmm_hst
-					) latest_hst
-				WHERE
-					rn = 1
+				) latest_hst
+				WHERE rn = 1
 			) twch ON my.USER_ID = twch.USER_ID
 		INNER JOIN
 			t_walk.t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
 		WHERE
 			1=1
-		<if test="reqId != null and reqId != ''">
-			AND req.REQ_ID = #{reqId}
+		<if test="userId != null and userId != ''">
+		AND
+			my.USER_ID = #{userId}
 		</if>
 	</select>
 
@@ -366,10 +436,18 @@
 		</if>
 	</select>
 
-	<!--
-		GRP_LV 1은 본인 InChargeNm만 열람
-		GRP_LV 2는 본인을 담당할 수 있는 전체 담당자 목록
-	-->
+	<!-- 해당 담당자 존재하는지 조회 -->
+	<select id="selectInChargeNmList" parameterType="string" resultType="UserSearchDTO">
+		SELECT DISTINCT
+			USER_ID AS IN_CHARGE_ID,
+			USER_NM AS IN_CHARGE_NM
+		FROM
+			t_walk.t_wlk_mng_user admin
+		WHERE
+			USER_NM LIKE CONCAT(#{inChargeNm}, '%')
+	</select>
+
+	<!-- 전체 담당자 목록 조회 -->
 	<select id="selectAllInChargeNm" parameterType="string" resultType="UserSearchDTO">
 		SELECT DISTINCT
 			USER_ID AS IN_CHARGE_ID,
@@ -377,16 +455,6 @@
 		FROM
 			t_walk.t_wlk_mng_user admin;
 	</select>
-<!--
-	<select id="selectHigherInChargeNm" parameterType="string" resultType="string">
-		SELECT
-			USER_NM
-		FROM
-			t_walk.t_wlk_mng_user admin
-		WHERE
-			admin.GRP_LV &lt; #{grpLv}
-	</select>
--->
 
 	<select id="updateUserInChargeIdByNm" parameterType="UserUpdateDTO" resultType="int">
 		UPDATE
@@ -413,9 +481,64 @@
 			(#{userId}, NOW(), #{height}, #{weight}, NOW());
 	</select>
 
+	<!-- 사용자 목록 -->
+	<select id="selectUserList" parameterType="userVO" resultType="userVO">
+		SELECT SQL_CALC_FOUND_ROWS
+		UID, USER_ID, USER_NM, EMAIL_ADDR, PHONE_NO, DATE_FORMAT(LOGIN_DT, '%Y-%m-%d %T') AS LOGIN_DT, LOGIN_YN, DEPT_NM, LOCK_YN, LOCK_YN AS oldLockYn, USE_YN,
+		USER_TYPE, USER_DESC, REGIST_ID, DATE_FORMAT(REGIST_DT, '%Y-%m-%d %T') AS REGIST_DT, MODIFY_ID, DATE_FORMAT(MODIFY_DT, '%Y-%m-%d %T') AS MODIFY_DT,
+		CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP
+		FROM t_wlk_MNG_USER
+		<where>
+			<if test='searchString != null and searchString != "" '>
+				AND USER_ID LIKE CONCAT('%', #{searchString}, '%')
+			</if>
 
+			<if test='userNm != null and userNm != "" '>
+				OR USER_NM LIKE CONCAT('%', #{userNm}, '%')
+			</if>
 
-
+		</where>
+		ORDER BY
+		<choose>
+			<when test='sortColumn == "userId"'>
+				USER_ID
+			</when>
+			<when test='sortColumn == "userNm"'>
+				USER_NM
+			</when>
+			<when test='sortColumn == "useYn"'>
+				USE_YN
+			</when>
+			<when test='sortColumn == "lockYn"'>
+				LOCK_YN
+			</when>
+			<when test='sortColumn == "userDesc"'>
+				USER_DESC
+			</when>
+			<when test='sortColumn == "userType"'>
+				USER_TYPE
+			</when>
+			<when test='sortColumn == "loginDt"'>
+				LOGIN_DT
+			</when>
+			<when test='sortColumn == "registDt"'>
+				REGIST_DT
+			</when>
+			<when test='sortColumn == "modifyDt"'>
+				MODIFY_DT
+			</when>
+		</choose>
+		<choose>
+			<when test='sord == "DESC" or sord == "desc"'>
+				DESC
+			</when>
+			<otherwise>
+				ASC
+			</otherwise>
+		</choose>
+		LIMIT
+		#{rowNo}, #{rows}
+	</select>
 
 	<!-- User 목록 total -->
 	<select id="selectTotalRecords" resultType="int">

@@ -14,6 +14,7 @@
     <!-- Input Checkup Data 탭 -->
     <definition name="user/userDtlInputCheckupData" template="/WEB-INF/views/user/userDtlInputCheckupData.jsp" />
 
+    <definition name="user/chargeSearchPopup" template="/WEB-INF/views/user/chargeSearchPopup.jsp"/>
     <definition name="user/resetPwStartPopup" template="/WEB-INF/views/user/resetPwStartPopup.jsp"/>
     <definition name="user/resetPwConfirmPopup" template="/WEB-INF/views/user/resetPwConfirmPopup.jsp"/>
     <definition name="user/checkPwStartPopup" template="/WEB-INF/views/user/checkPwStartPopup.jsp"/>
