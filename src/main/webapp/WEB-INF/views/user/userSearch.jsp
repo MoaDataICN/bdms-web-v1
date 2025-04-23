@@ -467,7 +467,7 @@
             mobile : $('#mobile').val().replaceAll('-',''),
             sx : $('#userSearch_sxDropdown').text().trim() !== "All" ? $('#userSearch_sxDropdown').text().trim().charAt(0) : "",
             brthDt : $('#brthDt').val(),
-            inChargeNm : $('#userSearch_inChargeNm').text() !== "All" ? $('#userSearch_inChargeNm').text().trim() : "",
+            inChargeNm : $('#userSearch_inChargeNm').text().trim() !== "All" ? $('#userSearch_inChargeNm').text().trim() : "",
             //inChargeNm: $('#userSearch_inChargeNmDropdown').text().trim() !== "All" ? $('#userSearch_inChargeNmDropdown').text().trim() : "",
             grpTp : $('#userSearch_grpTpDropdown').text().trim() !== "All" ? $('#userSearch_grpTpDropdown').text().trim() : "",
             // 기존 reqTp/altTp → Exists, N/A로 단순화
@@ -482,6 +482,7 @@
 
     // 검색
     function userSearch_fnSearch(){
+    console.log(userSearch_setSearchParam());
         $('#userSearch_grid').jqGrid('setGridParam', {
             url: '/user/selectUserSearch',
             datatype: 'json',
@@ -753,7 +754,7 @@
                 initServiceRequestsGrid();
             } else if (tab === 'input-checkup-data') {
                 initDropzone();
-                initInputCheckupDataTab();
+                inputCheckup_fnClear();
             }
         })
         .catch(error => {
@@ -959,7 +960,7 @@
                         OK: {
                             btnClass: 'btn-green',
                             action: function(){
-                                // 확인 눌렀을 때 실행할 동작 (필요 시)
+                                // 확인 눌렀을 때 실행할 동작
                             }
                         }
                     }
@@ -2331,8 +2332,8 @@
                             //기본정보
                             if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#inputCheckup_chckType").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Checkup result")>= 0){$("#inputCheckup_chckResult").val(responseText.resultList[1][k])}
-                            if (resval.trim().indexOf("Checkup center")>= 0){$("#chckCt").val(responseText.resultList[1][k])}
-                            if (resval.trim().indexOf("Doctor")>= 0){$("#chckDctr").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup center")>= 0){$("#inputCheckup_chckCt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Doctor")>= 0){$("#inputCheckup_chckDctr").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#inputCheckup_chckDt").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Date Of Birth")>= 0){$("#inputCheckup_brthDt").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Gender")>= 0){
@@ -2370,13 +2371,13 @@
     }
 
     function inputCheckup_fnClear() {
-        $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#chckDctr").val('');
-        $("#inputCheckup_brthDt").val(''); $("#inputCheckup_gender").val(''); $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#chckCt').val('');
-        $('#inputCheckup_hght').val(''); $('#inputCheckup_wght').val(''); $('#inputCheckup_wst').val(''); $('#inputCheckup_sbp').val(''); $('#inputCheckup_dbp').val('');
-        $('#inputCheckup_fbs').val(''); $('#inputCheckup_hba1c').val(''); $('#inputCheckup_tc').val(''); $('#inputCheckup_hdl').val(''); $('#inputCheckup_ldl').val('');
-        $('#inputCheckup_trgly').val(''); $('#inputCheckup_sc').val(''); $('#inputCheckup_gfr').val(''); $('#inputCheckup_urAcd').val(''); $('#inputCheckup_bun').val('');
-        $('#inputCheckup_alt').val(''); $('#inputCheckup_ast').val(''); $('#inputCheckup_gtp').val(''); $('#inputCheckup_tprtn').val(''); $('#inputCheckup_blrbn').val('');
-        $('#inputCheckup_alp').val(''); $('#inputCheckup_comment').val('');
+        $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#inputCheckup_chckDctr").val('');
+        $("#inputCheckup_brthDt").val('');   $("#inputCheckup_gender").val('');     $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#inputCheckup_chckCt').val('');
+        $('#inputCheckup_hght').val('');     $('#inputCheckup_wght').val('');       $('#inputCheckup_wst').val('');    $('#inputCheckup_sbp').val('');    $('#inputCheckup_dbp').val('');
+        $('#inputCheckup_fbs').val('');      $('#inputCheckup_hba1c').val('');      $('#inputCheckup_tc').val('');     $('#inputCheckup_hdl').val('');    $('#inputCheckup_ldl').val('');
+        $('#inputCheckup_trgly').val('');    $('#inputCheckup_sc').val('');         $('#inputCheckup_gfr').val('');    $('#inputCheckup_urAcd').val('');  $('#inputCheckup_bun').val('');
+        $('#inputCheckup_alt').val('');      $('#inputCheckup_ast').val('');        $('#inputCheckup_gtp').val('');    $('#inputCheckup_tprtn').val('');  $('#inputCheckup_blrbn').val('');
+        $('#inputCheckup_alp').val('');      $('#inputCheckup_comment').val('');
         $('.sex-btn-f').removeClass('active');
         $('.sex-btn').removeClass('active');
     }
@@ -2386,8 +2387,8 @@
             userId : userDtlGeneral.userId,
             chckType : $("#inputCheckup_chckType").val(),
             chckResult : $("#inputCheckup_chckResult").val(),
-            chckCt : $("#inputCheckup_chckDt").val(),
-            chckDctr : $("#chckDct").val(),
+            chckCt : $("#inputCheckup_chckCt").val(),
+            chckDctr : $("#inputCheckup_chckDctr").val(),
             chckDt : $("#inputCheckup_chckDt").val(),
             brthDt : $("#inputCheckup_brthDt").val(),
             gender : $("#inputCheckup_gender").val(),
@@ -2419,53 +2420,64 @@
         };
     }
 
+    var validData;
     $(document).ready(function() {
         inputCheckup_fnClear();
+
+        $.ajax({
+            type: 'POST',
+            url: '${contextPath}/user/selectValidMinMax',
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                if(data.isError){
+                    $.alert(data.message);
+                    console.log('ERROR', data.message);
+                }else{
+                    console.log('SUCCESS', data.row);
+                    validData = data.row;
+                }
+            }
+        });
     })
 
     function validation(){
         return true;
     }
 
-    function initInputCheckupDataTab() {
-        // 초기화
+    $(document).on('click','#checkupreset', function(){
         inputCheckup_fnClear();
+    });
 
-        // 이벤트 바인딩 (중복 방지 위해 off로 제거 후 다시 on)
-        $(document).off('click', '#checkupreset').on('click', '#checkupreset', function () {
-            inputCheckup_fnClear();
-        });
-
-        $(document).off('click', '#checkupsave').on('click', '#checkupsave', function () {
-
-            $.confirm({
-                title: '',
-                content: 'Would you like to save an checkup data?',
-                buttons: {
-                    OK: function () {
-                        if (validation()) {
-                            $.ajax({
-                                type: 'POST',
-                                url: '${contextPath}/user/checkupAdd',
-                                data: inputCheckup_setAddParam(),
-                                dataType: 'json',
-                                success: function (data) {
-                                    if (data.isError) {
-                                        $.alert(data.message);
-                                        console.log('ERROR', data.message);
-                                    } else {
-                                        inputCheckup_fnClear();
-                                        $.alert(data.message);
-                                    }
+    $(document).on('click','#checkupsave', function(){
+        $.confirm({
+            title: '',
+            content: 'Would you like to save an checkup data?',
+            buttons: {
+                OK: function () {
+                    if (validation()) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '${contextPath}/user/checkupAdd',
+                            data: inputCheckup_setAddParam(),
+                            dataType: 'json',
+                            success: function(data) {
+                                if(data.isError){
+                                    $.alert(data.message);
+                                    console.log('ERROR', data.message);
+                                }else{
+                                    inputCheckup_fnClear();
+                                    $.alert(data.message);
                                 }
-                            });
-                        }
-                    },
-                    Cancel: function () {}
+                            }
+                        });
+                    }
+                },
+                Cancel: function () {
                 }
-            });
+            }
         });
-    }
+    });
 
     $(document).on('click', '.sex-btn-f', function() {
         if($(this).hasClass('active')){
