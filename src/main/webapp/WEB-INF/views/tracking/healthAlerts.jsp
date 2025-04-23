@@ -340,7 +340,7 @@
 
 
         $('#healthAlertList').jqGrid({
-            url : '${contextPath}/selectHealthAlert',
+            url : '${contextPath}/tracking/selectHealthAlert',
             mtype : "POST",
             datatype: "json",
             jsonReader : {repeatitems: false},
