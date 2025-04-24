@@ -10,6 +10,19 @@ const userDtlSlide_messages = {
 
 // 우측에서 나타나는 슬라이드 팝업 열기
 function openPopup() {
+    // 다중 컨테이너 제거
+    if ($('.slide-popup-container').length > 1) {
+        console.warn('다중 slide-popup-container 발견하여 추가 컨테이너를 제거합니다.');
+        $('.slide-popup-container').slice(1).remove();
+    }
+    // 컨테이너가 없으면 오류 로그 출력
+    if ($('.slide-popup-container').length === 0) {
+        console.error('slide-popup-container가 존재하지 않습니다. HTML 구조를 확인하세요.');
+        return;  // 팝업 열기 중단
+    }
+
+    console.log('Slide containers in openPopup : ' + $('.slide-popup-container').length);
+
     $('#customerPopup').addClass('active');
     $('#slideOverlay').addClass('active');
     document.body.classList.add('no-scroll');
@@ -27,7 +40,7 @@ $(document).on('click', '#slideOverlay, #closePopup', function () {
     closePopup();
 });
 
-function loadUserDetailTab(tab = 'general') {
+function loadUserDetailTab(tab = 'general', userId) {
     fetch("/user/detail/" + tab, {
         method: 'POST',
         headers: {
@@ -40,7 +53,7 @@ function loadUserDetailTab(tab = 'general') {
         return response.text();
     })
     .then(html => {
-        $('.slide-popup-container').html(html);
+        $('.slide-popup-container').empty().html(html);
 
         if (tab === 'general') {
             general_readonly();
@@ -74,16 +87,19 @@ function loadUserDetailTab(tab = 'general') {
 }
 
 $(document).on("click", ".detail-btn.open-slide-btn", function () {
-    userId = $(this).data("uid");
+    let userId = $(this).data("uid");
+    $('.slide-popup-container').attr('data-uid', userId);
 
     openPopup();
-    loadUserDetailTab('general');  // 기본 탭 로딩
+    loadUserDetailTab('general', userId);  // 기본 탭 로딩
 });
 
 $(document).on('click', '.second-tap-btn', function () {
+    let userId = $('.slide-popup-container').data('uid');
+
     $('.second-tap-btn').removeClass('active');
     $(this).addClass('active');
 
     let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
-    loadUserDetailTab(tab);
+    loadUserDetailTab(tab, userId);
 });
