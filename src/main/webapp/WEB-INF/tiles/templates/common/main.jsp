@@ -42,8 +42,8 @@
     }
 </style>
 <script>
-    //logout 임다.
-    $(document).on('click','.logout_icon30', function(){
+    // logout
+    $(document).on('click','.logout_icon30', function() {
         window.location.href='<c:url value="/login/logout"/>';
     })
 </script>

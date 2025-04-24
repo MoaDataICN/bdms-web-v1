@@ -229,34 +229,7 @@
 <div class="space-30"></div>
 
 <script type="text/javascript">
-    // Alert & Service Summation S
-    function calc(targetEl, val) {
-        $({ val : 0 }).animate({ val : val }, {
-            duration: 500,
-            step: function() {
-                let num = numberWithCommas(Math.floor(this.val));
-                $("#"+targetEl).text(num);
-            },
-            complete: function() {
-                let num = numberWithCommas(Math.floor(this.val));
-                $("#"+targetEl).text(num);
-            }
-        });
-    }
 
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    let sum = 0;
-
-    function summation(arr) {
-        let sum = 0;
-        arr.forEach((num) => { sum += num; })
-        return sum
-    }
-
-    // Alert & Service Summation E
 
     let healthAlertsChart = null;
 
@@ -279,7 +252,7 @@
         $.ajax({
             url: healthAlertsChartUrl,
             method: 'POST',
-            data: { userId: userId },
+            data: { userId: userDtlGeneral.userId },
             success: function (response) {
                 let healthAlertsCntMap = response.healthAlertsCntMap;
 
@@ -512,8 +485,8 @@
         let healthAlerts_startDate = $('#healthAlertsBgnDe').val();
         let healthAlerts_endDate = $('#healthAlertsEndDe').val();
 
-        console.log("healthAlerts_startDate : " + healthAlerts_startDate);
-        console.log("healthAlerts_endDate : " + healthAlerts_endDate);
+        //("healthAlerts_startDate : " + healthAlerts_startDate);
+        //console.log("healthAlerts_endDate : " + healthAlerts_endDate);
 
         let altTp = $('#healthAlerts_altTp .data-select-btn.active').map(function () {
                 return '"' + $(this).data('filter') + '"';
@@ -527,7 +500,7 @@
             }
 
         return {
-            userId: userId,
+            userId: userDtlGeneral.userId,
             searchBgnDe: $('#healthAlertsBgnDe').val() + ' 00:00:00',
             searchEndDe: $('#healthAlertsEndDe').val() + ' 23:59:59',
             altTp: altTp
@@ -552,7 +525,7 @@
     }
 
     $(document).on('click', '#healthAlerts_date .data-select-btn', function () {
-        console.log('✅ healthAlerts data-select-btn clicked!');
+        //console.log('✅ healthAlerts data-select-btn clicked!');
         $('#healthAlerts_date .data-select-btn').removeClass('active');
         $(this).addClass('active');
 

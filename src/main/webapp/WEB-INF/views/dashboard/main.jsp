@@ -7,10 +7,14 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
 <script src="../../resources/js/script.js"></script>
+<script src="/resources/js/grid/pager.js"></script>
+<script src="/resources/js/grid/userDtlPager.js"></script>
+<script src="/resources/js/chart/doughnutChart.js"></script>
+<script src="/resources/js/common/slide/userDtlSlide.js"></script>
+<script src="/resources/js/common/utils/calcUtil.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<script src="../../resources/js/chart/doughnutChart.js"></script>
-<script src="../../resources/js/common/preparationPopup.js"></script>
 
 <style>
     .ui-jqgrid-htable {
@@ -598,33 +602,47 @@
         </div>
     </div>
 
+    <!-- 우측 슬라이드 팝업 -->
+    <!-- 슬라이드 팝업 활성화 시 표시되는 반투명 배경 -->
+    <div class="slide-overlay" id="slideOverlay"></div>
+
+    <!-- 우측에서 슬라이드 되는 팝업 -->
+    <div class="customer-popup" id="customerPopup">
+        <!-- 팝업 상단 헤더 -->
+        <div class="popup-header">
+            <div class="second-title">
+                <spring:message code='common.menu.userDetails'/>
+            </div>
+            <button type="button" id="closePopup">
+                <img src="/resources/images/close-icon.svg" class="icon24">
+            </button>
+        </div>
+
+        <!-- userDetail 탭 삽입 영역 -->
+        <div class="slide-popup-container">
+            <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
+        </div>
+
+        <!-- 팝업 삽입 영역 -->
+        <div class="reset-pw-popup-container">
+        </div>
+
+        <div class="check-pw-popup-container">
+        </div>
+    </div>
+
+    <!-- 팝업 삽입 영역 -->
+    <div class="charge-search-popup-container">
+    </div>
+
     <!-- footer copyright -->
     <div class="copyright mt-12px"><spring:message code="common.copyright"/></div>
 </main>
 
 <script type="text/javascript">
-
     const today = moment().format('YYYY-MM-DD');
 
     <!-- Alert & Service Summation S -->
-    function calc(targetEl, val) {
-        $({ val : 0 }).animate({ val : val }, {
-            duration: 500,
-            step: function() {
-                var num = numberWithCommas(Math.floor(this.val));
-                $("#"+targetEl).text(num);
-            },
-            complete: function() {
-                var num = numberWithCommas(Math.floor(this.val));
-                $("#"+targetEl).text(num);
-            }
-        });
-    }
-
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
     var HA_total = Number($('#HA_0').text()) + Number($('#HA_1').text());
     var A_total = Number($('#A_0').text()) + Number($('#A_1').text());
     var N_total = Number($('#N_0').text()) + Number($('#N_1').text());
@@ -634,11 +652,9 @@
     calc('A_total', A_total);
     calc('N_total', N_total);
     calc('T_total', T_total);
-
     <!-- Alert & Service Summation E -->
 
     <!-- Chart S -->
-
     let healthAlerts = {
         'Activity': <c:out value="${
         (healthAlertCntMap.A['0'] != null ? healthAlertCntMap.A['0'] : 0) +
@@ -675,14 +691,6 @@
         (healthAlertCntMap.ST['1'] != null ? healthAlertCntMap.ST['1'] : 0)
     }" default="0" />
     };
-
-    let sum = 0;
-
-    function summation(arr) {
-        let sum = 0;
-        arr.forEach((num) => { sum += num; })
-        return sum
-    }
 
     let myCt = document.getElementById('myChart');
     let myChart = new Chart(myCt, {
@@ -786,6 +794,25 @@
     // 기본 Items 개수
     var rowNumsVal = 10;
 
+    const gridPagingState = {
+        userSearch_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        },
+        healthAlerts_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        },
+        serviceRequests_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        }
+        // 추가할 그리드는 여기에 계속 추가
+    };
+
     var inChargeList = new Array();
     <c:forEach items="${inChargeList}" var="item">
         inChargeList.push("'${item.userId}'")
@@ -849,9 +876,20 @@
                     }},
                 { label: 'Group', name: 'grpNm', width:130, sortable : true},
                 { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
-                { label: 'Details', name: 'userId', width:100, sortable : false, formatter : function(cellValue, options, rowObject){
-                        return `<button type="button" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
-                    }},
+                {
+                    label: 'Details',
+                    name: 'details',
+                    width: 80,
+                    sortable: false,
+                    formatter: function(cellValue, options, rowObject) {
+                        return `
+                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
+                                <span>detail</span>
+                                <img src="/resources/images/arrow-right-nomal.svg" class="icon18">
+                            </button>
+                        `;
+                    }
+                }
             ],
             viewrecords: true,
             autowidth : true,
@@ -945,12 +983,8 @@
         fnSearch();
     })
 
-    //logout 임다.
-    <%--$(document).on('click','.logout_icon30', function(){--%>
-    <%--    window.location.href='<c:url value="/login/logout"/>';--%>
-    <%--})--%>
-
-    $(document).on('click', '.detail-btn', function () {
-        showPreparationPopup();
-    });
+    // logout
+    //$(document).on('click','.logout_icon30', function() {
+    //    window.location.href='<c:url value="/login/logout"/>'
+    //})
 </script>
