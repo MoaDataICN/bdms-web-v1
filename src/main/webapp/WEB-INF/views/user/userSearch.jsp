@@ -6,11 +6,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
-<script src="../../resources/js/script.js"></script>
-<script src="../../resources/js/grid/pager.js"></script>
-<script src="../../resources/js/grid/userDtlPager.js"></script>
-<script src="../../resources/js/chart/doughnutChart.js"></script>
+<script src="/resources/js/script.js"></script>
 <script src="/resources/js/jquery-ui.js"></script>
+<script src="/resources/js/grid/pager.js"></script>
+<script src="/resources/js/grid/userDtlPager.js"></script>
+<script src="/resources/js/common/slide/userDtlSlide.js"></script>
+<script src="/resources/js/common/utils/calcUtil.js"></script>
+<script src="/resources/js/chart/doughnutChart.js"></script>
 <script src="/resources/js/dropzone-min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
@@ -336,7 +338,7 @@
             </button>
         </div>
 
-        <!-- fetch로 로드된 userDetail 탭 삽입 영역 -->
+        <!-- userDetail 탭 삽입 영역 -->
         <div class="slide-popup-container">
             <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
         </div>
@@ -360,16 +362,6 @@
 </main>
 
 <script type="text/javascript">
-    const userSearch_messages = {
-        f: "<spring:message code='common.sex.f'/>",
-        m: "<spring:message code='common.sex.m'/>",
-        active: "<spring:message code='common.active'/>",
-        suspended: "<spring:message code='common.suspended'/>",
-        readyToDelete: "<spring:message code='common.readyToDelete'/>",
-        all: "<spring:message code='common.all'/>",
-        select: "<spring:message code='common.select'/>"
-    };
-
     // Grid 하단 페이지 숫자
     let pageSize = 10;
     let currentPageGroup = 1;
@@ -396,7 +388,7 @@
         // 추가할 그리드는 여기에 계속 추가
     };
 
-    let userId = "${userId}";
+    let userId = "";
     let inChargeId = "";
     let inChargeNm = "";
 
@@ -478,7 +470,6 @@
 
     // 검색
     function userSearch_fnSearch(){
-    console.log(userSearch_setSearchParam());
         $('#userSearch_grid').jqGrid('setGridParam', {
             url: '/user/selectUserSearch',
             datatype: 'json',
@@ -597,7 +588,6 @@
                             </button>
                         `;
                     }
-
                 }
             ],
             page: 1,
@@ -648,7 +638,7 @@
 
     // 검색일 계산
     $(document).on('click', '#userSearch_date .data-select-btn', function(){
-        console.log('✅ search data-select-btn clicked!');
+        //console.log('✅ search data-select-btn clicked!');
 
         $('#userSearch_date .data-select-btn').removeClass('active');
 
@@ -700,89 +690,8 @@
     });
 */
 
-    /***** slide *****/
-    // 우측에서 나타나는 슬라이드 팝업 열기
-    function openPopup() {
-        $('#customerPopup').addClass('active');
-        $('#slideOverlay').addClass('active');
-        document.body.classList.add('no-scroll');
-    }
-
-    // 우측에서 나타나는 슬라이드 팝업 닫기
-    function closePopup() {
-        $('#customerPopup').removeClass('active');
-        $('#slideOverlay').removeClass('active');
-        document.body.classList.remove('no-scroll');
-    }
-
-    // 반투명 오버레이, 팝업 내 닫기 버튼 클릭 시 슬라이드 닫기
-    $(document).on('click', '#slideOverlay, #closePopup', function () {
-        closePopup();
-    });
-
-    function loadUserDetailTab(tab = 'general') {
-        fetch("/user/detail/" + tab, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({ userId })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('❌ Error : ' + tab);
-            return response.text();
-        })
-        .then(html => {
-            $('.slide-popup-container').html(html);
-
-            if (tab === 'general') {
-                readonly();
-                extractUserDtlGeneralFromDOM("#customerPopup .slide-popup-container");
-                updateDeletionDateInfo();
-            } else if (tab === 'health-alerts') {
-                drawHealthAlertsChart('all');
-                initHealthAlertsGrid();
-            } else if (tab === 'service-requests') {
-                drawServiceRequestsChart('all');
-                initServiceRequestsGrid();
-            } else if (tab === 'input-checkup-data') {
-                initDropzone();
-                inputCheckup_fnClear();
-            }
-        })
-        .catch(error => {
-            $.confirm({
-                title: 'Error',
-                content: 'Failed to load tab content.',
-                type: 'red',
-                typeAnimated: true,
-                buttons: {
-                    OK: {
-                        btnClass: 'btn-red',
-                        action: function(){ console.error(error); }
-                    }
-                }
-            });
-        });
-    }
-
-    $(document).on("click", ".detail-btn.open-slide-btn", function () {
-        userId = $(this).data("uid");
-
-        openPopup();
-        loadUserDetailTab('general');  // 기본 탭 로딩
-    });
-
-    $(document).on('click', '.second-tap-btn', function () {
-        $('.second-tap-btn').removeClass('active');
-        $(this).addClass('active');
-
-        let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
-        loadUserDetailTab(tab);
-    });
-
     // logout
-    $(document).on('click','.logout_icon30', function(){
+    $(document).on('click','.logout_icon30', function() {
         window.location.href='<c:url value="/login/logout"/>';
     });
 </script>

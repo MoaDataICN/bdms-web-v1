@@ -321,7 +321,9 @@
 
 <script type="text/javascript">
     // userDtlGeneral : 기존 값 저장
-    let userDtlGeneral = {};
+    if (typeof userDtlGeneral === 'undefined') {
+        var userDtlGeneral = {};
+    }
 
     function extractUserDtlGeneralFromDOM() {
         userDtlGeneral = {
@@ -341,34 +343,34 @@
             uptId: $("#general_uptId").val() || "-",
             sx: $("#general_sxDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select,
+            }).text().trim() || userDtlSlide_messages.select,
             inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select,
+            }).text().trim() || userDtlSlide_messages.select,
             grpTp: $("#general_grpTpDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select,
+            }).text().trim() || userDtlSlide_messages.select,
             wdYn: $("#general_statusDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userSearch_messages.select
+            }).text().trim() || userDtlSlide_messages.select
         };
     }
 
     // 입력창 잠금
-    function readonly() {
+    function general_readonly() {
         $('#customerPopup input, #customerPopup textarea').attr('readonly', true);
         $('#customerPopup .dropdown-search, #customerPopup .dropdown-content a').addClass('hold');
     }
 
     // 입력창 해제
-    function write() {
+    function general_write() {
         $('#customerPopup input:not(.hold), #customerPopup textarea:not(.hold)').removeAttr('readonly');
         $('#customerPopup .dropdown-search, #customerPopup .dropdown-content a').not('.readonly-dropdown').removeClass('hold');
     }
 
     // editBtn : 사용자 정보 변경 버튼
     $(document).on('click', '#editBtn', function () {
-        write();
+        general_write();
 
         $('#editButtons').addClass('hidden');
         $('#actionButtons').removeClass('hidden');
@@ -546,10 +548,10 @@
         $("#general_mmo").val(userDtlGeneral.mmo);
 
         // 드롭다운 복원
-        resetDropdownText("general_sxDropdown", userDtlGeneral.sx || userSearch_messages.select);
-        resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userSearch_messages.select);
-        resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userSearch_messages.select);
-        resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userSearch_messages.select);
+        resetDropdownText("general_sxDropdown", userDtlGeneral.sx || userDtlSlide_messages.select);
+        resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userDtlSlide_messages.select);
+        resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userDtlSlide_messages.select);
+        resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userDtlSlide_messages.select);
     }
 
     let calculatedWdDt = "";  // 변경 될 삭제 예정일
@@ -565,13 +567,13 @@
         let $deletionDateInput = $("#deletionDate");
         let $deletionDateCntInput = $("#deletionDateCnt");
 
-        if (wdYn === userSearch_messages.active) {  // 'Active' 상태
+        if (wdYn === userDtlSlide_messages.active) {  // 'Active' 상태
             $deletionDateInput.val('-');
             $deletionDateCntInput.val('-');
 
             calculatedWdYn = 'N';
             return;
-        } else if (wdYn === userSearch_messages.suspended) {  // 'Suspended' 상태
+        } else if (wdYn === userDtlSlide_messages.suspended) {  // 'Suspended' 상태
             $deletionDateInput.val('-');
             $deletionDateCntInput.val('-');
 
@@ -580,7 +582,7 @@
         }
 
         // ✅ 'Ready to delete' 상태일 때
-        if (wdYn === userSearch_messages.readyToDelete) {
+        if (wdYn === userDtlSlide_messages.readyToDelete) {
             let targetDate;
 
             if (wdDtCopy) {
@@ -618,7 +620,7 @@
         const $button = $dropdown.find('button.dropdown-search');
         const selectedText = $(this).text().trim();
 
-        console.log("🔽 드롭다운 클릭됨 : " + selectedText);
+        console.log("🔽 Dropdown clicked : " + selectedText);
 
         // 텍스트 노드 교체
         $button.contents().filter(function () {
@@ -693,7 +695,7 @@
 
     $(document).on('input', '#general_mobile, #general_brthDt, #general_height, #general_weight, #general_addr, #general_mmo', general_checkDataChanged);
 
-    function userSearch_setUserUpdateParam() {
+    function general_setUserUpdateParam() {
         return {
             mobile: $("#general_mobile").val()?.trim() || "",
             sx: (() => {
@@ -701,8 +703,8 @@
                     return this.nodeType === 3;
                 }).text().trim();
 
-                if (text === userSearch_messages.f) return "F";
-                if (text === userSearch_messages.m) return "M";
+                if (text === userDtlSlide_messages.f) return "F";
+                if (text === userDtlSlide_messages.m) return "M";
                 return "";
             })(),
             inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
@@ -768,7 +770,6 @@
         .then(({ status, message }) => {
             switch (status) {
                 case "success":
-                    console.log("✅ 비밀번호 확인 성공");
                     updateUserGeneralInfo();
 
                     $("#checkPwConfirmPopup").fadeOut();
@@ -823,7 +824,7 @@
     });
 
     function updateUserGeneralInfo() {
-        let updateData = userSearch_setUserUpdateParam();
+        let updateData = general_setUserUpdateParam();
 
         console.log(updateData);
 
@@ -849,7 +850,7 @@
                     OK: {
                         btnClass: 'btn-green',
                         action: function(){
-                            $(".open-slide-btn[data-uid='" + userId + "']").click();
+                            $(".open-slide-btn[data-uid='" + userDtlGeneral.userId + "']").click();
                         }
                     }
                 }

@@ -212,7 +212,7 @@
         $.ajax({
             url: serviceRequestsChartUrl,
             method: 'POST',
-            data: { userId: userId },
+            data: { userId: userDtlGeneral.userId },
             success: function (response) {
                 let serviceRequestsCntMap = response.serviceRequestsCntMap;
 
@@ -428,8 +428,8 @@
         let serviceRequests_startDate = $('#serviceRequestsBgnDe').val();
         let serviceRequests_endDate = $('#serviceRequestsEndDe').val();
 
-        console.log("serviceRequests_startDate : " + serviceRequests_startDate);
-        console.log("serviceRequests_endDate : " + serviceRequests_endDate);
+        //console.log("serviceRequests_startDate : " + serviceRequests_startDate);
+        //console.log("serviceRequests_endDate : " + serviceRequests_endDate);
 
         let reqTp = $('#serviceRequests_reqTp .data-select-btn.active').map(function () {
                 return '"' + $(this).data('filter') + '"';
@@ -441,7 +441,7 @@
             }
 
         return {
-            userId: userId,
+            userId: userDtlGeneral.userId,
             searchBgnDe: $('#serviceRequestsBgnDe').val() + ' 00:00:00',
             searchEndDe: $('#serviceRequestsEndDe').val() + ' 23:59:59',
             reqTp: reqTp
@@ -466,7 +466,7 @@
     }
 
     $(document).on('click', '#serviceRequests_date .data-select-btn', function () {
-        console.log('✅ serviceRequests data-select-btn clicked!');
+        //console.log('✅ serviceRequests data-select-btn clicked!');
 
         $('#serviceRequests_date .data-select-btn').removeClass('active');
         $(this).addClass('active');

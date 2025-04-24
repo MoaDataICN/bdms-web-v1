@@ -6,9 +6,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
-<script src="../../resources/js/grid/pager.js"></script>
+<script src="/resources/js/grid/pager.js"></script>
+<script src="/resources/js/grid/userDtlPager.js"></script>
+<script src="/resources/js/chart/doughnutChart.js"></script>
+<script src="/resources/js/common/slide/userDtlSlide.js"></script>
+<script src="/resources/js/common/utils/calcUtil.js"></script>
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
-<script src="../../resources/js/common/preparationPopup.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 
 <style>
@@ -277,6 +282,39 @@
         </div>
     </div>
 
+    <!-- 우측 슬라이드 팝업 -->
+    <!-- 슬라이드 팝업 활성화 시 표시되는 반투명 배경 -->
+    <div class="slide-overlay" id="slideOverlay"></div>
+
+    <!-- 우측에서 슬라이드 되는 팝업 -->
+    <div class="customer-popup" id="customerPopup">
+        <!-- 팝업 상단 헤더 -->
+        <div class="popup-header">
+            <div class="second-title">
+                <spring:message code='common.menu.userDetails'/>
+            </div>
+            <button type="button" id="closePopup">
+                <img src="/resources/images/close-icon.svg" class="icon24">
+            </button>
+        </div>
+
+        <!-- userDetail 탭 삽입 영역 -->
+        <div class="slide-popup-container">
+            <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
+        </div>
+
+        <!-- 팝업 삽입 영역 -->
+        <div class="reset-pw-popup-container">
+        </div>
+
+        <div class="check-pw-popup-container">
+        </div>
+    </div>
+
+    <!-- 팝업 삽입 영역 -->
+    <div class="charge-search-popup-container">
+    </div>
+
     <form name="excelForm" method="POST">
         <input type="hidden" id="sortColumn" name="sortColumn" value="reqDt"/>
         <input type="hidden" id="sord" name="sord" value="DESC"/>
@@ -292,6 +330,25 @@
 
     // 기본 Items 개수
     var rowNumsVal = 10;
+
+    const gridPagingState = {
+        userSearch_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        },
+        healthAlerts_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        },
+        serviceRequests_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
+        }
+        // 추가할 그리드는 여기에 계속 추가
+    };
 
     function fnClear() {
         $('#searchBgnDe').val('');
@@ -389,9 +446,20 @@
                     }},
                 { label: 'Group', name: 'grpNm', width:130, sortable : true},
                 { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
-                { label: 'Details', name: 'userId', width:80, sortable : false, formatter : function(cellValue, options, rowObject){
-                        return `<button type="button" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
-                    }},
+                {
+                    label: 'Details',
+                    name: 'details',
+                    width: 80,
+                    sortable: false,
+                    formatter: function(cellValue, options, rowObject) {
+                        return `
+                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
+                                <span>detail</span>
+                                <img src="/resources/images/arrow-right-nomal.svg" class="icon18">
+                            </button>
+                        `;
+                    }
+                }
             ],
             page: 1,
             autowidth: true,
@@ -492,9 +560,5 @@
         if(e.keyCode == '13'){
             fnSearch();
         }
-    });
-
-    $(document).on('click', '.detail-btn', function () {
-        showPreparationPopup();
     });
 </script>
