@@ -43,6 +43,12 @@
     .calendar-icon {
         z-index: 1;
     }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 </style>
 
 <div class="second-tap-menu mt-12px">
@@ -161,12 +167,13 @@
                     <div class="input-label03 mb-4px">
                         1. Health Checkup Date
                     </div>
-                    <div class="input-img-wrap">
-                        <input type="text" class="input-txt02" placeholder="Health Checkup Date"
-                               oninput="limitLength(this, 30);" id="inputCheckup_chckDt">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
+                    <div class="p-r">
+                        <input type="text" class="date-input input-txt02" id="inputCheckup_chckDt"
+                               placeholder="Health Checkup Date" readonly>
+                        <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                             onclick="openCalendar('chkup_datePicker1')" alt="달력 아이콘">
+                        <input type="date" id="chkup_datePicker1" class="hidden-date"
+                               onchange="updateDate('chkup_datePicker1', 'inputCheckup_chckDt')">
                     </div>
                 </div>
             </div>
@@ -175,12 +182,13 @@
                     <div class="input-label03 mb-4px">
                         2. Date Of Birth
                     </div>
-                    <div class="input-img-wrap">
-                        <input type="text" class="input-txt02" placeholder="Date Of Birth"
-                               oninput="limitLength(this, 30);" id="inputCheckup_brthDt">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
+                    <div class="p-r">
+                        <input type="text" class="date-input input-txt02" id="inputCheckup_brthDt"
+                               placeholder="Date Of Birth" readonly>
+                        <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                             onclick="openCalendar('chkup_datePicker2')" alt="달력 아이콘">
+                        <input type="date" id="chkup_datePicker2" class="hidden-date"
+                               onchange="updateDate('chkup_datePicker2', 'inputCheckup_brthDt')">
                     </div>
                 </div>
             </div>
@@ -740,14 +748,14 @@
             tprtn  : $('#inputCheckup_tprtn').val(),
             blrbn  : $('#inputCheckup_blrbn').val(),
             alp    : $('#inputCheckup_alp').val(),
-            comment: $('#inputCheckup_comment').val()
+            comment: $('#inputCheckup_comment').val(),
+            locale: '<c:out value="${pageContext.request.locale.language}"/>'
         };
     }
 
     var validData;
-    $(document).ready(function() {
-        inputCheckup_fnClear();
 
+    function selectMainMaxValue(){
         $.ajax({
             type: 'POST',
             url: '${contextPath}/user/selectValidMinMax',
@@ -763,9 +771,207 @@
                 }
             }
         });
+    }
+
+    $(document).ready(function() {
+        inputCheckup_fnClear();
+        selectMainMaxValue();
     })
 
     function validation(){
+
+        if (validData == null || validData.length == 0) {
+            selectMainMaxValue();
+        }
+
+        //Height validation
+        if ($('#inputCheckup_hght').val() != null && $('#inputCheckup_hght').val() != "") {
+            if (Number($('#inputCheckup_hght').val()) < Number(validData[0].valid_min) ||
+                Number($('#inputCheckup_hght').val()) > Number(validData[0].valid_max)) {
+                $.alert("Height must be between " + validData[0].valid_min + " and " + validData[0].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Weight validation
+        if ($('#inputCheckup_wght').val() != null && $('#inputCheckup_wght').val() != "") {
+            if (Number($('#inputCheckup_wght').val()) < Number(validData[1].valid_min) ||
+                Number($('#inputCheckup_wght').val()) > Number(validData[1].valid_max)) {
+                $.alert("Weight must be between " + validData[1].valid_min + " and " + validData[1].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Waist Circumference validation
+        if ($('#inputCheckup_wst').val() != null && $('#inputCheckup_wst').val() != "") {
+            if (Number($('#inputCheckup_wst').val()) < Number(validData[2].valid_min) ||
+                Number($('#inputCheckup_wst').val()) > Number(validData[2].valid_max)) {
+                $.alert("Waist Circumference must be between " + validData[2].valid_min + " and " + validData[2].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Systolic Blood Pressure
+        if ($('#inputCheckup_sbp').val() != null && $('#inputCheckup_sbp').val() != "") {
+            if (Number($('#inputCheckup_sbp').val()) < Number(validData[3].valid_min) ||
+                Number($('#inputCheckup_sbp').val()) > Number(validData[3].valid_max)) {
+                $.alert("Systolic Blood Pressure must be between " + validData[3].valid_min + " and " + validData[3].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Diastolic Blood Pressure
+        if ($('#inputCheckup_dbp').val() != null && $('#inputCheckup_dbp').val() != "") {
+            if (Number($('#inputCheckup_dbp').val()) < Number(validData[4].valid_min) ||
+                Number($('#inputCheckup_dbp').val()) > Number(validData[4].valid_max)) {
+                $.alert("Diastolic Blood Pressure must be between " + validData[4].valid_min + " and " + validData[4].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Fasting Blood Sugar
+        if ($('#inputCheckup_fbs').val() != null && $('#inputCheckup_fbs').val() != "") {
+            if (Number($('#inputCheckup_fbs').val()) < Number(validData[19].valid_min) ||
+                Number($('#inputCheckup_fbs').val()) > Number(validData[19].valid_max)) {
+                $.alert("Fasting Blood Sugar must be between " + validData[19].valid_min + " and " + validData[19].valid_max + ".");
+                return false;
+            }
+        }
+
+        //HbA1C
+        if ($('#inputCheckup_hba1c').val() != null && $('#inputCheckup_hba1c').val() != "") {
+            if (Number($('#inputCheckup_hba1c').val()) < Number(validData[20].valid_min) ||
+                Number($('#inputCheckup_hba1c').val()) > Number(validData[20].valid_max)) {
+                $.alert("HbA1C must be between " + validData[20].valid_min + " and " + validData[20].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Total Cholesterol
+        if ($('#inputCheckup_tc').val() != null && $('#inputCheckup_tc').val() != "") {
+            if (Number($('#inputCheckup_tc').val()) < Number(validData[15].valid_min) ||
+                Number($('#inputCheckup_tc').val()) > Number(validData[15].valid_max)) {
+                $.alert("Total Cholesterol must be between " + validData[15].valid_min + " and " + validData[15].valid_max + ".");
+                return false;
+            }
+        }
+
+        //HDL-C
+        if ($('#inputCheckup_hdl').val() != null && $('#inputCheckup_hdl').val() != "") {
+            if (Number($('#inputCheckup_hdl').val()) < Number(validData[16].valid_min) ||
+                Number($('#inputCheckup_hdl').val()) > Number(validData[16].valid_max)) {
+                $.alert("HDL-C must be between " + validData[16].valid_min + " and " + validData[16].valid_max + ".");
+                return false;
+            }
+        }
+
+        //LDL-C
+        if ($('#inputCheckup_ldl').val() != null && $('#inputCheckup_ldl').val() != "") {
+            if (Number($('#inputCheckup_ldl').val()) < Number(validData[17].valid_min) ||
+                Number($('#inputCheckup_ldl').val()) > Number(validData[17].valid_max)) {
+                $.alert("LDL-C must be between " + validData[17].valid_min + " and " + validData[17].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Triglyceride
+        if ($('#inputCheckup_trgly').val() != null && $('#inputCheckup_trgly').val() != "") {
+            if (Number($('#inputCheckup_trgly').val()) < Number(validData[18].valid_min) ||
+                Number($('#inputCheckup_trgly').val()) > Number(validData[18].valid_max)) {
+                $.alert("Triglyceride must be between " + validData[18].valid_min + " and " + validData[18].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Serum Creatinine
+        if ($('#inputCheckup_sc').val() != null && $('#inputCheckup_sc').val() != "") {
+            if (Number($('#inputCheckup_sc').val()) < Number(validData[5].valid_min) ||
+                Number($('#inputCheckup_sc').val()) > Number(validData[5].valid_max)) {
+                $.alert("Serum Creatinine must be between " + validData[5].valid_min + " and " + validData[5].valid_max + ".");
+                return false;
+            }
+        }
+
+        //GFR (Glomerular Filtration Rate)
+        if ($('#inputCheckup_gfr').val() != null && $('#inputCheckup_gfr').val() != "") {
+            if (Number($('#inputCheckup_gfr').val()) < Number(validData[6].valid_min) ||
+                Number($('#inputCheckup_gfr').val()) > Number(validData[6].valid_max)) {
+                $.alert("GFR(Glomerular Filtration Rate) must be between " + validData[6].valid_min + " and " + validData[6].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Uric Acid
+        if ($('#inputCheckup_urAcd').val() != null && $('#inputCheckup_urAcd').val() != "") {
+            if (Number($('#inputCheckup_urAcd').val()) < Number(validData[7].valid_min) ||
+                Number($('#inputCheckup_urAcd').val()) > Number(validData[7].valid_max)) {
+                $.alert("Uric Acid must be between " + validData[7].valid_min + " and " + validData[7].valid_max + ".");
+                return false;
+            }
+        }
+
+        //BUN
+        if ($('#inputCheckup_bun').val() != null && $('#inputCheckup_bun').val() != "") {
+            if (Number($('#inputCheckup_bun').val()) < Number(validData[8].valid_min) ||
+                Number($('#inputCheckup_bun').val()) > Number(validData[8].valid_max)) {
+                $.alert("BUN must be between " + validData[8].valid_min + " and " + validData[8].valid_max + ".");
+                return false;
+            }
+        }
+
+        //ALT
+        if ($('#inputCheckup_alt').val() != null && $('#inputCheckup_alt').val() != "") {
+            if (Number($('#inputCheckup_alt').val()) < Number(validData[10].valid_min) ||
+                Number($('#inputCheckup_alt').val()) > Number(validData[10].valid_max)) {
+                $.alert("ALT must be between " + validData[10].valid_min + " and " + validData[10].valid_max + ".");
+                return false;
+            }
+        }
+
+        //AST
+        if ($('#inputCheckup_ast').val() != null && $('#inputCheckup_ast').val() != "") {
+            if (Number($('#inputCheckup_ast').val()) < Number(validData[9].valid_min) ||
+                Number($('#inputCheckup_ast').val()) > Number(validData[9].valid_max)) {
+                $.alert("AST must be between " + validData[9].valid_min + " and " + validData[9].valid_max + ".");
+                return false;
+            }
+        }
+
+        //γ-GTP
+        if ($('#inputCheckup_gtp').val() != null && $('#inputCheckup_gtp').val() != "") {
+            if (Number($('#inputCheckup_gtp').val()) < Number(validData[11].valid_min) ||
+                Number($('#inputCheckup_gtp').val()) > Number(validData[11].valid_max)) {
+                $.alert("γ-GTP must be between " + validData[11].valid_min + " and " + validData[11].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Total Protein
+        if ($('#inputCheckup_tprtn').val() != null && $('#inputCheckup_tprtn').val() != "") {
+            if (Number($('#inputCheckup_tprtn').val()) < Number(validData[12].valid_min) ||
+                Number($('#inputCheckup_tprtn').val()) > Number(validData[12].valid_max)) {
+                $.alert("Total Protein must be between " + validData[12].valid_min + " and " + validData[12].valid_max + ".");
+                return false;
+            }
+        }
+
+        //Bilirubin
+        if ($('#inputCheckup_blrbn').val() != null && $('#inputCheckup_blrbn').val() != "") {
+            if (Number($('#inputCheckup_blrbn').val()) < Number(validData[13].valid_min) ||
+                Number($('#inputCheckup_blrbn').val()) > Number(validData[13].valid_max)) {
+                $.alert("Bilirubin must be between " + validData[13].valid_min + " and " + validData[13].valid_max + ".");
+                return false;
+            }
+        }
+
+        //ALP(Alkaline Phosphatase)
+        if ($('#inputCheckup_alp').val() != null && $('#inputCheckup_alp').val() != "") {
+            if (Number($('#inputCheckup_alp').val()) < Number(validData[14].valid_min) ||
+                Number($('#inputCheckup_alp').val()) > Number(validData[14].valid_max)) {
+                $.alert("ALP(Alkaline Phosphatase) must be between " + validData[14].valid_min + " and " + validData[14].valid_max + ".");
+                return false;
+            }
+        }
         return true;
     }
 
@@ -827,28 +1033,14 @@
         }
     });
 
-/* 실시간으로 모든 필드의 입력 값이 있으면 버튼을 바꿈
-$(document).on('click', '#inputCheckup_dataFields input', function() {
-    let isAllFilled = true;
-
-    $('#inputCheckup_dataFields input').each(function () {
-        if (!$(this).val()?.trim()) {
-            isAllFilled = false;
-            return false;
-        }
-    });
-
-    if (isAllFilled) {
-        $('#checkupsave')
-            .removeClass('gray-submit-btn')
-            .addClass('point-submit-btn')
-            .prop('disabled', false);
-    } else {
-        $('#checkupsave')
-            .removeClass('point-submit-btn')
-            .addClass('gray-submit-btn')
-            .prop('disabled', true);
+    // 날짜 선택 시, 표시할 입력 필드 업데이트
+    function updateDate(dateInputId, displayId) {
+        const dateValue = document.getElementById(dateInputId).value;
+        document.getElementById(displayId).value = dateValue;
     }
-});
-*/
+
+    // 달력 아이콘 클릭 시, date input 활성화
+    function openCalendar(dateInputId) {
+        document.getElementById(dateInputId).showPicker();
+    }
 </script>

@@ -109,7 +109,7 @@ public interface UserService {
 	/**
 	 * 사용자 삭제
 	 * 
-	 * @param list
+	 * @param user
 	 */
 	public void deleteUserList(UserVO user);
 

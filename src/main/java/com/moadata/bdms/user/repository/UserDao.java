@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.CheckupVO;
 import org.springframework.stereotype.Repository;
@@ -172,119 +173,169 @@ public class UserDao extends BaseAbstractDao {
 		String reportId = "";
 
 		Map<String, Object> tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "11000000"); //1
-		tmpmap.put("msmt", checkupVO.getHght());
-		checkUpList.add(tmpmap);
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "12000000"); //2
-		tmpmap.put("msmt", checkupVO.getWght());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getHght().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "11000000"); //1
+			tmpmap.put("msmt", checkupVO.getHght());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "13000000"); //3
-		tmpmap.put("msmt", checkupVO.getWst());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getWght().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "12000000"); //2
+			tmpmap.put("msmt", checkupVO.getWght());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "17100000"); //4
-		tmpmap.put("msmt", checkupVO.getSbp());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getWst().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "13000000"); //3
+			tmpmap.put("msmt", checkupVO.getWst());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "17200000");  //5
-		tmpmap.put("msmt", checkupVO.getDbp());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getSbp().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "17100000"); //4
+			tmpmap.put("msmt", checkupVO.getSbp());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "52000000");  //6
-		tmpmap.put("msmt", checkupVO.getFbs());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getDbp().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "17200000");  //5
+			tmpmap.put("msmt", checkupVO.getDbp());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "53000000");  //7
-		tmpmap.put("msmt", checkupVO.getHba1c());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getFbs().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "52000000");  //6
+			tmpmap.put("msmt", checkupVO.getFbs());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "41000000");  //8
-		tmpmap.put("msmt", checkupVO.getTc());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getHba1c().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "53000000");  //7
+			tmpmap.put("msmt", checkupVO.getHba1c());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "42000000");  //9
-		tmpmap.put("msmt", checkupVO.getHdl());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getTc().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "41000000");  //8
+			tmpmap.put("msmt", checkupVO.getTc());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "43000000");  //10
-		tmpmap.put("msmt", checkupVO.getLdl());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getHdl().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "42000000");  //9
+			tmpmap.put("msmt", checkupVO.getHdl());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "44000000");  //11
-		tmpmap.put("msmt", checkupVO.getTrgly());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getLdl().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "43000000");  //10
+			tmpmap.put("msmt", checkupVO.getLdl());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "22000000");  //12
-		tmpmap.put("msmt", checkupVO.getSc());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getTrgly().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "44000000");  //11
+			tmpmap.put("msmt", checkupVO.getTrgly());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "23000000");  //13
-		tmpmap.put("msmt", checkupVO.getGfr());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getSc().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "22000000");  //12
+			tmpmap.put("msmt", checkupVO.getSc());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "24000000");  //14
-		tmpmap.put("msmt", checkupVO.getUrAcd());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getGfr().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "23000000");  //13
+			tmpmap.put("msmt", checkupVO.getGfr());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "25000000");  //15
-		tmpmap.put("msmt", checkupVO.getBun());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getUrAcd().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "24000000");  //14
+			tmpmap.put("msmt", checkupVO.getUrAcd());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "32000000");  //16
-		tmpmap.put("msmt", checkupVO.getAlt());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getBun().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "25000000");  //15
+			tmpmap.put("msmt", checkupVO.getBun());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "31000000");  //17
-		tmpmap.put("msmt", checkupVO.getAst());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getAlt().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "32000000");  //16
+			tmpmap.put("msmt", checkupVO.getAlt());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "33000000");  //18
-		tmpmap.put("msmt", checkupVO.getGtp());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getAst().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "31000000");  //17
+			tmpmap.put("msmt", checkupVO.getAst());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "34000000");  //19
-		tmpmap.put("msmt", checkupVO.getTprtn());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getGtp().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "33000000");  //18
+			tmpmap.put("msmt", checkupVO.getGtp());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "35000000");  //20
-		tmpmap.put("msmt", checkupVO.getBlrbn());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getTprtn().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "34000000");  //19
+			tmpmap.put("msmt", checkupVO.getTprtn());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "36000000");  //21
-		tmpmap.put("msmt", checkupVO.getAlp());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getBlrbn().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "35000000");  //20
+			tmpmap.put("msmt", checkupVO.getBlrbn());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "91000000");  //checkup result
-		tmpmap.put("msmt", checkupVO.getChckResult());
-		checkUpList.add(tmpmap);
+		if (!checkupVO.getAlp().equals("")) {
+			tmpmap = new HashMap<>();
+			tmpmap.put("metaDataCode", "36000000");  //21
+			tmpmap.put("msmt", checkupVO.getAlp());
+			checkUpList.add(tmpmap);
+		}
 
-		tmpmap = new HashMap<>();
-		tmpmap.put("metaDataCode", "92000000");  //Comment
-		tmpmap.put("msmt", checkupVO.getComment());
-		checkUpList.add(tmpmap);
+		if (checkupVO.getLocale().indexOf("ko") != -1) {
+			if (!checkupVO.getComment().equals("")) {
+				tmpmap = new HashMap<>();
+				tmpmap.put("metaDataCode", "91000001");  //Comment 한글일 경우  "91000001", 영문일 경우 "91000002"
+				tmpmap.put("cmmt", checkupVO.getComment());
+				checkUpList.add(tmpmap);
+			}
+		} else {
+			if (!checkupVO.getComment().equals("")) {
+				tmpmap = new HashMap<>();
+				tmpmap.put("metaDataCode", "91000002");  //Comment 한글일 경우  "91000001", 영문일 경우 "91000002"
+				tmpmap.put("cmmt", checkupVO.getComment());
+				checkUpList.add(tmpmap);
+			}
+		}
 
 		if (checkupVO.getWght() != null && checkupVO.getHght() != null && isNumberic(checkupVO.getWght()) && isNumberic(checkupVO.getHght())) {
 			tmpmap = new HashMap<>();
@@ -296,13 +347,26 @@ public class UserDao extends BaseAbstractDao {
 		reportId = (String)selectOne("user.selectMaxSeqReportItem");
 		for(int i=0; i < checkUpList.size(); i++) {
 			checkUpList.get(i).put("reportId", reportId);
-			checkUpList.get(i).put("cmmt", "");
 			checkUpList.get(i).put("usrId", checkupVO.getUserId());
 		}
 
 		checkupVO.setReportId(reportId);
 		// 입력창 필드 해결 이후 추가 예정
-//		update("user.updateWlkMy", checkupVO);
+
+		String brthDtStr = checkupVO.getBrthDt();
+		String brthYear = brthDtStr.substring(0,4);
+		String brthDt = "";
+
+		try {
+			brthDt = EncryptUtil.encryptText(brthDtStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		checkupVO.setBrthYear(brthYear);
+		checkupVO.setBrthDt(brthDt);
+
+		update("user.updateWlkMy", checkupVO);
 		insert("user.insertChckReport", checkupVO);
 		insert("user.insertCheckUp", checkUpList);
 		insert("user.insertMyBody", checkupVO);

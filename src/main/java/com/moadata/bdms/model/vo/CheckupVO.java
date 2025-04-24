@@ -57,4 +57,6 @@ public class CheckupVO extends BaseSearchObject {
     private String   blrbn;                       // Bilirubin                    간수치 - 총빌리루빈
     private String   alp;                         // ALP                          간수치 - ALP
     private String   comment;                     // Comment
+    private String   locale;                      // 언어 locale
+    private String   brthYear;                    // 출생년
 }

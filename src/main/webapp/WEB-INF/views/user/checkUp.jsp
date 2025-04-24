@@ -751,7 +751,8 @@
             tprtn  : $('#inputCheckup_tprtn').val(),
             blrbn  : $('#inputCheckup_blrbn').val(),
             alp    : $('#inputCheckup_alp').val(),
-            comment: $('#inputCheckup_comment').val()
+            comment: $('#inputCheckup_comment').val(),
+            locale : 'ko'
         };
     }
 
@@ -785,6 +786,7 @@
     });
 
     $(document).on('click','#checkupsave', function(){
+
         $.confirm({
             title: '',
             content: 'Would you like to save an checkup data?',
