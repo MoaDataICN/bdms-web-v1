@@ -565,3 +565,293 @@
 </div>
 
 <div class="space-30"></div>
+
+<script type="text/javascript">
+    function downform(){
+        let _url = "${contextPath}/user/downform";
+        let _jsonData = {
+            name: 'moadata',
+            url: 'www.moadata.co.kr'
+        };
+
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let _data = this.response;
+                let _blob = new Blob([_data], {type : 'text/csv'});
+
+                let link = document.createElement('a');
+                link.href = window.URL.createObjectURL(_blob);
+                link.download = 'twalk_downData.csv';
+                link.click();
+            };
+        };
+
+        xhr.open('POST', _url);
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(_jsonData);
+    }
+
+    function initDropzone() {
+        if ($("#dropzone-file").length === 0) {
+            console.warn("#dropzone-file 요소 없음. Dropzone 초기화 생략.");
+            return;
+        }
+
+        // 이미 Dropzone이 초기화되어 있다면 중복 방지
+        if (Dropzone.instances.length > 0) {
+            Dropzone.instances.forEach(instance => instance.destroy());
+        }
+
+        let dropzoneFile = new Dropzone("#dropzone-file",{
+            url:'${contextPath}/user/getChckUpExcelImport',
+            maxFilesize:5000000,
+            parallelUploads:2,     //한번에 올릴 파일 수
+            //addRemoveLinks:  true, //업로드 후 삭제 버튼
+            timeout:300000,	     //커넥션 타임아웃 설정 -> 데이터가 클 경우 꼭 넉넉히 설정해주자
+            maxFiles:5,            //업로드 할 최대 파일 수
+            paramName:"file",      //파라미터로 넘길 변수명 default는 file
+            acceptedFiles: ".csv,.CSV",   // 허용 확장자
+            autoQueue:true,	     //드래그 드랍 후 바로 서버로 전송
+            createImageThumbnails:true,	//파일 업로드 썸네일 생성
+            uploadMultiple:true,	 //멀티파일 업로드
+            dictRemoveFile:'remove',	    //삭제 버튼의 텍스트 설정
+            //dictDefaultMessage:'PREVIEW', //미리보기 텍스트 설정
+            accept:function(file,done){
+                done();
+            },
+            init:function(){
+                this.on('success',function(file,responseText){
+                    console.log("responseText Start : ");
+                    console.log(responseText);
+                    console.log("responseText End.");
+
+                    //제목의 길이 체크
+                    let tlen = responseText.resultList[0].length;
+                    let vlen = responseText.resultList[1].length;
+
+                    if (tlen == vlen){
+                        for(let k = 0; k < vlen; k++){
+                            let resval = responseText.resultList[0][k]+"";
+                            if (resval.trim().indexOf("hght") >= 0){$("#inputCheckup_hght").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("wght") >= 0){$("#inputCheckup_wght").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("wst")>= 0){$("#inputCheckup_wst").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("sbp")>= 0){$("#inputCheckup_sbp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("dbp")>= 0){$("#inputCheckup_dbp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("fbs") >= 0){$("#inputCheckup_fbs").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("hba1c")>= 0){$("#inputCheckup_hba1c").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("tc") >= 0){$("#inputCheckup_tc").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("hdl") >= 0){$("#inputCheckup_hdl").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("ldl")>= 0){$("#inputCheckup_ldl").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("trgly")>= 0){$("#inputCheckup_trgly").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("sc")>= 0){$("#inputCheckup_sc").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("gfr") >= 0){$("#inputCheckup_gfr").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("urAcd")>= 0){$("#inputCheckup_urAcd").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("bun")>= 0){$("#inputCheckup_bun").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("alt") >= 0){$("#inputCheckup_alt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("ast")>= 0){$("#inputCheckup_ast").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("gtp") >= 0){$("#inputCheckup_gtp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("tprtn")>= 0){$("#inputCheckup_tprtn").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("blrbn")>= 0){$("#inputCheckup_blrbn").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("alp")>= 0){$("#inputCheckup_alp").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("comment")>= 0){$("#inputCheckup_comment").val(responseText.resultList[1][k])}
+                            //기본정보
+                            if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#inputCheckup_chckType").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup result")>= 0){$("#inputCheckup_chckResult").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup center")>= 0){$("#inputCheckup_chckCt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Doctor")>= 0){$("#inputCheckup_chckDctr").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#inputCheckup_chckDt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Date Of Birth")>= 0){$("#inputCheckup_brthDt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Gender")>= 0){
+                                $("#inputCheckup_gender").val(responseText.resultList[1][k])
+                                if (responseText.resultList[1][k] == 'M'){
+                                    $('.sex-btn-f').removeClass('active');
+                                    $('.sex-btn').addClass('active');
+                                } else {
+                                    $('.sex-btn-f').addClass('active');
+                                    $('.sex-btn').removeClass('active');
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Dropzone에 이미지가 추가되면 업로드 버튼 활성화
+                this.on("addedfile", function () {
+                });
+                this.on("removedfile", function(file) {
+                });
+                this.on("complete", function(file) {
+                });
+                this.on("dragover", function(e) {
+                });
+                this.on("drop", function(e) {
+                    console.log("count : " + this.getAcceptedFiles().length);
+                    if (this.getAcceptedFiles().length >= 1) {
+                        let files = this.getAcceptedFiles();
+                        this.removeFile(files[0]);
+                    }
+                });
+            }
+        });
+    }
+
+    function inputCheckup_fnClear() {
+        $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#inputCheckup_chckDctr").val('');
+        $("#inputCheckup_brthDt").val('');   $("#inputCheckup_gender").val('');     $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#inputCheckup_chckCt').val('');
+        $('#inputCheckup_hght').val('');     $('#inputCheckup_wght').val('');       $('#inputCheckup_wst').val('');    $('#inputCheckup_sbp').val('');    $('#inputCheckup_dbp').val('');
+        $('#inputCheckup_fbs').val('');      $('#inputCheckup_hba1c').val('');      $('#inputCheckup_tc').val('');     $('#inputCheckup_hdl').val('');    $('#inputCheckup_ldl').val('');
+        $('#inputCheckup_trgly').val('');    $('#inputCheckup_sc').val('');         $('#inputCheckup_gfr').val('');    $('#inputCheckup_urAcd').val('');  $('#inputCheckup_bun').val('');
+        $('#inputCheckup_alt').val('');      $('#inputCheckup_ast').val('');        $('#inputCheckup_gtp').val('');    $('#inputCheckup_tprtn').val('');  $('#inputCheckup_blrbn').val('');
+        $('#inputCheckup_alp').val('');      $('#inputCheckup_comment').val('');
+        $('.sex-btn-f').removeClass('active');
+        $('.sex-btn').removeClass('active');
+    }
+
+    function inputCheckup_setAddParam() {
+        return {
+            userId : userDtlGeneral.userId,
+            chckType : $("#inputCheckup_chckType").val(),
+            chckResult : $("#inputCheckup_chckResult").val(),
+            chckCt : $("#inputCheckup_chckCt").val(),
+            chckDctr : $("#inputCheckup_chckDctr").val(),
+            chckDt : $("#inputCheckup_chckDt").val(),
+            brthDt : $("#inputCheckup_brthDt").val(),
+            gender : $("#inputCheckup_gender").val(),
+            chckDt : $('#inputCheckup_chckDt').val(),
+            brthDt : $('#inputCheckup_brthDt').val(),
+            gender : $('#inputCheckup_gender').val(),
+            hght   : $('#inputCheckup_hght').val(),
+            wght   : $('#inputCheckup_wght').val(),
+            wst    : $('#inputCheckup_wst').val(),
+            sbp    : $('#inputCheckup_sbp').val(),
+            dbp    : $('#inputCheckup_dbp').val(),
+            fbs    : $('#inputCheckup_fbs').val(),
+            hba1c  : $('#inputCheckup_hba1c').val(),
+            tc     : $('#inputCheckup_tc').val(),
+            hdl    : $('#inputCheckup_hdl').val(),
+            ldl    : $('#inputCheckup_ldl').val(),
+            trgly  : $('#inputCheckup_trgly').val(),
+            sc     : $('#inputCheckup_sc').val(),
+            gfr    : $('#inputCheckup_gfr').val(),
+            urAcd  : $('#inputCheckup_urAcd').val(),
+            bun    : $('#inputCheckup_bun').val(),
+            alt    : $('#inputCheckup_alt').val(),
+            ast    : $('#inputCheckup_ast').val(),
+            gtp    : $('#inputCheckup_gtp').val(),
+            tprtn  : $('#inputCheckup_tprtn').val(),
+            blrbn  : $('#inputCheckup_blrbn').val(),
+            alp    : $('#inputCheckup_alp').val(),
+            comment: $('#inputCheckup_comment').val()
+        };
+    }
+
+    var validData;
+    $(document).ready(function() {
+        inputCheckup_fnClear();
+
+        $.ajax({
+            type: 'POST',
+            url: '${contextPath}/user/selectValidMinMax',
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                if(data.isError){
+                    $.alert(data.message);
+                    console.log('ERROR', data.message);
+                }else{
+                    console.log('SUCCESS', data.row);
+                    validData = data.row;
+                }
+            }
+        });
+    })
+
+    function validation(){
+        return true;
+    }
+
+    $(document).on('click','#checkupreset', function(){
+        inputCheckup_fnClear();
+    });
+
+    $(document).on('click','#checkupsave', function(){
+        $.confirm({
+            title: '',
+            content: 'Would you like to save an checkup data?',
+            buttons: {
+                OK: function () {
+                    if (validation()) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '${contextPath}/user/checkupAdd',
+                            data: inputCheckup_setAddParam(),
+                            dataType: 'json',
+                            success: function(data) {
+                                if(data.isError){
+                                    $.alert(data.message);
+                                    console.log('ERROR', data.message);
+                                }else{
+                                    inputCheckup_fnClear();
+                                    $.alert(data.message);
+                                }
+                            }
+                        });
+                    }
+                },
+                Cancel: function () {
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.sex-btn-f', function() {
+        if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            $("#inputCheckup_gender").val('M');
+            $('.sex-btn').addClass('active');
+        } else {
+            $(this).addClass('active');
+            $("#inputCheckup_gender").val('F');
+            $('.sex-btn').removeClass('active');
+        }
+    });
+
+    $(document).on('click', '.sex-btn', function() {
+        if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            $("#inputCheckup_gender").val('F');
+            $('.sex-btn-f').addClass('active');
+        } else {
+            $(this).addClass('active');
+            $("#inputCheckup_gender").val('M');
+            $('.sex-btn-f').removeClass('active');
+        }
+    });
+
+/* 실시간으로 모든 필드의 입력 값이 있으면 버튼을 바꿈
+$(document).on('click', '#inputCheckup_dataFields input', function() {
+    let isAllFilled = true;
+
+    $('#inputCheckup_dataFields input').each(function () {
+        if (!$(this).val()?.trim()) {
+            isAllFilled = false;
+            return false;
+        }
+    });
+
+    if (isAllFilled) {
+        $('#checkupsave')
+            .removeClass('gray-submit-btn')
+            .addClass('point-submit-btn')
+            .prop('disabled', false);
+    } else {
+        $('#checkupsave')
+            .removeClass('point-submit-btn')
+            .addClass('gray-submit-btn')
+            .prop('disabled', true);
+    }
+});
+*/
+</script>

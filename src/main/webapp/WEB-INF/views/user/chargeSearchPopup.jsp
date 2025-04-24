@@ -102,7 +102,7 @@
 </style>
 
 <!-- 스크립트 -->
-<script>
+<script type="text/javascript">
     // 항목 클릭 시 콘솔 출력
     $(document).on('click', '.incharge-item', function () {
         const id = $(this).data('id');

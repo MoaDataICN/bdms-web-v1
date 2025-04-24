@@ -9,6 +9,10 @@
                 <spring:message code='resetPwStartPopup.title'/>
             </div>
 
+            <div class="popup-text">
+                 <spring:message code='resetPwStartPopup.content'/>
+             </div>
+
             <button class="popup-close"><img src="/resources/images/close-icon.svg" class="icon22"></button>
 
             <div class="popup-footer mt-16px">
