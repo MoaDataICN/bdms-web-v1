@@ -339,7 +339,7 @@
         </div>
 
         <!-- userDetail 탭 삽입 영역 -->
-        <div class="slide-popup-container">
+        <div class="slide-popup-container" data-uid="">
             <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
         </div>
 
@@ -388,7 +388,6 @@
         // 추가할 그리드는 여기에 계속 추가
     };
 
-    let userId = "";
     let inChargeId = "";
     let inChargeNm = "";
 

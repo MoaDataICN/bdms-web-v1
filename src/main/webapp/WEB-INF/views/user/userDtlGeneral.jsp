@@ -91,6 +91,12 @@
                     <%-- GRP_LV 1 : 담당자 변경 가능 --%>
                     <c:when test="${grpLv == 1}">
                         <div class="dropdown">
+                            <button class="dropdown-search" id="general_inChargeNm">
+                                ${userDtlGeneral.inChargeNm}
+                            </button>
+                        </div>
+                        <%--
+                        <div class="dropdown">
                             <button class="dropdown-search" id="general_inChargeNmDropdown">
                                  <c:choose>
                                     <c:when test="${not empty userDtlGeneral.inChargeNm}">
@@ -110,11 +116,12 @@
                                 </c:forEach>
                             </div>
                         </div>
+                        --%>
                     </c:when>
                     <%-- GRP_LV 2 : 담당자 열람 가능 --%>
                     <c:otherwise>
                         <div class="dropdown">
-                            <button class="dropdown-search readonly-dropdown" id="general_inChargeNmDropdown">
+                            <button class="dropdown-search readonly-dropdown" id="general_inChargeNm">
                                 ${userDtlGeneral.inChargeNm}
                             </button>
                         </div>
@@ -317,6 +324,10 @@
     </div>
 </div>
 
+<!-- 팝업 삽입 영역 -->
+<div class="charge-search-popup-general-container">
+</div>
+
 <div class="space-30"></div>
 
 <script type="text/javascript">
@@ -331,6 +342,7 @@
             emailId: $("#general_emailId").val() || "-",
             mobile: $("#general_mobile").val() || "",
             userId: $("#general_userId").val() || "-",
+            inChargeNm: $('#general_inChargeNm').text().trim() || "-",
             brthDt: $("#general_brthDt").val() || "",
             height: $("#general_height").val() || "",
             registDt: $("#general_registDt").val() || "-",
@@ -344,9 +356,11 @@
             sx: $("#general_sxDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim() || userDtlSlide_messages.select,
+            /*
             inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim() || userDtlSlide_messages.select,
+            */
             grpTp: $("#general_grpTpDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim() || userDtlSlide_messages.select,
@@ -538,6 +552,7 @@
         $("#general_emailId").val(userDtlGeneral.emailId);
         $("#general_mobile").val(userDtlGeneral.mobile);
         $("#general_userId").val(userDtlGeneral.userId);
+        $("#general_inChargeNm").text(userDtlGeneral.inChargeNm);
         $("#general_brthDt").val(userDtlGeneral.brthDt);
         $("#general_height").val(userDtlGeneral.height);
         $("#general_registDt").val(userDtlGeneral.registDt);
@@ -549,13 +564,21 @@
 
         // 드롭다운 복원
         resetDropdownText("general_sxDropdown", userDtlGeneral.sx || userDtlSlide_messages.select);
-        resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userDtlSlide_messages.select);
+        //resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userDtlSlide_messages.select);
         resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userDtlSlide_messages.select);
         resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userDtlSlide_messages.select);
+
+        //general_checkDataChanged();
     }
 
-    let calculatedWdDt = "";  // 변경 될 삭제 예정일
-    let calculatedWdYn = "";  // 변경 될 탈퇴 상태
+    // 최초 한 번만 선언되도록 if로 감싸기
+    if (typeof calculatedWdDt === 'undefined') {  // 변경 될 삭제 예정일
+        var calculatedWdDt = "";
+    }
+    // 최초 한 번만 선언되도록 if로 감싸기
+    if (typeof calculatedWdYn === 'undefined') {  // 변경 될 탈퇴 상태
+        var calculatedWdYn = "";
+    }
 
     function updateDeletionDateInfo() {
         let wdYn = $("#general_statusDropdown").contents().filter(function () {
@@ -638,18 +661,21 @@
     // 변경사항 확인
     function general_checkDataChanged() {
         let editedValues = {
-            mobile: $('#general_mobile').val()?.trim() || '',
-            brthDt: $('#general_brthDt').val()?.trim() || '',
-            height: $('#general_height').val()?.trim() || '',
-            weight: $('#general_weight').val()?.trim() || '',
-            addr: $('#general_addr').val()?.trim() || '',
-            mmo: $('#general_mmo').val()?.trim() || '',
+            mobile: $("#general_mobile").val()?.trim() || '',
+            inChargeNm : $("#general_inChargeNm").text().trim() || '',
+            brthDt: $("#general_brthDt").val()?.trim() || '',
+            height: $("#general_height").val()?.trim() || '',
+            weight: $("#general_weight").val()?.trim() || '',
+            addr: $("#general_addr").val()?.trim() || '',
+            mmo: $("#general_mmo").val()?.trim() || '',
             sx: $("#general_sxDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim(),
+            /*
             inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim(),
+            */
             grpTp: $("#general_grpTpDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim(),
@@ -677,6 +703,14 @@
         let isChanged = Object.keys(editedValues).some(key => {
             let initialValue = userDtlGeneral[key] ? String(userDtlGeneral[key]).trim() : '';
             let currentValue = editedValues[key] || '';
+
+            // inChargeNm은 버튼 안의 텍스트와 비교
+            if (key === 'inChargeNm') {
+                const inChargeText = $('#general_inChargeNm').text().trim();
+
+                return inChargeText !== initialValue;
+            }
+
             return currentValue !== initialValue;
         });
 
@@ -707,9 +741,12 @@
                 if (text === userDtlSlide_messages.m) return "M";
                 return "";
             })(),
+            /*
             inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim() || "",
+            */
+            inChargeNm: $('#general_inChargeNm').text().trim() || "",
             brthDt: $("#general_brthDt").val()?.trim() || "",
             grpTp: $("#general_grpTpDropdown").contents().filter(function () {
                 return this.nodeType === 3;
@@ -725,6 +762,13 @@
             userId: $("#general_userId").val()?.trim() || ""
         };
     }
+
+    // 담당자명 팝업 열기
+    $(document).on('click', '#general_inChargeNm', function () {
+        $(".charge-search-popup-general-container").load("/user/chargeSearchOnSlidePopup", function () {
+            $('#chargeSearchOnSlidePopup').fadeIn();
+        });
+    });
 
     // general_saveChangesBtn : 사용자 정보 변경 요청 버튼
     $(document).on("click", "#general_saveChangesBtn", function () {
@@ -810,7 +854,7 @@
         .catch(error => {
             $.confirm({
                 title: 'Error',
-                content: message || 'A network error has occurred.',
+                content: error.message || 'A network error has occurred.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {
@@ -865,7 +909,7 @@
         .catch(error => {
             $.confirm({
                 title: 'Error',
-                content: message || 'An error occurred while updating user information.',
+                content: error.message || 'An error occurred while updating user information.',
                 type: 'red',
                 typeAnimated: true,
                 buttons: {

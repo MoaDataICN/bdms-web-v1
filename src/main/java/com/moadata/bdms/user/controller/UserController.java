@@ -440,7 +440,7 @@ public class UserController extends BaseController {
 		System.out.println("grpLv : " + grpLv);
 
 		UserDtlGeneralVO userDtlGeneralVO = userService.selectUserDtlGeneral(userId);  // 사용자 조회
-		System.out.println(userService.selectUserDtlGeneral(userId).toString());
+		System.out.println(userDtlGeneralVO.getUserId());
 
 //		model.addAttribute("grpLv", "2");  // 테스트용
 		model.addAttribute("grpLv", grpLv);  // 원래 코드
@@ -450,23 +450,6 @@ public class UserController extends BaseController {
 		switch (tab) {
             case "general":
                 System.out.println("tab : general");
-
-				// GRP_LV가 '1'인 경우만 전체 담당자명 조회
-                List<UserSearchDTO> inChargeNmList = null;
-
-				// 최상위 관리자인 경우
-				if (grpLv != null && grpLv.equals("1")) {  // 테스트용
-					inChargeNmList = userService.selectAllInChargeNm(); // 테스트용
-
-                    if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
-						for (UserSearchDTO inChargeNm : inChargeNmList) {
-//							System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
-							System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
-						}
-					}
-                }
-
-                model.addAttribute("inChargeNmList", inChargeNmList);
 
                 return "user/userDtlGeneral";
             case "health-alerts":
@@ -557,6 +540,7 @@ public class UserController extends BaseController {
 
 			if (encryptedInput.equals(actualPassword)) {
 				isMatch = true;
+				response.put("message", "비밀번호가 맞았습니다.");
 			} else {
 				response.put("status", "fail");
 				response.put("message", "비밀번호가 틀렸습니다.");
@@ -660,6 +644,22 @@ public class UserController extends BaseController {
 		model.addAttribute("inChargeNmList", inChargeNmList);
 
 		return "user/chargeSearchPopup";
+	}
+
+	@RequestMapping(value = "/chargeSearchOnSlidePopup", method = RequestMethod.GET)
+	public String chargeSearchOnSlidePopup(Model model) {
+		List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
+
+		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
+			for (UserSearchDTO inChargeNm : inChargeNmList) {
+				System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
+				System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
+			}
+		}
+
+		model.addAttribute("inChargeNmList", inChargeNmList);
+
+		return "user/chargeSearchOnSlidePopup";
 	}
 
 	@RequestMapping(value = "/resetPwStartPopup", method = RequestMethod.GET)

@@ -3,15 +3,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!-- 일반 팝업 Popup -->
-<div class="popup-wrapper" id="chargeSearchWrapper">
-    <div class="popup-modal" id="chargeSearchPopup">
+<div class="popup-wrapper" id="chargeSearchOnSlideWrapper">
+    <div class="popup-modal" id="chargeSearchOnSlidePopup">
         <div class="popup-show">
             <div class="popup-title mt-8px">
-                <spring:message code='chargeSearchPopup.title'/>
+                <spring:message code='chargeSearchOnSlidePopup.title'/>
             </div>
 
             <!-- 닫기 버튼 -->
-            <button class="popup-close" id="chargeSearch_closeBtn">
+            <button class="popup-close" id="chargeSearchOnSlide_closeBtn">
                 <img src="/resources/images/close-icon.svg" class="icon22">
             </button>
 
@@ -19,11 +19,11 @@
                 <!-- 검색창 -->
                 <div class="popup-search-bar d-flex">
                     <div class="row-input">
-                        <input type="text" class="input-txt02 mr-12px" id="inchargeSearchInput"
+                        <input type="text" class="input-txt02 mr-12px" id="inchargeSearchOnSlideInput"
                                placeholder="<spring:message code='common.placeholder.pleaseEnter'/>">
                     </div>
-                    <button type="button" id="chargeSearchBtn" class="point-submit-btn">
-                        <spring:message code='chargeSearchPopup.btn.search'/>
+                    <button type="button" id="chargeSearchOnSlideBtn" class="point-submit-btn">
+                        <spring:message code='chargeSearchOnSlidePopup.btn.search'/>
                     </button>
                 </div>
 
@@ -111,7 +111,7 @@
         console.log("✅ 선택된 담당자 ID:", id);
         console.log("✅ 선택된 담당자 이름:", name);
 
-        const $dropdown = $('#userSearch_inChargeNm');
+        const $dropdown = $('#general_inChargeNm');
         const $textNode = $dropdown.contents().filter(function () {
             return this.nodeType === 3; // 텍스트 노드만 필터링
         }).first();
@@ -125,21 +125,22 @@
         inChargeId = id;
         inChargeNm = name;
 
-        closeChargeSearchPopup();
+        general_checkDataChanged();
+        closechargeSearchOnSlidePopup();
     });
 
-    function closeChargeSearchPopup() {
-        $("#chargeSearchPopup").fadeOut();
-        $(".charge-search-popup-container").empty();
+    function closechargeSearchOnSlidePopup() {
+        $('#chargeSearchOnSlidePopup').fadeOut();
+        $(".charge-search-popup-general-container").empty();
     }
 
     // 닫기 버튼
-    $(document).on('click', '#chargeSearch_closeBtn', function () {
-        closeChargeSearchPopup();
+    $(document).on('click', '#chargeSearchOnSlide_closeBtn', function () {
+        closechargeSearchOnSlidePopup();
     });
 
     // 실시간 필터링 (결과 없을 경우 메시지 노출)
-    $(document).on('input', '#inchargeSearchInput', function () {
+    $(document).on('input', '#inchargeSearchOnSlideInput', function () {
         const keyword = $(this).val().toLowerCase();
         let matchCount = 0;
 
@@ -161,9 +162,9 @@
         }
     });
 
-    // chargeSearchBtn : 담당자 목록 갱신
-    $(document).on('click', '#chargeSearchBtn', function () {
-        let inChargeNm = $('#inchargeSearchInput').val().trim();
+    // chargeSearchOnSlideBtn : 담당자 목록 갱신
+    $(document).on('click', '#chargeSearchOnSlideBtn', function () {
+        let inChargeNm = $('#inchargeSearchOnSlideInput').val().trim();
 
         fetch('/user/selectInChargeNmList', {
             method: 'POST',
