@@ -229,7 +229,7 @@
             <div class="second-title">
                 Workforce Add
             </div>
-            <button type="button" id="closePopup" class="closePopup">
+            <button type="button" class="closePopup">
                 <img src="/resources/images/close-icon.svg" class="icon24">
             </button>
         </div>

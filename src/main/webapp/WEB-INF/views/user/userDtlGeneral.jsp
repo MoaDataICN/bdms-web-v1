@@ -404,7 +404,7 @@
     });
 
     // 비밀번호 재설정 팝업 외부 요소 클릭 시 팝업 닫기 처리
-    $(document).on("click", "#slideOverlay, .popup-close, .popup-modal #goBackBtn, .popup-modal #cancelBtn", function () {
+    $(document).on("click", ".popup-modal .popup-close, .popup-modal #goBackBtn, .popup-modal #cancelBtn", function () {
         if ($("#resetPwStartPopup").is(":visible")) {
             $("#resetPwStartPopup").fadeOut();
             $("#customerPopup .reset-pw-popup-container").empty();
@@ -423,39 +423,6 @@
         if ($("#checkPwConfirmPopup").is(":visible")) {
             $("#checkPwConfirmPopup").fadeOut();
             $(".check-pw-popup-container").empty();
-        }
-    });
-
-    // resetPwStartPopup / resetPwConfirmPopup 외부 요소 클릭 시 팝업 닫기
-    $(document).on("click", "#resetPwStartWrapper, #resetPwConfirmWrapper, #checkPwStartWrapper, #checkPwConfirmWrapper", function (e) {
-        const wrapperId = e.currentTarget.id;
-        let popupId;
-
-        switch (wrapperId) {
-            case "resetPwStartWrapper":
-                popupId = "resetPwStartPopup";
-                break;
-            case "resetPwConfirmWrapper":
-                popupId = "resetPwConfirmPopup";
-                break;
-            case "checkPwStartWrapper":
-                popupId = "checkPwStartPopup";
-                break;
-            case "checkPwConfirmWrapper":
-                popupId = "checkPwConfirmPopup";
-                break;
-            default:
-                return;
-        }
-
-        const popup = document.getElementById(popupId);
-
-        if (e.target.closest('.popup-show')) {
-            console.log("🚫 popup-show 내부 클릭 : 닫기 무시");
-            return;
-        } else {
-            console.log("✅ popup-show 외부 클릭 : 닫기 실행");
-            $('.popup-close').click();
         }
     });
 
