@@ -36,7 +36,12 @@ function closePopup() {
 }
 
 // 반투명 오버레이, 팝업 내 닫기 버튼 클릭 시 슬라이드 닫기
-$(document).on('click', '#slideOverlay, #closePopup', function () {
+$(document).on('click', '#slideOverlay, .closePopup', function () {
+    // popup-modal이 떠 있을 경우에는 slideOverlay를 클릭해도 안 닫힘
+    if ($('.popup-modal').is(':visible')) {
+        return;
+    }
+
     closePopup();
 });
 
@@ -92,6 +97,8 @@ $(document).on("click", ".detail-btn.open-slide-btn", function () {
 
     openPopup();
     loadUserDetailTab('general', userId);  // 기본 탭 로딩
+
+   console.log("1 : " + userId);
 });
 
 $(document).on('click', '.second-tap-btn', function () {
@@ -102,4 +109,6 @@ $(document).on('click', '.second-tap-btn', function () {
 
     let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
     loadUserDetailTab(tab, userId);
+
+    console.log("2 : " + userId);
 });

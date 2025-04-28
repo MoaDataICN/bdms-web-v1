@@ -4,7 +4,7 @@
 <mapper namespace="user">
 	<select id="selectUserSearch" parameterType="UserSearchDTO" resultType="UserSearchDTO">
 		SELECT SQL_CALC_FOUND_ROWS
-			req.USER_ID,
+			my.USER_ID,
 			MAX(my.REGIST_DT) AS REGIST_DT,
 			MAX(my.USER_NM) AS USER_NM,
 			MAX(my.MOBILE) AS MOBILE,
@@ -24,9 +24,9 @@
 			) AS IN_CHARGE_NM, my.IN_CHARGE_ID,
 			req.REQ_ID
 		FROM
-			t_walk.t_wlk_mng_req req
+			t_walk.t_wlk_my my
 		LEFT OUTER JOIN
-			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
+			t_walk.t_wlk_mng_req req ON req.USER_ID = my.USER_ID
 		LEFT OUTER JOIN
 			t_walk.t_wlk_mng_alt alt ON req.ALRM_ID = alt.ALRM_ID
 		INNER JOIN

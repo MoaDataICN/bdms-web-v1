@@ -287,7 +287,7 @@
             <div class="second-title">
                 <spring:message code='common.menu.userDetails'/>
             </div>
-            <button type="button" id="closePopup">
+            <button type="button" class="closePopup">
                 <img src="/resources/images/close-icon.svg" class="icon24">
             </button>
         </div>
