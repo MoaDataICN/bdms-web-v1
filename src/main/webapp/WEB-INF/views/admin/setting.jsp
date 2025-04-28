@@ -428,6 +428,7 @@
 				$("#sord").val(sortOrder);
 			},
 			ondblClickRow: function (rowid, iRow, iCol,e) {
+				$('.popup-title').html("Modify Admin Account");
 				const rowData = $("#adminList").getRowData(rowid);
 				var usrId = rowData.userId;
 				selectAdminRowId(usrId);
@@ -450,6 +451,56 @@
 	})
 
 	function validation(){
+		//Admin ID Validation
+		if ($('#adminid').val() != null && $('#adminid').val() != "") {
+			if ($('#adminid').val().length < 4) {
+				$.alert("Admin Id must have at least 4 characters.");
+				return false;
+			}
+		} else {
+			$.alert("Admin Id must have at least 4 characters.");
+			return false;
+		}
+		//Password Validation
+		if ($('#adminpw').val() != null && $('#adminpw').val() != "") {
+			if ($('#adminpw').val().length < 4) {
+				$.alert("Password must have at least 4 characters.");
+				return false;
+			}
+		} else {
+			$.alert("Password must have at least 4 characters.");
+			return false;
+		}
+        //Authority Type Validation
+		if ($('#au').val() == null || $('#au').val() == "") {
+			$.alert("You must select an Authority Type.");
+			return false;
+		}
+        //Admin Type Validation
+		if ($('#tpNm').val() == null || $('#tpNm').val() == "") {
+			$.alert("You must select an Admin Type.");
+			return false;
+		}
+        //Admin Name Validation
+		if ($('#adminnm').val() != null && $('#adminnm').val() != "") {
+			if ($('#adminnm').val().length < 2) {
+				$.alert("Admin Name must have at least 2 characters.");
+				return false;
+			}
+		} else {
+			$.alert("Admin Name must have at least 2 characters.");
+			return false;
+		}
+		//Admin Phone Validation
+		if ($('#adminphone').val() != null && $('#adminphone').val() != "") {
+			if ($('#adminphone').val().length < 4) {
+				$.alert("Admin Phone must have at least 4 characters.");
+				return false;
+			}
+		} else {
+			$.alert("Admin Phone must have at least 4 characters.");
+			return false;
+		}
 		return true;
 	}
 
@@ -555,6 +606,7 @@
 
 	function fnAdd() {
 		fnClear();
+		$('.popup-title').html("Create Admin Account");
 		$('#showType').val('A');
 		$('#add_popup').show();
 	}
@@ -576,7 +628,7 @@
 
 		rowNumsVal = cnt;
 		$('#gridDropdownBtn').text($(this).text());
-		$("#healthAlertList").setGridParam({ rowNum: cnt });
+		$("#adminList").setGridParam({ rowNum: cnt });
 		fnSearch();
 	})
 

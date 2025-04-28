@@ -165,11 +165,11 @@
             <div class="row-wrap02">
                 <div class="row-input f-x-c">
                     <div class="input-label03 mb-4px">
-                        1. Health Checkup Date
+                        1. Health Checkup Date(YYYY-MM-DD)
                     </div>
                     <div class="p-r">
                         <input type="text" class="date-input input-txt02" id="inputCheckup_chckDt"
-                               placeholder="Health Checkup Date" readonly>
+                               placeholder="Health Checkup Date" pattern="^[0-9_]" maxlength="10">
                         <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                              onclick="openCalendar('chkup_datePicker1')" alt="달력 아이콘">
                         <input type="date" id="chkup_datePicker1" class="hidden-date"
@@ -180,11 +180,11 @@
             <div class="row-wrap02">
                 <div class="row-input f-x-c">
                     <div class="input-label03 mb-4px">
-                        2. Date Of Birth
+                        2. Date Of Birth(YYYY-MM-DD)
                     </div>
                     <div class="p-r">
                         <input type="text" class="date-input input-txt02" id="inputCheckup_brthDt"
-                               placeholder="Date Of Birth" readonly>
+                               placeholder="Date Of Birth" pattern="^[0-9_]" maxlength="10">
                         <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                              onclick="openCalendar('chkup_datePicker2')" alt="달력 아이콘">
                         <input type="date" id="chkup_datePicker2" class="hidden-date"
@@ -783,6 +783,21 @@
         if (validData == null || validData.length == 0) {
             selectMainMaxValue();
         }
+        //DATE Format check
+        if (!isValidDateDate($('#inputCheckup_chckDt').val())){
+            $.alert("Health Checkup Date is invalid. Please input a valid date.(YYYY-MM-DD)");
+            return false;
+        }
+
+        if (!isValidDateDate($('#inputCheckup_brthDt').val())){
+            $.alert("Date Of Birth is invalid. Please input a valid date.(YYYY-MM-DD)");
+            return false;
+        }
+
+        if(!$(".sex-btn-f").hasClass('active') && !$(".sex-btn").hasClass('active')){
+            $.alert("Choice Gender type");
+            return false;
+        }
 
         //Height validation
         if ($('#inputCheckup_hght').val() != null && $('#inputCheckup_hght').val() != "") {
@@ -1042,5 +1057,28 @@
     // 달력 아이콘 클릭 시, date input 활성화
     function openCalendar(dateInputId) {
         document.getElementById(dateInputId).showPicker();
+    }
+
+    function isValidDateDate(yyyymmdd) {
+        var r = true;
+
+        try {
+            var date = [];
+            if (yyyymmdd.length == 8) {
+                date[0] = yyyymmdd.substring(0, 4);
+                date[1] = yyyymmdd.substring(4, 6);
+                date[2] = yyyymmdd.substring(6, 8);
+            } else if (yyyymmdd.length > 8) {
+                date = yyyymmdd.split("-");
+            }
+            var yyyy = parseInt(date[0], 10);
+            var mm = parseInt(date[1], 10);
+            var dd = parseInt(date[2], 10);
+            var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+            r = dateRegex.test(dd + '-' + mm + '-' + yyyy);
+        } catch (err) {
+            r = false;
+        }
+        return r;
     }
 </script>
