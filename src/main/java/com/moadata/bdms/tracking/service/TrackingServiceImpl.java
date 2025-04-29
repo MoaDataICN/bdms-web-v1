@@ -87,4 +87,12 @@ public class TrackingServiceImpl implements TrackingService {
 	public List<Map<String, Object>> selectTodayUserRequestCnt(Map<String, Object> param) {
 		return trackingDao.selectTodayUserRequestCnt(param);
 	}
+
+	public List<Map<String, Object>> selectUserRequestsAmount(Map<String, Object> param) {
+		return trackingDao.selectUserRequestsAmount(param);
+	}
+
+	public List<Map<String, Object>> selectHealthAlertsAmount(Map<String, Object> param) {
+		return trackingDao.selectHealthAlertsAmount(param);
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service("announcementService")
 public class AnnouncementServiceImpl implements AnnouncementService {
@@ -133,4 +134,19 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public List<AnnouncementVO> selectUserMessage(String userId) {
         return announcementDao.selectUserMessage(userId);
     }
+
+	@Override
+	public AnnouncementVO selectAnnouncementByAnnId(String annId) {
+		return announcementDao.selectAnnouncementByAnnId(annId);
+	}
+
+	@Override
+	public void updateAnnouncementSt(Map<String, Object> param) {
+		announcementDao.updateAnnouncementSt(param);
+	}
+	
+	@Override
+	public int selectUnreadAnnCnt(String userId) {
+		return announcementDao.selectUnreadAnnCnt(userId);
+	}
 }

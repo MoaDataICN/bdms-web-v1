@@ -22,9 +22,11 @@ public class AnnouncementVO extends BaseSearchObject {
 	private String tgTp;
 	private String grpNm;
 	private String rcpt;
+	private String rcptNm;
 	private String title;
 	private String cont;
 	private String sndId;
+	private String sndNm;
 	private String userId;
 	private String userNm;
 	private String readSt;

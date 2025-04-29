@@ -640,9 +640,28 @@
 </main>
 
 <script type="text/javascript">
+
     const today = moment().format('YYYY-MM-DD');
 
     <!-- Alert & Service Summation S -->
+    function calc(targetEl, val) {
+        $({ val : 0 }).animate({ val : val }, {
+            duration: 500,
+            step: function() {
+                var num = numberWithCommas(Math.floor(this.val));
+                $("#"+targetEl).text(num);
+            },
+            complete: function() {
+                var num = numberWithCommas(Math.floor(this.val));
+                $("#"+targetEl).text(num);
+            }
+        });
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
     var HA_total = Number($('#HA_0').text()) + Number($('#HA_1').text());
     var A_total = Number($('#A_0').text()) + Number($('#A_1').text());
     var N_total = Number($('#N_0').text()) + Number($('#N_1').text());
@@ -652,9 +671,11 @@
     calc('A_total', A_total);
     calc('N_total', N_total);
     calc('T_total', T_total);
+
     <!-- Alert & Service Summation E -->
 
     <!-- Chart S -->
+
     let healthAlerts = {
         'Activity': <c:out value="${
         (healthAlertCntMap.A['0'] != null ? healthAlertCntMap.A['0'] : 0) +
@@ -691,6 +712,14 @@
         (healthAlertCntMap.ST['1'] != null ? healthAlertCntMap.ST['1'] : 0)
     }" default="0" />
     };
+
+    let sum = 0;
+
+    function summation(arr) {
+        let sum = 0;
+        arr.forEach((num) => { sum += num; })
+        return sum
+    }
 
     let myCt = document.getElementById('myChart');
     let myChart = new Chart(myCt, {
@@ -982,9 +1011,4 @@
         $("#alertGrid").setGridParam({ rowNum: cnt });
         fnSearch();
     })
-
-    // logout
-    //$(document).on('click','.logout_icon30', function() {
-    //    window.location.href='<c:url value="/login/logout"/>'
-    //})
 </script>

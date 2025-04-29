@@ -41,7 +41,6 @@
 		from t_wlk_mng_req req
 			left outer join t_wlk_my my on req.user_id = my.user_id
 			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
-			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
 		where 1=1
 		<if test="inChargeIds != null and inChargeIds != ''">
 			-- 담당자에 맞는 조회
@@ -136,7 +135,6 @@
 		from t_wlk_mng_alt alt
 			left outer join t_wlk_my my on alt.user_id = my.user_id
 			inner join t_wlk_mng_user admin on admin.user_id = my.IN_CHARGE_ID
-			inner join t_wlk_mng_grp grp on grp.GRP_ID = admin.GRP_ID
 		where 1=1
 		<if test="inChargeIds != null and inChargeIds != ''">
 			-- 담당자에 맞는 조회
@@ -273,4 +271,36 @@
 		GROUP BY REQ_TP, REQ_STT
 		ORDER BY REQ_TP, REQ_STT
 	</select>
+
+    <select id="selectHealthAlertsAmount" parameterType="java.util.Map" resultType="java.util.Map">
+        select date(dct_dt) as 'dt', ALT_TP as 'tp', count(*) as 'cnt'
+        from t_wlk_mng_alt
+        where 1=1
+        <if test="startDt != null and startDt != ''">
+            AND DCT_DT <![CDATA[>=]]> #{startDt}
+        </if>
+        <if test="endDt != null and endDt != ''">
+            AND DCT_DT <![CDATA[<=]]> #{endDt}
+        </if>
+        <if test="tp != null and tp != ''">
+            AND ALT_TP IN (${tp})
+        </if>
+        group by date(dct_dt), alt_tp
+    </select>
+
+    <select id="selectUserRequestsAmount" parameterType="java.util.Map" resultType="java.util.Map">
+        select date(req_dt) as 'dt', REQ_TP as 'tp', count(*) as 'cnt'
+        from t_wlk_mng_req
+        where 1=1
+        <if test="startDt != null and startDt != ''">
+            AND REQ_DT <![CDATA[>=]]> #{startDt}
+        </if>
+        <if test="endDt != null and endDt != ''">
+            AND REQ_DT <![CDATA[<=]]> #{endDt}
+        </if>
+        <if test="tp != null and tp != ''">
+            AND REQ_TP IN (${tp})
+        </if>
+        group by date(req_dt), req_tp
+    </select>
 </mapper>

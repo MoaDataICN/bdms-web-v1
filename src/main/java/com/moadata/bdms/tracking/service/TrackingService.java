@@ -15,4 +15,7 @@ public interface TrackingService {
 
     public List<Map<String, Object>> selectTodayUserRequestCnt(Map<String, Object> param);
     public List<Map<String, Object>> selectTodayHealthAlertCnt(Map<String, Object> param);
+
+	public List<Map<String, Object>> selectUserRequestsAmount(Map<String, Object> param);
+	public List<Map<String, Object>> selectHealthAlertsAmount(Map<String, Object> param);
 }

@@ -16,8 +16,12 @@ function createCustomPager(grid) {
     let pagerHtml = '';
     let selectHtml = '';
 
-    pagerHtml += `<button class="page-num-box nav-btn" type="button" data-action="prev" data-grid="`+grid+`"+`+(currentPageGroup === 1 ? 'disabled' : '')+`>
+    pagerHtml += `<button class="page-num-box nav-btn" type="button" data-action="first" data-grid="`+grid+`"+`+(currentPageGroup === 1 ? 'disabled' : '')+`>
                             <img src="../../resources/images/arrow-num-left.svg" class="icon16">
+                    </button>`
+
+    pagerHtml += `<button class="page-num-box nav-btn" type="button" data-action="prev" data-grid="`+grid+`"+`+(currentPageGroup === 1 ? 'disabled' : '')+`>
+                            <img src="../../resources/images/arrow-left-icon.svg" class="icon16">
                     </button>`
 
 
@@ -30,6 +34,10 @@ function createCustomPager(grid) {
     }
 
     pagerHtml += `<button class="page-num-box nav-btn" type="button" data-action="next" data-grid="`+grid+`"+`+(currentPageGroup === maxPageGroup ? 'disabled' : '')+`>
+                            <img src="../../resources/images/arrow-right-nomal.svg" class="icon16">
+                    </button>`
+
+    pagerHtml += `<button class="page-num-box nav-btn" type="button" data-action="last" data-grid="`+grid+`"+`+(currentPageGroup === maxPageGroup ? 'disabled' : '')+`>
                             <img src="../../resources/images/arrow-num-right.svg" class="icon16">
                     </button>`
 
@@ -68,7 +76,6 @@ $(document).on('click', '.page-btn', function() {
 // 화살표 버튼 클릭
 $(document).on('click', '.nav-btn', function() {
     const action = $(this).data('action');
-    console.log(action);
     const target = this.dataset['grid'];
     const totalRecords = $("#"+target).getGridParam('records');
     const rowNum = $("#"+target).getGridParam('rowNum');
@@ -84,8 +91,6 @@ $(document).on('click', '.nav-btn', function() {
             if (currentPageGroup > 1) {
                 currentPageGroup--;
                 const prevPage = (currentPageGroup - 1) * pageSize + 1;
-                console.log('here')
-                console.log(prevPage);
                 $("#"+target).setGridParam({ rowNum: rowNumsVal, page: prevPage }).trigger("reloadGrid");
             }
             break;
@@ -98,8 +103,15 @@ $(document).on('click', '.nav-btn', function() {
             break;
         case 'last':
             currentPageGroup = maxPageGroup;
-            const lastPage = (currentPageGroup - 1) * pageSize + 1;
-            $("#"+target).setGridParam({ rowNum: rowNumsVal, page: lastPage }).trigger("reloadGrid");
+
+            if(currentPageGroup != 1) {
+                const lastPage = (currentPageGroup - 1) * pageSize + 1;
+                $("#"+target).setGridParam({ rowNum: rowNumsVal, page: lastPage }).trigger("reloadGrid");
+            } else {
+                const lastPage = totalPages;
+                $("#"+target).setGridParam({ rowNum: rowNumsVal, page: lastPage }).trigger("reloadGrid");
+            }
+
             break;
     }
 });

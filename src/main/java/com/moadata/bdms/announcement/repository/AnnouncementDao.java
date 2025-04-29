@@ -5,6 +5,7 @@ import com.moadata.bdms.model.vo.AnnouncementVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository("announcementDao")
 public class AnnouncementDao extends BaseAbstractDao {
@@ -34,4 +35,16 @@ public class AnnouncementDao extends BaseAbstractDao {
     public List<AnnouncementVO> selectUserMessage(String userId) {
         return selectList("announcement.selectUserMessage", userId);
     }
+
+	public AnnouncementVO selectAnnouncementByAnnId(String annId) {
+		return (AnnouncementVO)selectOne("announcement.selectAnnouncementByAnnId", annId);
+	}
+
+	public void updateAnnouncementSt(Map<String, Object> param) {
+		update("announcement.updateAnnouncementSt", param);
+	}
+
+	public int selectUnreadAnnCnt(String userId) {
+		return (int)selectOne("announcement.selectUnreadAnnCnt", userId);
+	}
 }

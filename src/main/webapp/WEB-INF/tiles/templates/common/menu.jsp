@@ -96,23 +96,6 @@
                 </c:if>
             </ul>
         </div>
-        <!-- 사이드 하단 세팅/인포메이션 ui-->
-        <div class="menu ui-second mt-90px">
-            <ul>
-                <li>
-                    <a href="#">
-                        <img src="../../resources/images/setting-icon.svg" class="icon22">
-                        <span class="text"><spring:message code="common.setting"/></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="../../resources/images/infor-icon.svg" class="icon22">
-                        <span class="text"><spring:message code="common.information"/></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
 </aside>
 

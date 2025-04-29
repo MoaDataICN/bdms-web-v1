@@ -10,4 +10,26 @@
 				 inner join T_WLK_cmm_alrm_stt alrm on alrm.USER_ID = my.USER_ID
 		where my.user_id = #{userId}
 	</select>
+
+    <select id="selectUserCnt" parameterType="java.util.Map" resultType="java.util.Map">
+        WITH RECURSIVE date_range AS (
+        SELECT #{startDt} AS dt
+        UNION ALL
+        SELECT DATE_ADD(dt, INTERVAL 1 DAY)
+        FROM date_range
+        WHERE dt <![CDATA[<]]> #{endDt}
+        )
+        SELECT
+        d.dt,
+        (SELECT COUNT(*) FROM t_wlk_my u WHERE u.regist_dt <![CDATA[<=]]> d.dt) AS user_cnt
+        FROM date_range d
+    </select>
+
+    <select id="selectUserCntGrp" resultType="java.util.Map">
+        SELECT
+            SUM(CASE WHEN wd_yn = 'y' THEN 1 ELSE 0 END) AS y_count,
+            SUM(CASE WHEN wd_yn = 'n' THEN 1 ELSE 0 END) AS n_count
+        FROM
+            t_wlk_my
+    </select>
 </mapper>

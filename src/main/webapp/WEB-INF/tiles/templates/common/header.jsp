@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
     long lastAccessedTime = session.getLastAccessedTime();
     int maxInactiveInterval = session.getMaxInactiveInterval();
@@ -49,15 +50,18 @@
     </div>
     <!-- 헤더 우측 UI-->
     <div class="header-ui">
-        <div class="header-time header-time-text mr-6px">
+	    <div class="header-time header-time-text mr-6px">
             <img src="../../resources/images/time-svg.svg" class="icon22">
             <p class="header-time-text">session out <span id="sessionTimeout">--:--</span></p>
         </div>
         <button type="button" class="reflesh-btn" onclick="continueLogin()">
             <img src="../../resources/images/reflesh-icon.png" class="icon26">
         </button>
-        <button type="button" class="header-btn" id="messageBtn">
-            <img src="../../resources/images/bell-icon.svg" class="icon30">
+	    <button type="button" class="header-btn" id="messageBtn" style="position: relative;">
+	        <c:if test="${not empty annSt and annSt ne '0'}">
+		        <span class="requested-circle02" style="position: absolute;top: 0;right: 0;width: 12px;height: 12px;"></span>
+	        </c:if>
+	        <img src="../../resources/images/bell-icon.svg" class="icon30">
         </button>
         <!--
         <button type="button" class="header-btn">

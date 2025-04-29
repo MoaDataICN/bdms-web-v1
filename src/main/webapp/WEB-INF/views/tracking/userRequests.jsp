@@ -208,10 +208,9 @@
                                    onchange="updateDate('datePicker2', 'searchEndDe')">
                         </div>
                         <div class="day-button-wrap">
-                            <button class="data-select-btn periodBtn" data-period="all">All</button>
                             <button class="data-select-btn periodBtn" data-period="today">Today</button>
-                            <button class="data-select-btn periodBtn" data-period="7-day">7day</button>
-                            <button class="data-select-btn periodBtn active" data-period="30-day">30day</button>
+                            <button class="data-select-btn periodBtn active" data-period="7-day">7day</button>
+                            <button class="data-select-btn periodBtn" data-period="30-day">30day</button>
                             <button class="data-select-btn periodBtn" data-period="90-day">90day</button>
                         </div>
                     </div>
@@ -404,7 +403,7 @@
             todayHighlight:true
         });
 
-        $('#searchBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#searchBgnDe').val(moment().subtract(6,'days').format('YYYY-MM-DD'))
         $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
 
         $('#userRequestList').jqGrid({

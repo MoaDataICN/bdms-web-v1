@@ -7,6 +7,8 @@ import com.moadata.bdms.my.repository.MyDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 @Service("myService")
 public class MyServiceImpl implements MyService {
@@ -32,4 +34,14 @@ public class MyServiceImpl implements MyService {
         }
         return null;
     }
+
+	@Override
+	public List<Map<String, Object>> selectUserCnt(Map<String, Object> param) {
+		return myDao.selectUserCnt(param);
+	}
+
+	@Override
+	public Map<String, Object> selectUserCntGrp() {
+		return myDao.selectUserCntGrp();
+	}
 }

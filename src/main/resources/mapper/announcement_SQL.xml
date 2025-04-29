@@ -73,4 +73,35 @@
 		where ST.USER_ID=#{userId}
 		order by ANN.SND_DT DESC
 	</select>
+
+    <select id="selectAnnouncementByAnnId" parameterType="String" resultType="announcementVO">
+        SELECT ANNC.*, user.USER_NM as 'SND_NM'
+        FROM (
+                 SELECT
+                     ANN.*,
+                     CASE
+                         WHEN ANN.TG_TP = 3 THEN GROUP_CONCAT(user.USER_NM, ' ')
+                         ELSE '-'
+                         END AS RCPT_NM
+                 FROM T_WLK_MNG_ANN ANN
+                          LEFT JOIN (
+                     T_WLK_MNG_ANN_ST ST
+                         JOIN T_WLK_MNG_USER user ON ST.USER_ID = user.USER_ID
+                     ) ON ANN.TG_TP = 3 AND ANN.ANN_ID = ST.ANN_ID
+                 WHERE ANN.ANN_ID = #{annId}
+             ) AS ANNC
+                 JOIN T_WLK_MNG_USER user ON ANNC.SND_ID = user.USER_ID
+    </select>
+
+    <update id="updateAnnouncementSt" parameterType="java.util.Map">
+        UPDATE T_WLK_MNG_ANN_ST
+        SET READ_ST = 1
+        WHERE USER_ID = #{userId} AND ANN_ID = #{annId}
+    </update>
+
+    <select id="selectUnreadAnnCnt" parameterType="String" resultType="int">
+        select count(*)
+        from t_wlk_mng_ann_st
+        where user_id=#{userId} and read_st = '0'
+    </select>
 </mapper>

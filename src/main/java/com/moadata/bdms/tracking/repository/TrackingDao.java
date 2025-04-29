@@ -53,4 +53,12 @@ public class TrackingDao extends BaseAbstractDao {
     public List<Map<String, Object>> selectTodayHealthAlertCnt(Map<String, Object> param) {
         return selectList("tracking.selectTodayHealthAlertCnt", param);
     }
+
+	public List<Map<String, Object>> selectHealthAlertsAmount(Map<String, Object> param) {
+		return selectList("tracking.selectHealthAlertsAmount", param);
+	}
+
+	public List<Map<String, Object>> selectUserRequestsAmount(Map<String, Object> param) {
+		return selectList("tracking.selectUserRequestsAmount", param);
+	}
 }

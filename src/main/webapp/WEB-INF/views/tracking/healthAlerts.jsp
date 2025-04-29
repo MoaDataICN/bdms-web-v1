@@ -193,10 +193,9 @@
                                    onchange="updateDate('datePicker2', 'searchEndDe')">
                         </div>
                         <div class="day-button-wrap">
-                            <button class="data-select-btn periodBtn" data-period="all">All</button>
                             <button class="data-select-btn periodBtn" data-period="today">Today</button>
-                            <button class="data-select-btn periodBtn" data-period="7-day">7day</button>
-                            <button class="data-select-btn periodBtn active" data-period="30-day">30day</button>
+                            <button class="data-select-btn periodBtn active" data-period="7-day">7day</button>
+                            <button class="data-select-btn periodBtn" data-period="30-day">30day</button>
                             <button class="data-select-btn periodBtn" data-period="90-day">90day</button>
                         </div>
                     </div>
@@ -393,7 +392,7 @@
             todayHighlight:true
         });
 
-        $('#searchBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#searchBgnDe').val(moment().subtract(6,'days').format('YYYY-MM-DD'))
         $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
 
 
@@ -533,6 +532,7 @@
         }
     })
 
+
     $(document).on('click','.alertBtns', function(){
         if($('.alertBtns.active').length === 1 && $('.alertBtns.active')[0] == this){
             return;
@@ -549,12 +549,12 @@
     })
 
     <!-- 달력 스크립트 -->
-    // 달력 아이콘 클릭 시, date input 활성화
+        // 달력 아이콘 클릭 시, date input 활성화
     function openCalendar(dateInputId) {
         document.getElementById(dateInputId).showPicker();
     }
 
-    // 날짜 선택 시, 표시할 입력 필드 업데이트
+        // 날짜 선택 시, 표시할 입력 필드 업데이트
     function updateDate(dateInputId, displayId) {
         const dateValue = document.getElementById(dateInputId).value;
         document.getElementById(displayId).value = dateValue;

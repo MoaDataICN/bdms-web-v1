@@ -21,6 +21,10 @@
     <definition name="user/checkPwStartPopup" template="/WEB-INF/views/user/checkPwStartPopup.jsp"/>
     <definition name="user/checkPwConfirmPopup" template="/WEB-INF/views/user/checkPwConfirmPopup.jsp"/>
 
+    <definition name="statistic/userStatistic" template="/WEB-INF/views/statistic/userStatistic.jsp" />
+    <definition name="statistic/healthAlertStatistic" template="/WEB-INF/views/statistic/healthAlertStatistic.jsp" />
+    <definition name="statistic/serviceRequestStatistic" template="/WEB-INF/views/statistic/serviceRequestStatistic.jsp" />
+
     <!-- 대시보드 페이지 body 설정 -->
     <definition name="login/loginForm" extends=".loginForm">
         <put-attribute name="body" value="/WEB-INF/views/login/loginForm.jsp" />

@@ -130,7 +130,7 @@
         { label: 'Text', name: 'cont', width:200, sortable : false},
         { label: 'From', name: 'sndId', width:60, sortable : true},
         { label: 'Details', name: 'annId', width:80, sortable : false, formatter : function(cellValue, options, rowObject){
-            return `<button type="button" class="detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
+            return `<button type="button" class="detail-btn message-detail-btn" data-id="`+cellValue+`"><span>detail</span><img src="/resources/images/arrow-right-nomal.svg" class="icon18"></button>`
           }},
       ],
       page: 1,
@@ -166,9 +166,5 @@
 
   $(window).on('resize.jqGrid', function() {
     jQuery("#messageHistoryList").jqGrid('setGridWidth', $(".table-wrap").width());
-  })
-
-  $(document).on('click', '.detail-btn', function(){
-    showToast('퍼블리싱 작업 중인 기능입니다.')
   })
 </script>

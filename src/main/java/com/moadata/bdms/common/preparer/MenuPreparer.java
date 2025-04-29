@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.moadata.bdms.announcement.service.AnnouncementService;
 import com.moadata.bdms.model.vo.MenuVO;
 import com.moadata.bdms.model.vo.UserVO;
 import com.moadata.bdms.support.menu.service.MenuService;
@@ -26,6 +27,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class MenuPreparer implements ViewPreparer {
 	@Resource(name="menuService")
 	private MenuService menuService;
+
+	@Resource(name="announcementService")
+	private AnnouncementService announcementService;
 	
 	@Override
 	public void execute(Request context, AttributeContext attributeContext) throws PreparerException {
@@ -55,23 +59,14 @@ public class MenuPreparer implements ViewPreparer {
 
 			setCurMenuId(request.getRequestURI(),menuPath);
 		}
+
 		attributeContext.putAttribute("menuPathList", new Attribute(menuPath), true);
 		request.setAttribute("menuPathList", menuPath);
 		UserVO user = (UserVO) RequestContextHolder.currentRequestAttributes().getAttribute("user", RequestAttributes.SCOPE_SESSION);
 
+		request.setAttribute("annSt", announcementService.selectUnreadAnnCnt(user.getUserId()));
 		List<?> menu = null;
 		if(user != null) {
-			/*
-			if("UT01".equals(user.getUserType())) {
-				menu = menuService.selectMenuList(true);
-			} else if("UT02".equals(user.getUserType())) {
-				menu = menuService.selectMenuList(false);
-			} else {
-				//원본 소스 유저 권한별 메뉴 조회 쿼리 주석 처리 22.08.23
-				//menu = menuService.selectMenuListByGroup(user.getUsergroupId());
-				//유저권한에서 유저 uid로 변경 추후 확인 22.08.23
-				menu = menuService.selectMenuListByGroup(user.getUid());
-			}		*/	
 			menu = menuService.selectMenuListByGroup(user.getUsergroupId());
 		}
 		attributeContext.putAttribute("menuList", new Attribute(menu), true);
