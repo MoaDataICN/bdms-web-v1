@@ -31,8 +31,6 @@
 			t_walk.t_wlk_mng_alt alt ON req.ALRM_ID = alt.ALRM_ID
 		INNER JOIN
 			t_walk.t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
-		INNER JOIN
-			t_walk.t_wlk_mng_grp grp ON grp.GRP_ID = admin.GRP_ID
 		WHERE
 			1=1
 		<if test="inChargeIds != null and inChargeIds != ''">
@@ -89,7 +87,7 @@
 			AND my.GRP_TP = #{grpTp}
 		</if>
 		GROUP BY
-			req.USER_ID
+			my.USER_ID
 		ORDER BY
 		<choose>
 			<when test='sidx == "registDt"'>
@@ -139,7 +137,7 @@
 			t_walk.t_wlk_mng_alt alt
 		INNER JOIN
 			t_walk.t_wlk_my my ON alt.USER_ID = my.USER_ID
-		LEFT JOIN
+		LEFT OUTER JOIN
 			(
 				SELECT
 					USER_ID, USER_NM
@@ -177,7 +175,7 @@
 			t_walk.t_wlk_mng_alt alt
 		INNER JOIN
 			t_walk.t_wlk_my my ON alt.USER_ID = my.USER_ID
-		LEFT JOIN (
+		LEFT OUTER JOIN (
 			SELECT USER_ID, USER_NM, GRP_LV
 			FROM t_walk.t_wlk_mng_user
 		) admin ON my.IN_CHARGE_ID = admin.USER_ID
@@ -198,7 +196,7 @@
 			t_walk.t_wlk_mng_alt alt
 		INNER JOIN
 			t_walk.t_wlk_my my ON alt.USER_ID = my.USER_ID
-		LEFT JOIN (
+		LEFT OUTER JOIN (
 			SELECT USER_ID, USER_NM, GRP_LV
 			FROM t_walk.t_wlk_mng_user
 		) admin ON my.IN_CHARGE_ID = admin.USER_ID
@@ -234,7 +232,7 @@
 			t_walk.t_wlk_mng_req req
 		INNER JOIN
 			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
-		LEFT JOIN
+		LEFT OUTER JOIN
 			(
 				SELECT
 					USER_ID, USER_NM
@@ -280,7 +278,7 @@
 			t_walk.t_wlk_mng_req req
 		INNER JOIN
 			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
-		LEFT JOIN (
+		LEFT OUTER JOIN (
 			SELECT USER_ID, USER_NM, GRP_LV
 			FROM t_walk.t_wlk_mng_user
 		) admin ON my.IN_CHARGE_ID = admin.USER_ID
@@ -300,7 +298,7 @@
 			t_walk.t_wlk_mng_req req
 		INNER JOIN
 			t_walk.t_wlk_my my ON req.USER_ID = my.USER_ID
-		LEFT JOIN (
+		LEFT OUTER JOIN (
 			SELECT USER_ID, USER_NM, GRP_LV
 			FROM t_walk.t_wlk_mng_user
 		) admin ON my.IN_CHARGE_ID = admin.USER_ID
