@@ -264,10 +264,9 @@
                                    onchange="updateDate('datePicker2', 'searchEndDe')">
                         </div>
                         <div class="day-button-wrap" id="userSearch_date">
-                            <button class="data-select-btn" data-period="all">All</button>
                             <button class="data-select-btn" data-period="today">Today</button>
-                            <button class="data-select-btn" data-period="7-day">7day</button>
-                            <button class="data-select-btn active" data-period="30-day">30day</button>
+                            <button class="data-select-btn active" data-period="7-day">7day</button>
+                            <button class="data-select-btn" data-period="30-day">30day</button>
                             <button class="data-select-btn" data-period="90-day">90day</button>
                         </div>
                     </div>
@@ -415,7 +414,7 @@
         // 텍스트 필드 초기화
         $('#userNm').val('');
         $('#emailId').val('');
-        $('#searchBgnDe').val(moment().subtract(30, 'days').format('YYYY-MM-DD'));
+        $('#searchBgnDe').val(moment().subtract(7, 'days').format('YYYY-MM-DD'));
         $('#searchEndDe').val(moment().format('YYYY-MM-DD'));
         $('#mobile').val('');
         $('#userSearch_inChargeNm').text("All");
@@ -429,14 +428,9 @@
         $('#userSearch_grpTpDropdown').siblings('.dropdown-content').find('a[data-grpid="All"]').click();
 
         // 버튼 상태 초기화
-        $('#userSearch_reqTp .data-select-btn').removeClass('active');
-        $('#userSearch_reqTp .data-select-btn[data-filter="serviceTpExists"]').addClass('active');
-
-        $('#userSearch_altTp .data-select-btn').removeClass('active');
-        $('#userSearch_altTp .data-select-btn[data-filter="alertTpExists"]').addClass('active');
-
-        $('#userSearch_date .data-select-btn').removeClass('active');
-        $('#userSearch_date .data-select-btn[data-period="30-day"]').addClass('active');
+        $('#userSearch_reqTp .data-select-btn')[0].click();
+        $('#userSearch_altTp .data-select-btn')[0].click();
+        $('#userSearch_date .data-select-btn')[1].click();
 
         // 검색 실행
         userSearch_fnSearch();
@@ -484,7 +478,7 @@
             todayHighlight:true
         });
 
-        $('#searchBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#searchBgnDe').val(moment().subtract(7,'days').format('YYYY-MM-DD'))
         $('#searchEndDe').val(moment().format('YYYY-MM-DD'))
 
         $('#userSearch_grid').jqGrid({
@@ -645,9 +639,7 @@
 
         let period = $(this).data('period');
 
-        if (period === 'all') {
-            $('#searchBgnDe').val('');
-        } else if (period === 'today') {
+        if (period === 'today') {
             $('#searchBgnDe').val(moment().format('YYYY-MM-DD'));
             $('#searchEndDe').val(moment().format('YYYY-MM-DD'));
         } else {

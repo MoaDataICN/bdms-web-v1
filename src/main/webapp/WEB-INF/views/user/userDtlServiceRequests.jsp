@@ -104,10 +104,9 @@
                                 <input type="date" id="serviceRequests_datePicker2" class="hidden-date" onchange="updateDate('serviceRequests_datePicker2', 'serviceRequestsEndDe')">
                             </div>
                             <div class="day-button-wrap" id="serviceRequests_date">
-                                <button class="data-select-btn" data-period="all">All</button>
                                 <button class="data-select-btn" data-period="today">Today</button>
-                                <button class="data-select-btn" data-period="7-day">7day</button>
-                                <button class="data-select-btn active" data-period="30-day">30day</button>
+                                <button class="data-select-btn active" data-period="7-day">7day</button>
+                                <button class="data-select-btn" data-period="30-day">30day</button>
                                 <button class="data-select-btn" data-period="90-day">90day</button>
                             </div>
                         </div>
@@ -331,7 +330,7 @@
 
     // initServiceRequestsGrid S
     function initServiceRequestsGrid() {
-        $('#serviceRequestsBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#serviceRequestsBgnDe').val(moment().subtract(7,'days').format('YYYY-MM-DD'))
         $('#serviceRequestsEndDe').val(moment().format('YYYY-MM-DD'))
 
         let serviceRequests_grid = $("#serviceRequests_grid").jqGrid({
@@ -451,7 +450,7 @@
     function serviceRequests_fnClear() {
         $('#serviceRequestsBgnDe').val('');
         $('#serviceRequestsEndDe').val('');
-        $('#serviceRequests_date .data-select-btn')[3].click();
+        $('#serviceRequests_date .data-select-btn')[1].click();
         $('#serviceRequests_reqTp .data-select-btn')[0].click();
 
         // 차트 리셋
@@ -473,9 +472,7 @@
 
         let period = $(this).data('period');
 
-        if (period === 'all') {
-            $('#serviceRequestsBgnDe').val('');
-        } else if (period === 'today') {
+        if (period === 'today') {
             $('#serviceRequestsBgnDe').val(moment().format('YYYY-MM-DD'));
             $('#serviceRequestsEndDe').val(moment().format('YYYY-MM-DD'));
         } else {
