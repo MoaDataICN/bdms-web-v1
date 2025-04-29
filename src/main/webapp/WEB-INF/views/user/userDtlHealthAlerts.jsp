@@ -139,10 +139,9 @@
                                 <input type="date" id="healthAlerts_datePicker2" class="hidden-date" onchange="updateDate('healthAlerts_datePicker2', 'healthAlertsEndDe')">
                             </div>
                             <div class="day-button-wrap" id="healthAlerts_date">
-                                <button class="data-select-btn" data-period="all">All</button>
                                 <button class="data-select-btn" data-period="today">Today</button>
-                                <button class="data-select-btn" data-period="7-day">7day</button>
-                                <button class="data-select-btn active" data-period="30-day">30day</button>
+                                <button class="data-select-btn active" data-period="7-day">7day</button>
+                                <button class="data-select-btn" data-period="30-day">30day</button>
                                 <button class="data-select-btn" data-period="90-day">90day</button>
                             </div>
                         </div>
@@ -375,7 +374,7 @@
 
     // initHealthAlertsGrid S
     function initHealthAlertsGrid() {
-        $('#healthAlertsBgnDe').val(moment().subtract(30,'days').format('YYYY-MM-DD'))
+        $('#healthAlertsBgnDe').val(moment().subtract(7,'days').format('YYYY-MM-DD'))
         $('#healthAlertsEndDe').val(moment().format('YYYY-MM-DD'))
 
         let healthAlerts_grid = $("#healthAlerts_grid").jqGrid({
@@ -510,7 +509,7 @@
     function healthAlerts_fnClear() {
         $('#healthAlertsBgnDe').val('');
         $('#healthAlertsEndDe').val('');
-        $('#healthAlerts_date .data-select-btn')[3].click();
+        $('#healthAlerts_date .data-select-btn')[1].click();
         $('#healthAlerts_altTp .data-select-btn')[0].click();
 
         // 차트 리셋
@@ -531,9 +530,7 @@
 
         let period = $(this).data('period');
 
-        if (period === 'all') {
-            $('#healthAlertsBgnDe').val('');
-        } else if (period === 'today') {
+        if (period === 'today') {
             $('#healthAlertsBgnDe').val(moment().format('YYYY-MM-DD'));
             $('#healthAlertsEndDe').val(moment().format('YYYY-MM-DD'));
         } else {
