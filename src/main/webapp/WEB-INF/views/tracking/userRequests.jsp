@@ -142,6 +142,10 @@
                             <spring:message code="common.inCharge"/>
                         </div>
                         <div class="dropdown">
+	                        <button class="dropdown-search" id="userSearch_inChargeNm">
+		                        <spring:message code='common.all'/>
+	                        </button>
+	                        <!--
                             <button class="dropdown-search" id="inChargeNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                                           src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
@@ -150,6 +154,7 @@
                                     <a data-inchargeid="${inCharge.userId}" onclick="$('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">${inCharge.userNm}</a>
                                 </c:forEach>
                             </div>
+                            -->
                         </div>
                     </c:if>
                 </div>
@@ -321,7 +326,7 @@
 </main>
 
 <script type="text/javascript">
-    const inChargeId = '${inChargeId}';
+    //const inChargeId = '${inChargeId}';
 
     // Grid 하단 페이저 숫자
     const pageSize = 10;
@@ -349,6 +354,16 @@
         // 추가할 그리드는 여기에 계속 추가
     };
 
+    let inChargeId = "";
+    let inChargeNm = "";
+
+    // 담당자명 팝업 열기
+    $(document).on('click', '#userSearch_inChargeNm', function () {
+        $(".charge-search-popup-container").load("/user/chargeSearchPopup", function () {
+            $('#chargeSearchPopup').fadeIn();
+        });
+    });
+
     function fnClear() {
         $('#searchBgnDe').val('');
         $('#searchEndDe').val('');
@@ -356,9 +371,10 @@
         $('#emailId').val('');
         $('#userId').val('');
         $('#mobile').val('');
+        $('#userSearch_inChargeNm').text("All");
         $('#sx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#brthDt').val('');
-        $('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
+        //$('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('.alertBtns.active').removeClass('active');
         $('.alertBtns')[0].classList.add('active');
@@ -376,7 +392,8 @@
             mobile : $('#mobile').val().replaceAll('-',''),
             sx : $('#sx').text() != "All" ? $('#sx').text().slice(0,1) : "ALL",
             brthDt : $('#brthDt').val(),
-            inChargeNm : $('#inChargeNm').text() != "All" ? $('#inChargeNm').text() : "",
+            inChargeNm : $('#userSearch_inChargeNm').text().trim() !== "All" ? $('#userSearch_inChargeNm').text().trim() : "",
+            // inChargeNm : $('#inChargeNm').text() != "All" ? $('#inChargeNm').text() : "",
             grpTp : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
             reqTp : $('.alertBtns.active').data('filter') != 'all' ? $('.alertBtns.active')
                 .map(function() {
