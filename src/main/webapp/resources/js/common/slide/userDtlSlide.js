@@ -73,6 +73,7 @@ function loadUserDetailTab(tab = 'general', userId) {
         } else if (tab === 'input-checkup-data') {
             initDropzone();
             inputCheckup_fnClear();
+        } else if (tab === 'checkup-results') {
         }
     })
     .catch(error => {
