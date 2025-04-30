@@ -436,12 +436,37 @@
 
 	<!-- 해당 담당자 존재하는지 조회 -->
 	<select id="selectInChargeNmList" parameterType="string" resultType="UserSearchDTO">
-		SELECT DISTINCT
+		WITH RECURSIVE sub_groups AS
+			(
+				SELECT
+					GRP_ID
+				FROM
+					T_WLK_MNG_GRP
+				WHERE
+					GRP_ID = #{grpId}
+				UNION ALL
+				SELECT
+					g.GRP_ID
+				FROM
+					T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
+			)
+		SELECT
 			USER_ID AS IN_CHARGE_ID,
 			USER_NM AS IN_CHARGE_NM
 		FROM
-			t_walk.t_wlk_mng_user admin
+			t_wlk_mng_user usr
 		WHERE
+			usr.GRP_ID in
+				(
+					SELECT
+						*
+					FROM
+						sub_groups
+					WHERE
+						grp_id != #{grpId}
+				)
+		AND
 			USER_NM LIKE CONCAT(#{inChargeNm}, '%')
 	</select>
 
@@ -452,6 +477,40 @@
 			USER_NM AS IN_CHARGE_NM
 		FROM
 			t_walk.t_wlk_mng_user admin;
+	</select>
+
+	<!-- 하위 담당자 목록 조회 -->
+	<select id="selectLowLevelAdmins" parameterType="string" resultType="UserSearchDTO">
+		WITH RECURSIVE sub_groups AS
+			(
+				SELECT
+					GRP_ID
+				FROM
+					T_WLK_MNG_GRP
+				WHERE
+					GRP_ID = #{grpId}
+				UNION ALL
+				SELECT
+					g.GRP_ID
+				FROM
+					T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg ON g.PGRP_ID = sg.GRP_ID
+			)
+		SELECT
+			USER_ID AS IN_CHARGE_ID,
+			USER_NM AS IN_CHARGE_NM
+		FROM
+			t_wlk_mng_user usr
+		WHERE
+			usr.GRP_ID in
+				(
+					SELECT
+						*
+					FROM
+						sub_groups
+					WHERE
+						grp_id != #{grpId}
+				)
 	</select>
 
 	<select id="updateUserInChargeIdByNm" parameterType="UserUpdateDTO" resultType="int">

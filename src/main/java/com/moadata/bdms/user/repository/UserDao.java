@@ -91,13 +91,17 @@ public class UserDao extends BaseAbstractDao {
 		return update("user.updateUserGeneral", userUpdateDTO);
 	}
 
-	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm) {
-		return selectList("user.selectInChargeNmList", inChargeNm);
+	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param) {
+		return selectList("user.selectInChargeNmList", param);
 	}
 
 	public List<UserSearchDTO> selectAllInChargeNm() {
 		return selectList("user.selectAllInChargeNm");
 	}
+
+	public List<UserSearchDTO> selectLowLevelAdmins(String grpId) {
+		return selectList("user.selectLowLevelAdmins", grpId);
+    }
 
 	public int updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
 		return update("user.updateUserInChargeIdByNm", userUpdateDTO);
