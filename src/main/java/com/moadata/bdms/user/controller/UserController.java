@@ -78,7 +78,7 @@ public class UserController extends BaseController {
 		if (grpLv != null && grpLv.equals("1")) {
 			// 최상위 관리자인 경우
 			List<GroupVO> groupList = groupService.selectLowLevelGroups(grpId);
-			List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
+			List<UserSearchDTO> inChargeNmList = userService.selectLowLevelAdmins(grpId);
 
 			if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
 				for (UserSearchDTO inChargeNm : inChargeNmList) {
@@ -622,17 +622,35 @@ public class UserController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "/selectInChargeNmList", method = RequestMethod.POST)
-	public List<UserSearchDTO> selectInChargeNmList(@RequestParam(value = "inChargeNm") String inChargeNm) {
+	public List<UserSearchDTO> selectInChargeNmList(@RequestParam(value = "inChargeNm") String inChargeNm, HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		UserVO adminVO = (UserVO) session.getAttribute("user");
+
+		String grpId = adminVO.getGrpId();
+
+		System.out.println("grpId : " + grpId);
+
 		if (inChargeNm != null && !inChargeNm.trim().isEmpty()) {
-			return userService.selectInChargeNmList(inChargeNm);
+			Map<String, Object> param = new HashMap<>();
+			param.put("grpId", grpId);
+			param.put("inChargeNm", inChargeNm);
+
+			return userService.selectInChargeNmList(param);
 		} else {
 			return Collections.emptyList();
 		}
 	}
 
 	@RequestMapping(value = "/chargeSearchPopup", method = RequestMethod.GET)
-	public String chargeSearchPopup(Model model) {
-		List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
+	public String chargeSearchPopup(Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		UserVO adminVO = (UserVO) session.getAttribute("user");
+
+		String grpId = adminVO.getGrpId();
+
+		System.out.println("grpId : " + grpId);
+
+		List<UserSearchDTO> inChargeNmList = userService.selectLowLevelAdmins(grpId);
 
 		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
 			for (UserSearchDTO inChargeNm : inChargeNmList) {
@@ -647,8 +665,15 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/chargeSearchOnSlidePopup", method = RequestMethod.GET)
-	public String chargeSearchOnSlidePopup(Model model) {
-		List<UserSearchDTO> inChargeNmList = userService.selectAllInChargeNm();
+	public String chargeSearchOnSlidePopup(Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		UserVO adminVO = (UserVO) session.getAttribute("user");
+
+		String grpId = adminVO.getGrpId();
+
+		System.out.println("grpId : " + grpId);
+
+		List<UserSearchDTO> inChargeNmList = userService.selectLowLevelAdmins(grpId);
 
 		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
 			for (UserSearchDTO inChargeNm : inChargeNmList) {

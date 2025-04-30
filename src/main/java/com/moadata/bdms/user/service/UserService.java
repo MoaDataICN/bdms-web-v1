@@ -36,9 +36,11 @@ public interface UserService {
 
 	boolean updateUserGeneral(UserUpdateDTO userUpdateDTO);
 
-	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm);
+	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param);
 
 	public List<UserSearchDTO> selectAllInChargeNm();
+
+	public List<UserSearchDTO> selectLowLevelAdmins(String grpId);
 
 	boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO);
 

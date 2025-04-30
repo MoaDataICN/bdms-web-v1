@@ -175,9 +175,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm) {
+	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param) {
 		try {
-			List<UserSearchDTO> inChargeList = userDao.selectInChargeNmList(inChargeNm);
+			List<UserSearchDTO> inChargeList = userDao.selectInChargeNmList(param);
 			return inChargeList;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -195,6 +195,11 @@ public class UserServiceImpl implements UserService {
 		}
 		return null;
     }
+
+	@Override
+	public List<UserSearchDTO> selectLowLevelAdmins(String grpId) {
+		return userDao.selectLowLevelAdmins(grpId);
+	}
 
 	@Override
 	public boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
