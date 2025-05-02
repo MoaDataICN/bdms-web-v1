@@ -33,6 +33,46 @@ public class UserDao extends BaseAbstractDao {
 		return resultList;
 	}
 
+	public UserDtlGeneralVO selectUserDtlGeneral(String userId) {
+		return (UserDtlGeneralVO) selectOne("user.selectUserDtlGeneral", userId);
+	}
+
+	public int updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO) {
+		return update("user.updateUserResetPwByAdmin", myResetPwDTO);
+	}
+
+	public int updateUserGeneral(UserUpdateDTO userUpdateDTO) {
+		return update("user.updateUserGeneral", userUpdateDTO);
+	}
+
+	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param) {
+		return selectList("user.selectInChargeNmList", param);
+	}
+
+	public List<UserSearchDTO> selectAllInChargeNm() {
+		return selectList("user.selectAllInChargeNm");
+	}
+
+	public List<UserSearchDTO> selectLowLevelAdmins(String grpId) {
+		return selectList("user.selectLowLevelAdmins", grpId);
+	}
+
+	public int updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
+		return update("user.updateUserInChargeIdByNm", userUpdateDTO);
+	}
+
+	public int insertUserBody(UserUpdateDTO userUpdateDTO) {
+		return insert("user.insertUserBody", userUpdateDTO);
+	}
+
+	public List<UserVO> selectUserList(UserVO user) {
+		List<UserVO> list = selectList("user.selectUserList", user);
+		if(list.size() > 0) {
+			list.get(0).setCnt((int)selectOne("user.selectTotalRecords"));
+		}
+		return list;
+	}
+
 	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
 
 		List<UserDtlHealthAlertsDTO> resultList = selectList("user.selectUserDtlHealthAlerts", userDtlHealthAlertsDTO);
@@ -77,46 +117,6 @@ public class UserDao extends BaseAbstractDao {
 
 	public void updateReqStt(Map<String, Object> param) {
 		update("user.updateReqStt", param);
-	}
-
-    public UserDtlGeneralVO selectUserDtlGeneral(String userId) {
-		return (UserDtlGeneralVO) selectOne("user.selectUserDtlGeneral", userId);
-    }
-
-	public int updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO) {
-		return update("user.updateUserResetPwByAdmin", myResetPwDTO);
-	}
-
-	public int updateUserGeneral(UserUpdateDTO userUpdateDTO) {
-		return update("user.updateUserGeneral", userUpdateDTO);
-	}
-
-	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param) {
-		return selectList("user.selectInChargeNmList", param);
-	}
-
-	public List<UserSearchDTO> selectAllInChargeNm() {
-		return selectList("user.selectAllInChargeNm");
-	}
-
-	public List<UserSearchDTO> selectLowLevelAdmins(String grpId) {
-		return selectList("user.selectLowLevelAdmins", grpId);
-    }
-
-	public int updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
-		return update("user.updateUserInChargeIdByNm", userUpdateDTO);
-	}
-
-	public int insertUserBody(UserUpdateDTO userUpdateDTO) {
-		return insert("user.insertUserBody", userUpdateDTO);
-	}
-
-	public List<UserVO> selectUserList(UserVO user) {
-		List<UserVO> list = selectList("user.selectUserList", user);
-		if(list.size() > 0) {
-			list.get(0).setCnt((int)selectOne("user.selectTotalRecords"));
-		}
-		return list;
 	}
 
 	public UserVO selectUserInfo(String userId) {

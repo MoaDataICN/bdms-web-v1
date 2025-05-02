@@ -79,45 +79,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
-		return userDao.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param) {
-		return userDao.selectAllHealthAlertsCnt(param);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param) {
-		return userDao.selectLast24hHealthAlertsCnt(param);
-	}
-
-	@Override
-	public void updateAltStt(Map<String, Object> param) {
-        userDao.updateAltStt(param);
-    }
-
-	@Override
-	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
-		return userDao.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectAllServiceRequestsCnt(Map<String, Object> param) {
-		return userDao.selectAllServiceRequestsCnt(param);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param) {
-		return userDao.selectLast24hServiceRequestsCnt(param);
-	}
-	@Override
-	public void updateReqStt(Map<String, Object> param) {
-		userDao.updateReqStt(param);
-	}
-
-	@Override
 	public UserDtlGeneralVO selectUserDtlGeneral(String userId) {
 		try {
 			UserDtlGeneralVO userDtl = userDao.selectUserDtlGeneral(userId);
@@ -194,7 +155,7 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 		}
 		return null;
-    }
+	}
 
 	@Override
 	public List<UserSearchDTO> selectLowLevelAdmins(String grpId) {
@@ -221,6 +182,45 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
+		return userDao.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param) {
+		return userDao.selectAllHealthAlertsCnt(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param) {
+		return userDao.selectLast24hHealthAlertsCnt(param);
+	}
+
+	@Override
+	public void updateAltStt(Map<String, Object> param) {
+        userDao.updateAltStt(param);
+    }
+
+	@Override
+	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
+		return userDao.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllServiceRequestsCnt(Map<String, Object> param) {
+		return userDao.selectAllServiceRequestsCnt(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param) {
+		return userDao.selectLast24hServiceRequestsCnt(param);
+	}
+	@Override
+	public void updateReqStt(Map<String, Object> param) {
+		userDao.updateReqStt(param);
 	}
 
 	@Override

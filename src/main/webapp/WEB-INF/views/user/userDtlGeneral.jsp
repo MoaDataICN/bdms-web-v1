@@ -768,7 +768,7 @@
         }
     });
 
-    $(document).on("click", "#checkEditBtn", function () {
+    $(document).off("click", "#checkEditBtn").on("click", "#checkEditBtn", function () {
         const checkPassword = $("#checkPwInput").val().trim();
 
         fetch("/user/checkPassword", {
