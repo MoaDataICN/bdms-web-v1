@@ -838,7 +838,6 @@
     function updateUserGeneralInfo() {
         let updateData = general_setUserUpdateParam();
 
-        console.log("updateData");
         console.log(updateData);
 
         fetch("/user/updateGeneral", {
