@@ -11,17 +11,17 @@ const userDtlSlide_messages = {
 // 우측에서 나타나는 슬라이드 팝업 열기
 function openPopup() {
     // 다중 컨테이너 제거
-    if ($('.slide-popup-container').length > 1) {
-        console.warn('다중 slide-popup-container 발견하여 추가 컨테이너를 제거합니다.');
-        $('.slide-popup-container').slice(1).remove();
+    if ($('.userdtl-slide-popup-container').length > 1) {
+        console.warn('다중 userdtl-slide-popup-container 발견하여 추가 컨테이너를 제거합니다.');
+        $('.userdtl-slide-popup-container').slice(1).remove();
     }
     // 컨테이너가 없으면 오류 로그 출력
-    if ($('.slide-popup-container').length === 0) {
-        console.error('slide-popup-container가 존재하지 않습니다. HTML 구조를 확인하세요.');
+    if ($('.userdtl-slide-popup-container').length === 0) {
+        console.error('userdtl-slide-popup-container가 존재하지 않습니다. HTML 구조를 확인하세요.');
         return;  // 팝업 열기 중단
     }
 
-    console.log('Slide containers in openPopup : ' + $('.slide-popup-container').length);
+    console.log('Slide containers in openPopup : ' + $('.userdtl-slide-popup-container').length);
 
     $('#customerPopup').addClass('active');
     $('#slideOverlay').addClass('active');
@@ -58,11 +58,11 @@ function loadUserDetailTab(tab = 'general', userId) {
         return response.text();
     })
     .then(html => {
-        $('.slide-popup-container').empty().html(html);
+        $('.userdtl-slide-popup-container').empty().html(html);
 
         if (tab === 'general') {
             general_readonly();
-            extractUserDtlGeneralFromDOM("#customerPopup .slide-popup-container");
+            extractUserDtlGeneralFromDOM("#customerPopup .userdtl-slide-popup-container");
             updateDeletionDateInfo();
         } else if (tab === 'health-alerts') {
             drawHealthAlertsChart('all');
@@ -94,7 +94,7 @@ function loadUserDetailTab(tab = 'general', userId) {
 
 $(document).on("click", ".detail-btn.open-slide-btn", function () {
     let userId = $(this).data("uid");
-    $('.slide-popup-container').attr('data-uid', userId);
+    $('.userdtl-slide-popup-container').attr('data-uid', userId);
 
     openPopup();
     loadUserDetailTab('general', userId);  // 기본 탭 로딩
@@ -103,7 +103,7 @@ $(document).on("click", ".detail-btn.open-slide-btn", function () {
 });
 
 $(document).on('click', '.second-tap-btn', function () {
-    let userId = $('.slide-popup-container').data('uid');
+    let userId = $('.userdtl-slide-popup-container').data('uid');
 
     $('.second-tap-btn').removeClass('active');
     $(this).addClass('active');

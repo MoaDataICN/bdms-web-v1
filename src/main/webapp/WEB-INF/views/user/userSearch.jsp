@@ -338,7 +338,7 @@
         </div>
 
         <!-- userDetail 탭 삽입 영역 -->
-        <div class="slide-popup-container" data-uid="">
+        <div class="userdtl-slide-popup-container" data-uid="">
             <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
         </div>
 

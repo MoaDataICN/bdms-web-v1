@@ -768,7 +768,7 @@
         }
     });
 
-    $(document).on("click", "#checkEditBtn", function () {
+    $(document).off("click", "#checkEditBtn").on("click", "#checkEditBtn", function () {
         const checkPassword = $("#checkPwInput").val().trim();
 
         fetch("/user/checkPassword", {
@@ -838,6 +838,7 @@
     function updateUserGeneralInfo() {
         let updateData = general_setUserUpdateParam();
 
+        console.log("updateData");
         console.log(updateData);
 
         fetch("/user/updateGeneral", {
