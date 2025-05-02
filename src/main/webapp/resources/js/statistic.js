@@ -52,7 +52,7 @@ function updateDate(dateInputId, displayId) {
 
 <!-- Search Function -->
 function getStatisticData(callback) {
-    let param = {'startDt' : startDt, 'endDt' : moment(endDt).add(1,'days').format('YYYY-MM-DD')};
+    let param = {'startDt' : startDt, 'endDt' : moment(endDt).format('YYYY-MM-DD')};
     let url = '';
 
     switch(tabType) {
@@ -217,7 +217,7 @@ $(document).on('click', '.periodBtn', function(){
 });
 
 $(document).on('change', '#searchBgnDe, #searchEndDe', function(){
-    let param = {'startDt' : startDt, 'endDt' : moment(endDt).add(1,'days').format('YYYY-MM-DD')};
+    let param = {'startDt' : startDt, 'endDt' : moment(endDt).format('YYYY-MM-DD')};
     let url = '';
 
     switch(tabType) {

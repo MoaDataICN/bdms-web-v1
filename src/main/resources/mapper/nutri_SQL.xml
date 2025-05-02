@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nutri">
+	<insert id="insertNutriAnly" parameterType="nutriVO">
+        INSERT INTO T_WLK_NUTRI_ANLY(USER_ID, RCV_DT, BAD_VAL, BAA_VAL, CAA_VAL, PAA_VAL, REA_VAL, HEA_VAL, WEEK_VAL, REGIST_ID, REGIST_DT, UPT_ID, UPT_DT)
+        VALUES (#{userId}, CURDATE(), #{badVal}, #{baaVal}, #{caaVal}, #{paaVal}, #{reaVal}, #{heaVal}, TIMESTAMPDIFF(WEEK, '1970-01-05', curdate()), #{userId}, SYSDATE(), #{userId}, SYSDATE())
+        ON DUPLICATE KEY UPDATE
+            BAD_VAL = #{badVal},
+            BAA_VAL = #{baaVal},
+            CAA_VAL = #{caaVal},
+            PAA_VAL = #{paaVal},
+            REA_VAL = #{reaVal},
+            HEA_VAL = #{heaVal},
+            UPT_DT = SYSDATE()
+    </insert>
+</mapper>

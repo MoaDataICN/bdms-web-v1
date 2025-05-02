@@ -44,4 +44,9 @@ public class MyServiceImpl implements MyService {
 	public Map<String, Object> selectUserCntGrp() {
 		return myDao.selectUserCntGrp();
 	}
+
+	@Override
+	public void updateCheckupKey(String userId) {
+		myDao.updateCheckupKey(userId);
+	}
 }

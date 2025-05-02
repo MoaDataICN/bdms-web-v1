@@ -11,4 +11,6 @@ public interface MyService {
 	public List<Map<String, Object>> selectUserCnt(Map<String, Object> param);
 
 	public Map<String, Object> selectUserCntGrp();
+
+	public void updateCheckupKey(String userId);
 }
