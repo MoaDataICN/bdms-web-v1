@@ -18,7 +18,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <link rel="stylesheet" href="/resources/css/jquery-ui.css">
-<link rel="stylesheet" href="/resources/css/dropzone.css" type="text/css" />
+<link rel="stylesheet" href="/resources/css/dropzone.css">
 <link rel="stylesheet" href="/resources/css/bdms_common.css">
 <link rel="stylesheet" href="/resources/css/bdms_style.css">
 <link rel="stylesheet" href="/resources/css/bdms_color.css">
@@ -74,6 +74,11 @@
     table {
         width: 100% !important;
     }
+
+    .slide-popup-container {
+      overflow-x: hidden;
+      box-sizing: border-box;
+    }
 </style>
 
 <main class="main">
@@ -98,7 +103,7 @@
     </div>
 
     <!-- 주요 콘텐츠 시작 -->
-    <div class="second-container mt-18px">
+    <div class="second-container mt-18px search-container" id="userSearch">
         <div class="content-row">
             <!-- 좌측 입력폼 그룹 -->
             <div class="row-md-100">
@@ -108,7 +113,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="userNm" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="1">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -117,7 +122,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="emailId" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="2">
                     </div>
                 </div>
             </div>
@@ -129,7 +134,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02" id="mobile" placeholder="Please enter(ex.012-3456-7890)"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="3">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -175,7 +180,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 datePicker" id="brthDt" placeholder="Please enter"
-                               oninput="limitLength(this, 30);" required>
+                               oninput="limitLength(this, 30);" tabindex="4" required>
                     </div>
                 </div>
             </div>
@@ -248,7 +253,7 @@
                     <div class="row-input">
                         <div class="p-r">
                             <input type="text" class="date-input input-txt02" id="searchBgnDe"
-                                   placeholder="ALL" readonly>
+                                   placeholder="ALL" tabindex="5" readonly>
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                                  onclick="openCalendar('datePicker1')" alt="달력 아이콘">
                             <input type="date" id="datePicker1" class="hidden-date"
@@ -257,7 +262,7 @@
                         <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
                         <div class="p-r">
                             <input type="text" class="date-input input-txt02" id="searchEndDe"
-                                   placeholder="ALL" readonly>
+                                   placeholder="ALL" tabindex="6" readonly>
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                                  onclick="openCalendar('datePicker2')" alt="달력 아이콘">
                             <input type="date" id="datePicker2" class="hidden-date"
@@ -338,7 +343,7 @@
         </div>
 
         <!-- userDetail 탭 삽입 영역 -->
-        <div class="slide-popup-container" data-uid="">
+        <div class="userdtl-slide-popup-container" data-uid="">
             <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
         </div>
 
@@ -480,7 +485,7 @@
         $('.datePicker').datepicker({
             dateFormat: 'yy-mm-dd',
             autoclose: true,
-            todayHighlight:true
+            todayHighlight: true
         });
 
         $('#searchBgnDe').val(moment().subtract(7,'days').format('YYYY-MM-DD'))
@@ -620,7 +625,7 @@
     })
 
     $(window).on('resize.jqGrid', function() {
-        jQuery("#userSearchTable").jqGrid('setGridWidth', $(".table-wrap").width());
+        jQuery("#userSearch_grid").jqGrid('setGridWidth', $(".table-wrap").width());
     })
 
     // 달력 아이콘 클릭 시, date input 활성화
@@ -678,13 +683,11 @@
         userSearch_fnSearch();
     })
 
-/* 바로 검색
-    $('.input-txt02').keyup(function(e){
+    $('#userSearch .input-txt02').keyup(function(e){
         if(e.keyCode == '13'){
             userSearch_fnSearch();
         }
     });
-*/
 
     // logout
     $(document).on('click','.logout_icon30', function() {

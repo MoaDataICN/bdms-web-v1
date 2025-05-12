@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor()).excludePathPatterns("/css/**", "/images/**", "/js/**");
+        registry.addInterceptor(localeChangeInterceptor()).excludePathPatterns("/css/**", "/images/**", "/js/**", "/api/**");
     }
 
     @Bean

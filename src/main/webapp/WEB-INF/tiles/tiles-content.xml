@@ -13,8 +13,8 @@
     <definition name="user/userDtlServiceRequests" template="/WEB-INF/views/user/userDtlServiceRequests.jsp" />
     <!-- Input Checkup Data 탭 -->
     <definition name="user/userDtlInputCheckupData" template="/WEB-INF/views/user/userDtlInputCheckupData.jsp" />
-    <!-- Input Checkup Data 탭 -->
-    <definition name="user/userDtlCheckUpResult" template="/WEB-INF/views/user/userDtlCheckUpResult.jsp" />
+    <!-- Checkup Results 탭 -->
+    <definition name="user/userDtlCheckupResults" template="/WEB-INF/views/user/userDtlCheckupResults.jsp" />
 
     <definition name="user/chargeSearchPopup" template="/WEB-INF/views/user/chargeSearchPopup.jsp"/>
     <definition name="user/chargeSearchOnSlidePopup" template="/WEB-INF/views/user/chargeSearchOnSlidePopup.jsp"/>

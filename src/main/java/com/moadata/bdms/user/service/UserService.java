@@ -14,13 +14,29 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserService {
 	public List<UserSearchDTO> selectUserSearch(UserSearchDTO userSearchDTO);
 
+	public UserDtlGeneralDTO selectUserDtlGeneral(String userId);
+
+	boolean updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO);
+
+	boolean updateUserGeneral(UserUpdateDTO userUpdateDTO);
+
+	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param);
+
+	public List<UserSearchDTO> selectAllInChargeNm();
+
+	public List<UserSearchDTO> selectLowLevelAdmins(String grpId);
+
+	boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO);
+
+	boolean insertUserBody(UserUpdateDTO userUpdateDTO);
+
 	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO);
 
 	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param);
 
 	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param);
 
-	public void updateAltStt(Map<String, Object> param);
+	boolean updateAltStt(Map<String, Object> param);
 
 	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO);
 
@@ -28,21 +44,7 @@ public interface UserService {
 
 	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param);
 
-	public void updateReqStt(Map<String, Object> param);
-
-	public UserDtlGeneralVO selectUserDtlGeneral(String userId);
-
-	boolean updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO);
-
-	boolean updateUserGeneral(UserUpdateDTO userUpdateDTO);
-
-	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm);
-
-	public List<UserSearchDTO> selectAllInChargeNm();
-
-	boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO);
-
-	boolean insertUserBody(UserUpdateDTO userUpdateDTO);
+	boolean updateReqStt(Map<String, Object> param);
 
 	public List<UserVO> selectUserList(UserVO user);
 

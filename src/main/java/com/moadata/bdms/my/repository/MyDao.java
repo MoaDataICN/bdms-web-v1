@@ -20,4 +20,8 @@ public class MyDao extends BaseAbstractDao {
 	public Map<String, Object> selectUserCntGrp() {
 		return (Map<String, Object>)selectOne("my.selectUserCntGrp");
 	}
+
+	public void updateCheckupKey(String userId) {
+		update("my.updateCheckupKey", userId);
+	}
 }

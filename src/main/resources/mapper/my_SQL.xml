@@ -32,4 +32,10 @@
         FROM
             t_wlk_my
     </select>
+
+    <update id="updateCheckupKey" parameterType="String">
+        UPDATE T_WLK_MY
+        SET CHECKUP_KEY = 'q8QXy3iEJMMvd8I4cjAtlwviwO6l0CBDtYOFoinXwWQkeUBvEvv6Aj7DlypJCROh'
+        WHERE USER_ID = #{userId}
+    </update>
 </mapper>

@@ -29,7 +29,7 @@
 			t_walk.t_wlk_mng_req req ON req.USER_ID = my.USER_ID
 		LEFT OUTER JOIN
 			t_walk.t_wlk_mng_alt alt ON req.ALRM_ID = alt.ALRM_ID
-		INNER JOIN
+		LEFT OUTER JOIN
 			t_walk.t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
 		WHERE
 			1=1
@@ -122,6 +122,223 @@
 	<select id="selectUserSearchTotalRecords" parameterType="UserSearchDTO" resultType="int">
 		SELECT FOUND_ROWS();
 	</select>
+
+	<select id="selectUserDtlGeneral" parameterType="String" resultType="UserDtlGeneralDTO">
+		SELECT
+			my.USER_NM, my.EMAIL_ID,
+			my.MOBILE, my.USER_ID,
+			my.SX, admin.USER_NM AS IN_CHARGE_NM,
+			my.BRTH_DT, my.GRP_TP,
+			twtb.HEIGHT, my.REGIST_DT AS REGIST_DT,
+			twtb.WEIGHT, twch.REGIST_DT AS LAST_ACCESS,
+			my.ADDR, my.WD_DT, my.WD_YN,
+			my.mmo,
+			my.UPT_DT, my.UPT_ID,
+			admin.GRP_LV
+		FROM
+			t_walk.t_wlk_my my
+		LEFT OUTER JOIN
+			(
+				SELECT
+					USER_ID, HEIGHT, WEIGHT
+				FROM
+					(
+						SELECT
+							USER_ID, HEIGHT, WEIGHT,
+							ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
+						FROM
+							t_walk.t_wlk_td_body
+					) twtb_latest
+					WHERE rn = 1
+			) twtb ON my.USER_ID = twtb.USER_ID
+		LEFT OUTER JOIN
+			(
+				SELECT
+					USER_ID, REGIST_DT
+				FROM
+				(
+					SELECT
+						USER_ID, REGIST_DT,
+						ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
+					FROM
+						t_walk.t_wlk_cmm_hst
+				) latest_hst
+				WHERE rn = 1
+			) twch ON my.USER_ID = twch.USER_ID
+		LEFT OUTER JOIN
+			t_walk.t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
+		WHERE
+			1=1
+		<if test="userId != null and userId != ''">
+		AND
+			my.USER_ID = #{userId}
+		</if>
+	</select>
+
+	<update id="updateUserResetPwByAdmin" parameterType="MyResetPwDTO">
+		UPDATE
+			t_wlk_my
+		SET
+			PW = #{pw},
+			UPT_ID = #{uptId},
+			UPT_DT = NOW()
+		WHERE
+			USER_ID = #{userId}
+	</update>
+
+	<update id="updateUserGeneral" parameterType="UserUpdateDTO">
+		UPDATE
+			t_walk.t_wlk_my
+		SET
+		<if test="mobile != null and mobile != ''">
+			MOBILE = #{mobile},
+		</if>
+
+		<if test="sx != null and sx != ''">
+			SX = #{sx},
+		</if>
+
+		<if test="brthDt != null and brthDt != ''">
+			BRTH_DT = #{brthDt},
+		</if>
+
+		<if test="grpTp != null and grpTp != ''">
+			GRP_TP = #{grpTp},
+		</if>
+
+		<if test="addr != null and addr != ''">
+			ADDR = #{addr},
+		</if>
+
+		<if test="wdDt != null and wdDt != ''">
+			WD_DT = #{wdDt},
+		</if>
+
+		<if test="wdYn != null and wdYn != ''">
+			WD_YN = #{wdYn},
+		</if>
+
+		<if test="mmo != null and mmo != ''">
+			MMO = #{mmo},
+		</if>
+
+		UPT_DT = NOW(),
+
+		<if test="uptId != null and uptId != ''">
+			UPT_ID = #{uptId}
+		</if>
+
+		WHERE
+			1=1
+
+		<if test="userId != null and userId != ''">
+			AND USER_ID = #{userId}
+		</if>
+	</update>
+
+	<!-- 해당 담당자 존재하는지 조회 -->
+	<select id="selectInChargeNmList" parameterType="string" resultType="UserSearchDTO">
+		WITH RECURSIVE sub_groups AS
+			(
+				SELECT
+					GRP_ID
+				FROM
+					T_WLK_MNG_GRP
+				WHERE
+					GRP_ID = #{grpId}
+				UNION ALL
+				SELECT
+					g.GRP_ID
+				FROM
+					T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg on g.PGRP_ID = sg.GRP_ID
+			)
+		SELECT
+			USER_ID AS IN_CHARGE_ID,
+			USER_NM AS IN_CHARGE_NM
+		FROM
+			t_wlk_mng_user usr
+		WHERE
+			usr.GRP_ID in
+				(
+					SELECT
+						*
+					FROM
+						sub_groups
+					WHERE
+						grp_id != #{grpId}
+				)
+		AND
+			USER_NM LIKE CONCAT(#{inChargeNm}, '%')
+	</select>
+
+	<!-- 전체 담당자 목록 조회 -->
+	<select id="selectAllInChargeNm" parameterType="string" resultType="UserSearchDTO">
+		SELECT DISTINCT
+			USER_ID AS IN_CHARGE_ID,
+			USER_NM AS IN_CHARGE_NM
+		FROM
+			t_walk.t_wlk_mng_user admin;
+	</select>
+
+	<!-- 하위 담당자 목록 조회 -->
+	<select id="selectLowLevelAdmins" parameterType="string" resultType="UserSearchDTO">
+		WITH RECURSIVE sub_groups AS
+			(
+				SELECT
+					GRP_ID
+				FROM
+					T_WLK_MNG_GRP
+				WHERE
+					GRP_ID = #{grpId}
+				UNION ALL
+				SELECT
+					g.GRP_ID
+				FROM
+					T_WLK_MNG_GRP g
+				INNER JOIN sub_groups sg ON g.PGRP_ID = sg.GRP_ID
+			)
+		SELECT
+			USER_ID AS IN_CHARGE_ID,
+			USER_NM AS IN_CHARGE_NM
+		FROM
+			t_wlk_mng_user usr
+		WHERE
+			usr.GRP_ID in
+				(
+					SELECT
+						*
+					FROM
+						sub_groups
+					WHERE
+						grp_id != #{grpId}
+				)
+	</select>
+
+	<update id="updateUserInChargeIdByNm" parameterType="UserUpdateDTO">
+		UPDATE
+			t_walk.t_wlk_my
+		SET
+			IN_CHARGE_ID =
+			(
+				SELECT
+					admin.USER_ID
+				FROM
+					t_walk.t_wlk_mng_user admin
+				WHERE
+					admin.USER_NM = #{inChargeNm}
+				LIMIT 1
+			)
+		WHERE
+			USER_ID = #{userId};
+	</update>
+
+	<insert id="insertUserBody" parameterType="UserUpdateDTO">
+		INSERT INTO
+			t_walk.t_wlk_td_body (USER_ID, CR_DT, HEIGHT, WEIGHT, REGIST_DT)
+		VALUES
+			(#{userId}, NOW(), #{height}, #{weight}, NOW());
+	</insert>
 
 	<select id="selectUserDtlHealthAlerts" parameterType="UserDtlHealthAlertsDTO" resultType="UserDtlHealthAlertsDTO">
 		SELECT SQL_CALC_FOUND_ROWS
@@ -320,164 +537,6 @@
 		WHERE
 			REQ_ID = #{reqId}
 	</update>
-
-	<select id="selectUserDtlGeneral" parameterType="String" resultType="UserDtlGeneralVO">
-		SELECT
-			my.USER_NM, my.EMAIL_ID,
-			my.MOBILE, my.USER_ID,
-			my.SX, admin.USER_NM AS IN_CHARGE_NM,
-			my.BRTH_DT, my.GRP_TP,
-			twtb.HEIGHT, my.REGIST_DT AS REGIST_DT,
-			twtb.WEIGHT, twch.REGIST_DT AS LAST_ACCESS,
-			my.ADDR, my.WD_DT, my.WD_YN,
-			my.mmo,
-			my.UPT_DT, my.UPT_ID,
-			admin.GRP_LV
-		FROM
-			t_walk.t_wlk_my my
-		LEFT OUTER JOIN
-			(
-				SELECT
-					USER_ID, HEIGHT, WEIGHT
-				FROM
-					(
-						SELECT
-							USER_ID, HEIGHT, WEIGHT,
-							ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
-						FROM
-							t_walk.t_wlk_td_body
-					) twtb_latest
-					WHERE rn = 1
-			) twtb ON my.USER_ID = twtb.USER_ID
-		LEFT OUTER JOIN
-			(
-				SELECT
-					USER_ID, REGIST_DT
-				FROM
-				(
-					SELECT
-						USER_ID, REGIST_DT,
-						ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY REGIST_DT DESC) AS rn
-					FROM
-						t_walk.t_wlk_cmm_hst
-				) latest_hst
-				WHERE rn = 1
-			) twch ON my.USER_ID = twch.USER_ID
-		INNER JOIN
-			t_walk.t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
-		WHERE
-			1=1
-		<if test="userId != null and userId != ''">
-		AND
-			my.USER_ID = #{userId}
-		</if>
-	</select>
-
-	<update id="updateUserResetPwByAdmin" parameterType="MyResetPwDTO">
-		UPDATE
-			t_wlk_my
-		SET
-			PW = #{pw},
-			UPT_ID = #{uptId},
-			UPT_DT = NOW()
-		WHERE
-			USER_ID = #{userId}
-	</update>
-
-	<select id="updateUserGeneral" parameterType="UserUpdateDTO" resultType="int">
-		UPDATE
-			t_walk.t_wlk_my
-		SET
-		<if test="mobile != null and mobile != ''">
-			MOBILE = #{mobile},
-		</if>
-
-		<if test="sx != null and sx != ''">
-			SX = #{sx},
-		</if>
-
-		<if test="brthDt != null and brthDt != ''">
-			BRTH_DT = #{brthDt},
-		</if>
-
-		<if test="grpTp != null and grpTp != ''">
-			GRP_TP = #{grpTp},
-		</if>
-
-		<if test="addr != null and addr != ''">
-			ADDR = #{addr},
-		</if>
-
-		<if test="wdDt != null and wdDt != ''">
-			WD_DT = #{wdDt},
-		</if>
-
-		<if test="wdYn != null and wdYn != ''">
-			WD_YN = #{wdYn},
-		</if>
-
-		<if test="mmo != null and mmo != ''">
-			MMO = #{mmo},
-		</if>
-
-		UPT_DT = NOW(),
-
-		<if test="uptId != null and uptId != ''">
-			UPT_ID = #{uptId}
-		</if>
-
-		WHERE
-			1=1
-
-		<if test="userId != null and userId != ''">
-			AND USER_ID = #{userId}
-		</if>
-	</select>
-
-	<!-- 해당 담당자 존재하는지 조회 -->
-	<select id="selectInChargeNmList" parameterType="string" resultType="UserSearchDTO">
-		SELECT DISTINCT
-			USER_ID AS IN_CHARGE_ID,
-			USER_NM AS IN_CHARGE_NM
-		FROM
-			t_walk.t_wlk_mng_user admin
-		WHERE
-			USER_NM LIKE CONCAT(#{inChargeNm}, '%')
-	</select>
-
-	<!-- 전체 담당자 목록 조회 -->
-	<select id="selectAllInChargeNm" parameterType="string" resultType="UserSearchDTO">
-		SELECT DISTINCT
-			USER_ID AS IN_CHARGE_ID,
-			USER_NM AS IN_CHARGE_NM
-		FROM
-			t_walk.t_wlk_mng_user admin;
-	</select>
-
-	<select id="updateUserInChargeIdByNm" parameterType="UserUpdateDTO" resultType="int">
-		UPDATE
-			t_walk.t_wlk_my
-		SET
-			IN_CHARGE_ID =
-			(
-				SELECT
-					admin.USER_ID
-				FROM
-					t_walk.t_wlk_mng_user admin
-				WHERE
-					admin.USER_NM = #{inChargeNm}
-				LIMIT 1
-			)
-		WHERE
-			USER_ID = #{userId};
-	</select>
-
-	<select id="insertUserBody" parameterType="UserUpdateDTO" resultType="int">
-		INSERT INTO
-			t_walk.t_wlk_td_body (USER_ID, CR_DT, HEIGHT, WEIGHT, REGIST_DT)
-		VALUES
-			(#{userId}, NOW(), #{height}, #{weight}, NOW());
-	</select>
 
 	<!-- 사용자 목록 -->
 	<select id="selectUserList" parameterType="userVO" resultType="userVO">

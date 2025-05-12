@@ -40,7 +40,7 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 
         String requestURI = request.getRequestURI();
 
-        if (requestURI.startsWith("/resources/")) {
+        if (requestURI.startsWith("/resources/") || requestURI.contains("api")) {
             return true;
         }
 

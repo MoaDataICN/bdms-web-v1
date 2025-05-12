@@ -57,7 +57,6 @@
     <button type="button" class="second-tap-btn" data-tab="health-alerts"><spring:message code='common.tapMenu.healthAlerts'/></button>
     <button type="button" class="second-tap-btn" data-tab="service-requests"><spring:message code='common.tapMenu.serviceRequests'/></button>
     <button type="button" class="second-tap-btn active" data-tab="input-checkup-data"><spring:message code='common.tapMenu.inputCheckupData'/></button>
-    <button type="button" class="second-tap-btn" data-tab="checkup-result"><spring:message code='common.tapMenu.checkupResult'/></button>
 </div>
 
 <div class="mt-16px table-data-wrap">

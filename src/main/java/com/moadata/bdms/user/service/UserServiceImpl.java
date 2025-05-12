@@ -1,6 +1,5 @@
 package com.moadata.bdms.user.service;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,62 +78,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
-		return userDao.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param) {
-		return userDao.selectAllHealthAlertsCnt(param);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param) {
-		return userDao.selectLast24hHealthAlertsCnt(param);
-	}
-
-	@Override
-	public void updateAltStt(Map<String, Object> param) {
-        userDao.updateAltStt(param);
-    }
-
-	@Override
-	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
-		return userDao.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectAllServiceRequestsCnt(Map<String, Object> param) {
-		return userDao.selectAllServiceRequestsCnt(param);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param) {
-		return userDao.selectLast24hServiceRequestsCnt(param);
-	}
-	@Override
-	public void updateReqStt(Map<String, Object> param) {
-		userDao.updateReqStt(param);
-	}
-
-	@Override
-	public UserDtlGeneralVO selectUserDtlGeneral(String userId) {
+	public UserDtlGeneralDTO selectUserDtlGeneral(String userId) {
 		try {
-			UserDtlGeneralVO userDtl = userDao.selectUserDtlGeneral(userId);
+			UserDtlGeneralDTO userDtlGeneralDTO = userDao.selectUserDtlGeneral(userId);
 
-			if (userDtl.getUserNm() != null && !userDtl.getUserNm().isEmpty()) {
-				userDtl.setUserNm(EncryptUtil.decryptText(userDtl.getUserNm()));
+			if (userDtlGeneralDTO.getUserNm() != null && !userDtlGeneralDTO.getUserNm().isEmpty()) {
+				userDtlGeneralDTO.setUserNm(EncryptUtil.decryptText(userDtlGeneralDTO.getUserNm()));
 			}
 
-			if (userDtl.getMobile() != null && !userDtl.getMobile().isEmpty()) {
-				userDtl.setMobile(EncryptUtil.decryptText(userDtl.getMobile()));
+			if (userDtlGeneralDTO.getMobile() != null && !userDtlGeneralDTO.getMobile().isEmpty()) {
+				userDtlGeneralDTO.setMobile(EncryptUtil.decryptText(userDtlGeneralDTO.getMobile()));
 			}
 
-			if (userDtl.getBrthDt() != null && !userDtl.getBrthDt().isEmpty()) {
-				userDtl.setBrthDt(EncryptUtil.decryptText(userDtl.getBrthDt()));
+			if (userDtlGeneralDTO.getBrthDt() != null && !userDtlGeneralDTO.getBrthDt().isEmpty()) {
+				userDtlGeneralDTO.setBrthDt(EncryptUtil.decryptText(userDtlGeneralDTO.getBrthDt()));
 			}
 
-			return userDtl;
+			return userDtlGeneralDTO;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,9 +135,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserSearchDTO> selectInChargeNmList(String inChargeNm) {
+	public List<UserSearchDTO> selectInChargeNmList(Map<String, Object> param) {
 		try {
-			List<UserSearchDTO> inChargeList = userDao.selectInChargeNmList(inChargeNm);
+			List<UserSearchDTO> inChargeList = userDao.selectInChargeNmList(param);
 			return inChargeList;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,7 +154,12 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 		}
 		return null;
-    }
+	}
+
+	@Override
+	public List<UserSearchDTO> selectLowLevelAdmins(String grpId) {
+		return userDao.selectLowLevelAdmins(grpId);
+	}
 
 	@Override
 	public boolean updateUserInChargeIdByNm(UserUpdateDTO userUpdateDTO) {
@@ -217,6 +182,57 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 	}
+
+	@Override
+	public List<UserDtlHealthAlertsDTO> selectUserDtlHealthAlerts(UserDtlHealthAlertsDTO userDtlHealthAlertsDTO) {
+		return userDao.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllHealthAlertsCnt(Map<String, Object> param) {
+		return userDao.selectAllHealthAlertsCnt(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param) {
+		return userDao.selectLast24hHealthAlertsCnt(param);
+	}
+
+	@Override
+	public boolean updateAltStt(Map<String, Object> param) {
+		try {
+			int updatedRows = userDao.updateAltStt(param);
+			return updatedRows > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
+		return userDao.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllServiceRequestsCnt(Map<String, Object> param) {
+		return userDao.selectAllServiceRequestsCnt(param);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param) {
+		return userDao.selectLast24hServiceRequestsCnt(param);
+	}
+	@Override
+	public boolean updateReqStt(Map<String, Object> param) {
+		try {
+			int updatedRows = userDao.updateReqStt(param);
+			return updatedRows > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+    }
 
 	@Override
 	//@PrivacySrch("userNm,phoneNo")

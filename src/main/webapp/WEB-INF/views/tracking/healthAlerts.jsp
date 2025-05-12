@@ -61,7 +61,7 @@
     </div>
 
     <!-- 주요 콘텐츠 시작 -->
-    <div class="second-container mt-18px">
+    <div class="second-container mt-18px search-container">
         <div class="content-row">
             <!-- 좌측 입력폼 그룹 -->
             <div class="row-md-100">
@@ -71,7 +71,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="userNm" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="1">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -80,7 +80,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="emailId" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="2">
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02" id="mobile" placeholder="Please enter(ex.012-3456-7890)"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="3">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -101,7 +101,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="userId" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="4">
                     </div>
                 </div>
             </div>
@@ -127,6 +127,10 @@
                             <spring:message code="common.inCharge"/>
                         </div>
                         <div class="dropdown">
+	                        <button class="dropdown-search" id="userSearch_inChargeNm">
+		                        <spring:message code='common.all'/>
+	                        </button>
+	                        <!--
                             <button class="dropdown-search" id="inChargeNm"><spring:message code="common.all"/><span><img class="icon20" alt=""
                                                                               src="/resources/images/arrow-gray-bottom.svg"></span></button>
                             <div class="dropdown-content">
@@ -135,6 +139,7 @@
                                     <a data-inchargeid="${inCharge.userId}" onclick="$('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith($(this).text())">${inCharge.userNm}</a>
                                 </c:forEach>
                             </div>
+                            -->
                         </div>
                     </c:if>
                 </div>
@@ -147,7 +152,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 datePicker" id="brthDt" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="5">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -177,7 +182,7 @@
                     <div class="row-input">
                         <div class="p-r">
                             <input type="text" class="date-input input-txt02" id="searchBgnDe"
-                                   placeholder="ALL" readonly>
+                                   placeholder="ALL" tabindex="6" readonly>
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                                  onclick="openCalendar('datePicker1')" alt="달력 아이콘">
                             <input type="date" id="datePicker1" class="hidden-date"
@@ -186,7 +191,7 @@
                         <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
                         <div class="p-r">
                             <input type="text" class="date-input input-txt02" id="searchEndDe"
-                                   placeholder="ALL" readonly>
+                                   placeholder="ALL" tabindex="7" readonly>
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                                  onclick="openCalendar('datePicker2')" alt="달력 아이콘">
                             <input type="date" id="datePicker2" class="hidden-date"
@@ -269,7 +274,11 @@
             </div>
         </div>
     </div>
-
+	
+	<!-- 팝업 삽입 영역 -->
+	<div class="charge-search-popup-container">
+	</div>
+	
     <form name="excelForm" method="POST">
         <input type="hidden" id="sortColumn" name="sortColumn" value="dctDt"/>
         <input type="hidden" id="sord" name="sord" value="DESC"/>
@@ -292,7 +301,7 @@
         </div>
 
         <!-- userDetail 탭 삽입 영역 -->
-        <div class="slide-popup-container">
+        <div class="userdtl-slide-popup-container">
             <!-- userDtlGeneral.jsp 등 동적 탭 콘텐츠 -->
         </div>
 
@@ -303,14 +312,10 @@
         <div class="check-pw-popup-container">
         </div>
     </div>
-
-    <!-- 팝업 삽입 영역 -->
-    <div class="charge-search-popup-container">
-    </div>
 </main>
 
 <script type="text/javascript">
-    const inChargeId = '${inChargeId}';
+    //const inChargeId = '${inChargeId}';
 
     // Grid 하단 페이저 숫자
     const pageSize = 10;
@@ -338,6 +343,16 @@
         // 추가할 그리드는 여기에 계속 추가
     };
 
+    let inChargeId = "";
+    let inChargeNm = "";
+
+    // 담당자명 팝업 열기
+    $(document).on('click', '#userSearch_inChargeNm', function () {
+        $(".charge-search-popup-container").load("/user/chargeSearchPopup", function () {
+            $('#chargeSearchPopup').fadeIn();
+        });
+    });
+
     function setSearchParam() {
         return {
             inChargeId : inChargeId != null && inChargeId != '' ? inChargeId : null,
@@ -349,7 +364,8 @@
             mobile : $('#mobile').val().replaceAll('-',''),
             sx : $('#sx').text() != "All" ? $('#sx').text().slice(0,1) : "ALL",
             brthDt : $('#brthDt').val(),
-            inChargeNm : $('#inChargeNm').text() != "All" ? $('#inChargeNm').text() : "",
+            inChargeNm : $('#userSearch_inChargeNm').text().trim() !== "All" ? $('#userSearch_inChargeNm').text().trim() : "",
+            // inChargeNm : $('#inChargeNm').text() != "All" ? $('#inChargeNm').text() : "",
             grpTp : $('#grpNm').text() != "All" ? $('#grpNm').text() : "",
             altTp : $('.alertBtns.active').data('filter') != 'all' ? $('.alertBtns.active')
                 .map(function() {
@@ -367,9 +383,10 @@
         $('#emailId').val('');
         $('#userId').val('');
         $('#mobile').val('');
+        $('#userSearch_inChargeNm').text("All");
         $('#sx').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#brthDt').val('');
-        $('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
+        //$('#inChargeNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('#grpNm').contents().filter(function() {return this.nodeType === 3}).first().replaceWith('All');
         $('.alertBtns.active').removeClass('active');
         $('.alertBtns')[0].classList.add('active');
@@ -549,12 +566,12 @@
     })
 
     <!-- 달력 스크립트 -->
-        // 달력 아이콘 클릭 시, date input 활성화
+    // 달력 아이콘 클릭 시, date input 활성화
     function openCalendar(dateInputId) {
         document.getElementById(dateInputId).showPicker();
     }
 
-        // 날짜 선택 시, 표시할 입력 필드 업데이트
+    // 날짜 선택 시, 표시할 입력 필드 업데이트
     function updateDate(dateInputId, displayId) {
         const dateValue = document.getElementById(dateInputId).value;
         document.getElementById(displayId).value = dateValue;

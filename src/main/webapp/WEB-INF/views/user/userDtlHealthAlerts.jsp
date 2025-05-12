@@ -226,8 +226,8 @@
         </form>
     </div>
 
-    <div class="space-30"></div>
-</div>
+<div class="space-30"></div>
+
 <script type="text/javascript">
 
 
