@@ -83,7 +83,7 @@
         </div>
 
         <!-- 검색 영역 -->
-        <div class="second-container mt-18px">
+        <div class="second-container mt-18px" id="userDtlServiceRequests">
             <div class="content-row">
                 <!-- 좌측 입력폼 그룹 -->
         
@@ -465,6 +465,10 @@
         serviceRequests_fnSearch();
     }
 
+    $(window).on('resize.jqGrid', function() {
+        jQuery("#serviceRequests_grid").jqGrid('setGridWidth', $(".userdtl-slide-popup-container").width() - 74);
+    })
+
     $(document).on('click', '#serviceRequests_date .data-select-btn', function () {
         //console.log('✅ serviceRequests data-select-btn clicked!');
 
@@ -594,11 +598,9 @@
         });
     });
 
-/* 바로 검색
-    $('.input-txt02').keyup(function(e){
+    $('#userDtlServiceRequests .input-txt02').keyup(function(e){
         if(e.keyCode == '13'){
             serviceRequests_fnSearch();
         }
     });
-*/
 </script>
