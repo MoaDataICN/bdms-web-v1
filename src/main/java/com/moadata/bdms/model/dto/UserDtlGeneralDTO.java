@@ -1,14 +1,13 @@
 package com.moadata.bdms.model.dto;
 
-import com.moadata.bdms.common.base.vo.BaseSearchObject;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.type.Alias;
 
 @Getter
 @Setter
-@Alias("UserDtlGeneralVO")
-public class UserDtlGeneralVO {
+@Alias("UserDtlGeneralDTO")
+public class UserDtlGeneralDTO {
     private String userNm;         // 이름
     private String emailId;        // 이메일
     private String mobile;         // 전화번호

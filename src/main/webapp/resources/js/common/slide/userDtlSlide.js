@@ -1,12 +1,19 @@
-const userDtlSlide_messages = {
-    f: "<spring:message code='common.sex.f'/>",
-    m: "<spring:message code='common.sex.m'/>",
-    active: "<spring:message code='common.active'/>",
-    suspended: "<spring:message code='common.suspended'/>",
-    readyToDelete: "<spring:message code='common.readyToDelete'/>",
-    all: "<spring:message code='common.all'/>",
-    select: "<spring:message code='common.select'/>"
-};
+function disableTabFocus() {
+    $('.search-container').find('input, button, a, textarea, select')
+        .attr('tabindex', '-1');
+}
+
+function enableTabFocus() {
+    $('.search-container').find('input, button, a, textarea, select')
+        .removeAttr('tabindex');
+
+    $('#userNm').attr('tabindex', '1').focus().blur();
+    $('#emailId').attr('tabindex', '2');
+    $('#mobile').attr('tabindex', '3');
+    $('#brthDt').attr('tabindex', '4');
+    $('#searchBgnDe').attr('tabindex', '5');
+    $('#searchEndDe').attr('tabindex', '6');
+}
 
 // 우측에서 나타나는 슬라이드 팝업 열기
 function openPopup() {
@@ -30,9 +37,12 @@ function openPopup() {
 
 // 우측에서 나타나는 슬라이드 팝업 닫기
 function closePopup() {
+    $('.userdtl-slide-popup-container').empty();  // 내부 컨텐츠 제거
     $('#customerPopup').removeClass('active');
     $('#slideOverlay').removeClass('active');
     document.body.classList.remove('no-scroll');
+
+    enableTabFocus();
 }
 
 // 반투명 오버레이, 팝업 내 닫기 버튼 클릭 시 슬라이드 닫기
@@ -64,6 +74,13 @@ function loadUserDetailTab(tab = 'general', userId) {
             general_readonly();
             extractUserDtlGeneralFromDOM("#customerPopup .userdtl-slide-popup-container");
             updateDeletionDateInfo();
+
+            disableTabFocus();
+            $("#general_brthDt").datepicker({
+                dateFormat: 'yy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            }).prop("disabled", true);
         } else if (tab === 'health-alerts') {
             drawHealthAlertsChart('all');
             initHealthAlertsGrid();
