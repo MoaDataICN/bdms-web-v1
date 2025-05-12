@@ -2024,6 +2024,7 @@ textarea {
 .userdtl-slide-popup-container {
     padding: 20px;
     overflow-y: auto;
+    width: 100%;
 }
 
 .slide-open-btn {
