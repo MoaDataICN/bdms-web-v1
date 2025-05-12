@@ -2,7 +2,6 @@ package com.moadata.bdms.user.repository;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +32,8 @@ public class UserDao extends BaseAbstractDao {
 		return resultList;
 	}
 
-	public UserDtlGeneralVO selectUserDtlGeneral(String userId) {
-		return (UserDtlGeneralVO) selectOne("user.selectUserDtlGeneral", userId);
+	public UserDtlGeneralDTO selectUserDtlGeneral(String userId) {
+		return (UserDtlGeneralDTO) selectOne("user.selectUserDtlGeneral", userId);
 	}
 
 	public int updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO) {
@@ -92,8 +91,8 @@ public class UserDao extends BaseAbstractDao {
 		return selectList("user.selectLast24hHealthAlertsCnt", param);
 	}
 
-	public void updateAltStt(Map<String, Object> param) {
-		update("user.updateAltStt", param);
+	public int updateAltStt(Map<String, Object> param) {
+		return update("user.updateAltStt", param);
 	}
 
 	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO) {
@@ -115,8 +114,8 @@ public class UserDao extends BaseAbstractDao {
 		return selectList("user.selectLast24hServiceRequestsCnt", param);
 	}
 
-	public void updateReqStt(Map<String, Object> param) {
-		update("user.updateReqStt", param);
+	public int updateReqStt(Map<String, Object> param) {
+		return update("user.updateReqStt", param);
 	}
 
 	public UserVO selectUserInfo(String userId) {

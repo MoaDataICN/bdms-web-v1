@@ -272,9 +272,16 @@ public class UserController extends BaseController {
 			param.put("trkId", trkId);
 			param.put("altStt", altStt);
 
-			userService.updateAltStt(param);
+			boolean altSttUpdated = userService.updateAltStt(param);
 
-			response.put("success", true);
+			if (!altSttUpdated) {
+				response.put("success", false);
+				response.put("message", "알림 상태 수정 실패");
+				return response;
+			} else {
+				response.put("success", true);
+				response.put("message", "알림 상태가 성공적으로 수정되었습니다.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
@@ -418,7 +425,16 @@ public class UserController extends BaseController {
 			param.put("reqId", reqId);
 			param.put("reqStt", reqStt);
 
-			userService.updateReqStt(param);
+			boolean reqSttUpdated = userService.updateReqStt(param);
+
+			if (!reqSttUpdated) {
+				response.put("success", false);
+				response.put("message", "알림 상태 수정 실패");
+				return response;
+			} else {
+				response.put("success", true);
+				response.put("message", "알림 상태가 성공적으로 수정되었습니다.");
+			}
 
 			response.put("success", true);
 		} catch (Exception e) {
@@ -443,13 +459,13 @@ public class UserController extends BaseController {
 		System.out.println("grpId : " + grpId);
 		System.out.println("grpLv : " + grpLv);
 
-		UserDtlGeneralVO userDtlGeneralVO = userService.selectUserDtlGeneral(userId);  // 사용자 조회
-		System.out.println(userDtlGeneralVO.getUserId());
+		UserDtlGeneralDTO userDtlGeneralDTO = userService.selectUserDtlGeneral(userId);  // 사용자 조회
+		System.out.println(userDtlGeneralDTO.getUserId());
 
 //		model.addAttribute("grpLv", "2");  // 테스트용
 		model.addAttribute("grpLv", grpLv);  // 원래 코드
 //		model.addAttribute("userId", userId);
-		model.addAttribute("userDtlGeneral", userDtlGeneralVO);
+		model.addAttribute("userDtlGeneral", userDtlGeneralDTO);
 
 		switch (tab) {
             case "general":
@@ -459,19 +475,9 @@ public class UserController extends BaseController {
             case "health-alerts":
                 System.out.println("tab : health-alerts");
 
-				userDtlHealthAlertsDTO.setUserId(userId);  // userId 넘겨줌
-
-				List<UserDtlHealthAlertsDTO> healthAlertsList = userService.selectUserDtlHealthAlerts(userDtlHealthAlertsDTO);
-				model.addAttribute("healthAlertsList", healthAlertsList);
-
 				return "user/userDtlHealthAlerts";
 			case "service-requests":
 				System.out.println("tab : service-requests");
-
-				userDtlServiceRequestsDTO.setUserId(userId);  // userId 넘겨줌
-
-				List<UserDtlServiceRequestsDTO> serviceRequestsList = userService.selectUserDtlServiceRequests(userDtlServiceRequestsDTO);
-				model.addAttribute("serviceRequestsList", serviceRequestsList);
 
 				return "user/userDtlServiceRequests";
 			case "input-checkup-data":
@@ -595,9 +601,9 @@ public class UserController extends BaseController {
 			}
 
 			// 2. 담당자명 UPDATE
-			boolean inChargeIdInserted = userService.updateUserInChargeIdByNm(userUpdateDTO);
+			boolean inChargeUpdated = userService.updateUserInChargeIdByNm(userUpdateDTO);
 
-			if (!inChargeIdInserted) {
+			if (!inChargeUpdated) {
 				response.put("success", false);
 				response.put("message", "담당자명 수정 실패");
 				return response;
@@ -626,7 +632,6 @@ public class UserController extends BaseController {
 
 		return response;
 	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "/selectInChargeNmList", method = RequestMethod.POST)

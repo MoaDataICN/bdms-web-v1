@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserService {
 	public List<UserSearchDTO> selectUserSearch(UserSearchDTO userSearchDTO);
 
-	public UserDtlGeneralVO selectUserDtlGeneral(String userId);
+	public UserDtlGeneralDTO selectUserDtlGeneral(String userId);
 
 	boolean updateUserResetPwByAdmin(MyResetPwDTO myResetPwDTO);
 
@@ -36,7 +36,7 @@ public interface UserService {
 
 	public List<Map<String, Object>> selectLast24hHealthAlertsCnt(Map<String, Object> param);
 
-	public void updateAltStt(Map<String, Object> param);
+	boolean updateAltStt(Map<String, Object> param);
 
 	public List<UserDtlServiceRequestsDTO> selectUserDtlServiceRequests(UserDtlServiceRequestsDTO userDtlServiceRequestsDTO);
 
@@ -44,7 +44,7 @@ public interface UserService {
 
 	public List<Map<String, Object>> selectLast24hServiceRequestsCnt(Map<String, Object> param);
 
-	public void updateReqStt(Map<String, Object> param);
+	boolean updateReqStt(Map<String, Object> param);
 
 	public List<UserVO> selectUserList(UserVO user);
 
