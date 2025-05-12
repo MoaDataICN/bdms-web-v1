@@ -1850,6 +1850,12 @@ textarea {
     justify-content: space-between;
 }
 
+.table-data-wrap02 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /*  팝업  */
 
 /*================== 일반 popup =========================*/

@@ -1,8 +1,23 @@
 
 /************* 본문 관련 공통 시작 *************/
+.icon10 {
+    height: 10px !important;
+    width: 10px !important;
+}
+
+.icon12 {
+    height: 12px !important;
+    width: 12px !important;
+}
+
 .icon14 {
-    height: 14px;
-    width: 14px;
+    height: 14px !important;
+    width: 14px !important;
+}
+
+.icon15 {
+    height: 15px !important;
+    width: 15px !important;
 }
 
 .icon16 {
@@ -850,6 +865,10 @@
     vertical-align: middle;
     line-height: 1;
     transition: all 0.2s;
+    /* max-width: 106px; */
+    width: 100%;
+    max-width: 124px;
+
 }
 
 .detail-btn.active {
@@ -1160,6 +1179,14 @@ textarea {
 
 .f-x-c02{
     flex-direction: column;
+}
+
+.f-x-c03{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .f-x{

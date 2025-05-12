@@ -383,6 +383,11 @@
             pageSize: 10,
             currentPageGroup: 1,
             rowNumsVal: 10
+        },
+        checkUpResult_grid: {
+            pageSize: 10,
+            currentPageGroup: 1,
+            rowNumsVal: 10
         }
         // 추가할 그리드는 여기에 계속 추가
     };

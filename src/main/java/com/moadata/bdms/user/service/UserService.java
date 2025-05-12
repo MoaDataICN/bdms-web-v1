@@ -46,6 +46,8 @@ public interface UserService {
 
 	public List<UserVO> selectUserList(UserVO user);
 
+	public List<UserDtlCheckUpResultDTO> selectUserDtlCheckUpResults(UserDtlCheckUpResultDTO userDtlCheckUpResultDTO);
+
 	/**
 	 * 사용자 상세
 	 * 

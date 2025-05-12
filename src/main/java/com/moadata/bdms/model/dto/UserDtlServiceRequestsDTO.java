@@ -9,13 +9,13 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @Alias("UserDtlServiceRequestsDTO")
 public class UserDtlServiceRequestsDTO extends BaseSearchObject {
-    private String reqId;  // my.REQ_ID
-    private String userId;  // my.USER_ID
-    private String reqDt;  // req.DCT_DT
-    private String reqTp;  // req.ALT_TP
-    private String grpTp;  // my.GRP_TP
-    private String inChargeNm;  // admin.USER_NM
-    private String inChargeId;  // admin.USER_ID
+    private String reqId;
+    private String userId;
+    private String reqDt;
+    private String reqTp;
+    private String grpTp;
+    private String inChargeNm;
+    private String inChargeId;
     private String inChargeIds;
-    private String reqStt;  // req.ALT_STT
+    private String reqStt;
 }

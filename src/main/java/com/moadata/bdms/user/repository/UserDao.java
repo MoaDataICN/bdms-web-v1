@@ -384,4 +384,12 @@ public class UserDao extends BaseAbstractDao {
 		}
 		return true;
 	}
+
+	public List<UserDtlCheckUpResultDTO> selectUserDtlCheckUpResults(UserDtlCheckUpResultDTO userDtlCheckUpResultDTO){
+		List<UserDtlCheckUpResultDTO> list = selectList("user.selectCheckUpResult", userDtlCheckUpResultDTO);
+		if(list.size() > 0) {
+			list.get(0).setCnt((int)selectOne("user.selectUserSearchTotalRecords"));
+		}
+		return list;
+	}
 }

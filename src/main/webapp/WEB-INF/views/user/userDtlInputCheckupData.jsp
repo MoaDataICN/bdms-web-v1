@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-
+<!--
 <script src="/resources/js/jquery-ui.js"></script>
 <script src="/resources/js/dropzone-min.js"></script>
 
@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="/resources/css/bdms_common.css">
 <link rel="stylesheet" href="/resources/css/bdms_style.css">
 <link rel="stylesheet" href="/resources/css/bdms_color.css">
+-->
 
 <style>
     .ui-state-default.ui-corner-top.ui-jqgrid-hdiv {
@@ -56,6 +57,7 @@
     <button type="button" class="second-tap-btn" data-tab="health-alerts"><spring:message code='common.tapMenu.healthAlerts'/></button>
     <button type="button" class="second-tap-btn" data-tab="service-requests"><spring:message code='common.tapMenu.serviceRequests'/></button>
     <button type="button" class="second-tap-btn active" data-tab="input-checkup-data"><spring:message code='common.tapMenu.inputCheckupData'/></button>
+    <button type="button" class="second-tap-btn" data-tab="checkup-result"><spring:message code='common.tapMenu.checkupResult'/></button>
 </div>
 
 <div class="mt-16px table-data-wrap">

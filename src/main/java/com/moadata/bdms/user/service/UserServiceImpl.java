@@ -451,4 +451,9 @@ public class UserServiceImpl implements UserService {
 	public List<Map> selectValidMinMax(){
 		return userDao.selectValidMinMax();
 	}
+
+	@Override
+	public List<UserDtlCheckUpResultDTO> selectUserDtlCheckUpResults(UserDtlCheckUpResultDTO userDtlCheckUpResultDTO){
+		return userDao.selectUserDtlCheckUpResults(userDtlCheckUpResultDTO);
+	}
 }

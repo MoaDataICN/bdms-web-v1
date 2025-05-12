@@ -168,6 +168,40 @@ public class UserController extends BaseController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/selectCheckUpResult", method = RequestMethod.POST)
+	public Map<String, Object> selectCheckUpResult(@ModelAttribute UserDtlCheckUpResultDTO userDtlCheckUpResultDTO) {
+		Map<String, Object> map = new HashMap<>();
+
+		String message = "";
+		boolean isError = false;
+		List<UserDtlCheckUpResultDTO> resultList;
+
+		try {
+			userDtlCheckUpResultDTO.setSortColumn(userDtlCheckUpResultDTO.getSidx());
+			userDtlCheckUpResultDTO.setPageIndex(Integer.parseInt(userDtlCheckUpResultDTO.getPage()) -1);
+			userDtlCheckUpResultDTO.setRowNo(userDtlCheckUpResultDTO.getPageIndex() * userDtlCheckUpResultDTO.getRows());
+
+			resultList = userService.selectUserDtlCheckUpResults(userDtlCheckUpResultDTO);
+
+			int records = resultList.size() == 0 ? 0 : resultList.get(0).getCnt();
+
+			map.put("page", userDtlCheckUpResultDTO.getPageIndex() + 1);
+			map.put("records", records);
+			map.put("total", records == 0 ? 1 : Math.ceil(records / (double) userDtlCheckUpResultDTO.getRows()));
+			map.put("rows", resultList);
+		} catch(Exception e) {
+			e.printStackTrace();
+			isError = true;
+			message = e.getMessage();
+		}
+
+		map.put("isError", isError);
+		map.put("message", message);
+
+		return map;
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/healthAlertsCnt/all", method = RequestMethod.POST)
 	public Map<String, Object> getAllHealthAlertsCnt(@RequestParam("userId") String userId,
 													HttpServletRequest request) {
@@ -429,6 +463,7 @@ public class UserController extends BaseController {
 	public String getUserDetail(@PathVariable String tab, @RequestParam String userId,
 								UserDtlHealthAlertsDTO userDtlHealthAlertsDTO,
 								UserDtlServiceRequestsDTO userDtlServiceRequestsDTO,
+								UserDtlCheckUpResultDTO userDtlCheckUpResultDTO,
 								Model model, HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		UserVO adminVO = (UserVO) session.getAttribute("user");
@@ -474,6 +509,9 @@ public class UserController extends BaseController {
 				System.out.println("tab : input-checkup-data");
 
 				return "user/userDtlInputCheckupData";
+			case "checkup-result":
+				System.out.println("tab : checkup-result");
+				return "user/userDtlCheckUpResult";
             default:
                 System.out.println("tab : general");
 
@@ -1377,4 +1415,10 @@ public class UserController extends BaseController {
 		map.put("message", message);
 		return map;
 	}
+
+	@RequestMapping(value="/checkUpResult", method = RequestMethod.GET)
+	public String checkUpResult(HttpServletRequest request, ModelMap model) {
+		return "userDtlCheckUpResult";
+	}
+
 }
