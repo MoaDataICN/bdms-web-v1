@@ -76,7 +76,7 @@
     </div>
 
     <!-- 주요 콘텐츠 시작 -->
-    <div class="second-container mt-18px">
+    <div class="second-container mt-18px search-container">
         <div class="content-row">
             <!-- 좌측 입력폼 그룹 -->
             <div class="row-md-100">
@@ -86,7 +86,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="userNm" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="1">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -95,7 +95,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="emailId" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="2">
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02" id="mobile" placeholder="Please enter(ex.012-3456-7890)"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="3">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -116,7 +116,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 hold" id="userId" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="4">
                     </div>
                 </div>
             </div>
@@ -167,7 +167,7 @@
                     </div>
                     <div class="row-input">
                         <input type="text" class="input-txt02 datePicker" id="brthDt" placeholder="Please enter"
-                               oninput="limitLength(this, 30);">
+                               oninput="limitLength(this, 30);" tabindex="5">
                     </div>
                 </div>
                 <div class="row-wrap">
@@ -197,7 +197,7 @@
                     <div class="row-input">
                         <div class="p-r">
                             <input type="text" class="date-input input-txt02" id="searchBgnDe"
-                                   placeholder="ALL" readonly>
+                                   placeholder="ALL" tabindex="6" readonly>
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                                  onclick="openCalendar('datePicker1')" alt="달력 아이콘">
                             <input type="date" id="datePicker1" class="hidden-date"
@@ -206,7 +206,7 @@
                         <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
                         <div class="p-r">
                             <input type="text" class="date-input input-txt02" id="searchEndDe"
-                                   placeholder="ALL" readonly>
+                                   placeholder="ALL" tabindex="7" readonly>
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
                                  onclick="openCalendar('datePicker2')" alt="달력 아이콘">
                             <input type="date" id="datePicker2" class="hidden-date"
