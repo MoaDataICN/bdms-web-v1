@@ -19,7 +19,7 @@
     <div class="alerts-wrap mt-30px">
         <!-- Mini userDtlGeneral -->
         <div class="mt-16px table-data-wrap">
-            <p class="second-title-status">(${userDtlGeneral.userId}) ${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
+            <p class="second-title-status">${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
             <p class="title-status mr-12px">-<span class="bold-t-01" id="serviceRequests_cntTotal">{0}</span><spring:message code="serviceRequestsTap.description"/></p>
         </div>
 
