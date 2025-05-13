@@ -119,7 +119,7 @@
         </div>
 
         <!-- 검색 영역 -->
-        <div class="second-container mt-18px">
+        <div class="second-container mt-18px" id="userDtlHealthAlerts">
             <div class="content-row">
                 <!-- 좌측 입력폼 그룹 -->
                 <div class="row-md-100">
@@ -148,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <div class="row-md-100">
                     <div class="row-wrap mb-0px">
                         <div class="input-label01">
@@ -169,7 +169,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- submit 버튼 묶음-->
         <div class="content-submit-ui mt-22px">
             <div class="submit-ui-wrap">
@@ -179,7 +179,7 @@
                     <img src="/resources/images/reset-icon.svg" class="icon22">
                     <span><spring:message code='common.reset'/></span>
                 </button>
-        
+
                 <button type="button" class="point-submit-btn" onclick="healthAlerts_fnSearch()">
                     <img src="/resources/images/search-icon.svg" class="icon22">
                     <span>Search</span>
@@ -524,6 +524,10 @@
         healthAlerts_fnSearch();
     }
 
+    $(window).on('resize.jqGrid', function() {
+        jQuery("#healthAlerts_grid").jqGrid('setGridWidth', $(".userdtl-slide-popup-container").width() - 74);
+    })
+
     $(document).on('click', '#healthAlerts_date .data-select-btn', function () {
         //console.log('✅ healthAlerts data-select-btn clicked!');
         $('#healthAlerts_date .data-select-btn').removeClass('active');
@@ -653,11 +657,9 @@
         });
     });
 
-/* 바로 검색
-    $('.input-txt02').keyup(function(e){
+    $('#userDtlHealthAlerts .input-txt02').keyup(function(e){
         if(e.keyCode == '13'){
             healthAlerts_fnSearch();
         }
     });
-*/
 </script>

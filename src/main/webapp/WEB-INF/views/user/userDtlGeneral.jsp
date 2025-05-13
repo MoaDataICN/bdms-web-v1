@@ -20,7 +20,7 @@
                     <spring:message code='common.userNm'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_userNm" value="<c:out value='${userDtlGeneral.userNm}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_userNm" value="<c:out value='${userDtlGeneral.userNm}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
             <div class="row-wrap">
@@ -28,7 +28,7 @@
                     <spring:message code='common.loginId'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_emailId" value="<c:out value='${userDtlGeneral.emailId}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_emailId" value="<c:out value='${userDtlGeneral.emailId}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                     <spring:message code='common.phone'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02" id="general_mobile" value="<c:out value='${userDtlGeneral.mobile}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02" id="general_mobile" value="<c:out value='${userDtlGeneral.mobile}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="1">
                 </div>
             </div>
             <div class="row-wrap">
@@ -47,7 +47,7 @@
                     <spring:message code='common.uid'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_userId" value="<c:out value='${userDtlGeneral.userId}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_userId" value="<c:out value='${userDtlGeneral.userId}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -137,7 +137,7 @@
                     <spring:message code='common.birthDt'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02" id="general_brthDt" value="<c:out value='${userDtlGeneral.brthDt}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 datePicker" id="general_brthDt" value="<c:out value='${userDtlGeneral.brthDt}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="2">
                 </div>
             </div>
             <div class="row-wrap">
@@ -170,7 +170,7 @@
                     <spring:message code='common.height'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02" id="general_height" value="<c:out value='${userDtlGeneral.height}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02" id="general_height" value="<c:out value='${userDtlGeneral.height}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="3">
                 </div>
             </div>
             <div class="row-wrap">
@@ -178,7 +178,7 @@
                     <spring:message code='common.regDt'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_registDt" value="<c:out value='${userDtlGeneral.registDt}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_registDt" value="<c:out value='${userDtlGeneral.registDt}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -189,7 +189,7 @@
                     <spring:message code='common.weight'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02" id="general_weight" value="<c:out value='${userDtlGeneral.weight}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02" id="general_weight" value="<c:out value='${userDtlGeneral.weight}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="4">
                 </div>
             </div>
             <div class="row-wrap">
@@ -197,7 +197,7 @@
                     <spring:message code='common.lastAccess'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_lastAccess" value="<c:out value='${userDtlGeneral.lastAccess}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_lastAccess" value="<c:out value='${userDtlGeneral.lastAccess}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
                     <spring:message code='common.address'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02" id="general_addr" value="<c:out value='${userDtlGeneral.addr}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02" id="general_addr" value="<c:out value='${userDtlGeneral.addr}' default=''/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="5">
                 </div>
             </div>
             <div class="row-wrap">
@@ -217,7 +217,7 @@
                 </div>
                 <div class="row-input">
                     <input type="hidden" id="general_wdDt" value="${userDtlGeneral.wdDt}" />
-                    <input type="text" class="input-txt02 hold" id="deletionReqDateInput" value="<c:out value='${userDtlGeneral.wdDt}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="deletionReqDateInput" value="<c:out value='${userDtlGeneral.wdDt}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -259,10 +259,10 @@
                     <spring:message code='common.deletionDate'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold mr-4px" id="deletionDate" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold mr-4px" id="deletionDate" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt04 hold mx-w250" id="deletionDateCnt" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt04 hold mx-w250" id="deletionDateCnt" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -272,7 +272,7 @@
                 <spring:message code='common.memo'/>
             </div>
             <div class="wrap-form">
-                <textarea class="input-area" id="general_mmo" placeholder="Please enter a note."><c:out value='${userDtlGeneral.mmo}' default=''/></textarea>
+                <textarea class="input-area" id="general_mmo" placeholder="Please enter a note." tabindex="6"><c:out value='${userDtlGeneral.mmo}' default=''/></textarea>
             </div>
         </div>
 
@@ -282,7 +282,7 @@
                     <spring:message code='common.lastEdited'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_uptDt" value="<c:out value='${userDtlGeneral.uptDt}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_uptDt" value="<c:out value='${userDtlGeneral.uptDt}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
             <div class="row-wrap">
@@ -290,7 +290,7 @@
                     <spring:message code='common.editedBy'/>
                 </div>
                 <div class="row-input">
-                    <input type="text" class="input-txt02 hold" id="general_uptId" value="<c:out value='${userDtlGeneral.uptId}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);">
+                    <input type="text" class="input-txt02 hold" id="general_uptId" value="<c:out value='${userDtlGeneral.uptId}' default='-'/>" placeholder="<spring:message code='common.placeholder.pleaseEnter'/>" oninput="limitLength(this, 30);" tabindex="-1">
                 </div>
             </div>
         </div>
@@ -332,6 +332,16 @@
 <div class="space-30"></div>
 
 <script type="text/javascript">
+    var userDtlGeneral_messages = {
+        f: "<spring:message code='common.sex.f'/>",
+        m: "<spring:message code='common.sex.m'/>",
+        active: "<spring:message code='common.active'/>",
+        suspended: "<spring:message code='common.suspended'/>",
+        readyToDelete: "<spring:message code='common.readyToDelete'/>",
+        all: "<spring:message code='common.all'/>",
+        select: "<spring:message code='common.select'/>"
+    };
+
     // userDtlGeneral : 기존 값 저장
     if (typeof userDtlGeneral === 'undefined') {
         var userDtlGeneral = {};
@@ -356,31 +366,34 @@
             uptId: $("#general_uptId").val() || "-",
             sx: $("#general_sxDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userDtlSlide_messages.select,
+            }).text().trim() || userDtlGeneral_messages.select,
             /*
             inChargeNm: $("#general_inChargeNmDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userDtlSlide_messages.select,
+            }).text().trim() || userDtlGeneral_messages.select,
             */
             grpTp: $("#general_grpTpDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userDtlSlide_messages.select,
+            }).text().trim() || userDtlGeneral_messages.select,
             wdYn: $("#general_statusDropdown").contents().filter(function () {
                 return this.nodeType === 3;
-            }).text().trim() || userDtlSlide_messages.select
+            }).text().trim() || userDtlGeneral_messages.select
         };
     }
 
     // 입력창 잠금
     function general_readonly() {
-        $('#customerPopup input, #customerPopup textarea').attr('readonly', true);
+        $('#customerPopup input, #customerPopup textarea').attr('disabled', true);
         $('#customerPopup .dropdown-search, #customerPopup .dropdown-content a').addClass('hold');
     }
 
     // 입력창 해제
     function general_write() {
-        $('#customerPopup input:not(.hold), #customerPopup textarea:not(.hold)').removeAttr('readonly');
+        $('#customerPopup input:not(.hold), #customerPopup textarea:not(.hold)').removeAttr('disabled');
         $('#customerPopup .dropdown-search, #customerPopup .dropdown-content a').not('.readonly-dropdown').removeClass('hold');
+        $("#general_brthDt").prop("disabled", false);
+
+        $("#general_mobile").focus();
     }
 
     // editBtn : 사용자 정보 변경 버튼
@@ -531,12 +544,12 @@
         $("#general_mmo").val(userDtlGeneral.mmo);
 
         // 드롭다운 복원
-        resetDropdownText("general_sxDropdown", userDtlGeneral.sx || userDtlSlide_messages.select);
-        //resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userDtlSlide_messages.select);
-        resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userDtlSlide_messages.select);
-        resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userDtlSlide_messages.select);
+        resetDropdownText("general_sxDropdown", userDtlGeneral.sx || userDtlGeneral_messages.select);
+        //resetDropdownText("general_inChargeNmDropdown", userDtlGeneral.inChargeNm || userDtlGeneral_messages.select);
+        resetDropdownText("general_statusDropdown", userDtlGeneral.wdYn || userDtlGeneral_messages.select);
+        resetDropdownText("general_grpTpDropdown", userDtlGeneral.grpTp || userDtlGeneral_messages.select);
 
-        //general_checkDataChanged();
+        general_checkDataChanged();
     }
 
     // 최초 한 번만 선언되도록 if로 감싸기
@@ -558,28 +571,25 @@
         let $deletionDateInput = $("#deletionDate");
         let $deletionDateCntInput = $("#deletionDateCnt");
 
-        if (wdYn === userDtlSlide_messages.active) {  // 'Active' 상태
+        if (wdYn === userDtlGeneral_messages.active) {  // 'Active' 상태
             $deletionDateInput.val('-');
             $deletionDateCntInput.val('-');
 
             calculatedWdYn = 'N';
             return;
-        } else if (wdYn === userDtlSlide_messages.suspended) {  // 'Suspended' 상태
+        } else if (wdYn === userDtlGeneral_messages.suspended) {  // 'Suspended' 상태
             $deletionDateInput.val('-');
             $deletionDateCntInput.val('-');
 
             calculatedWdYn = 'S';
             return;
-        }
-
-        // ✅ 'Ready to delete' 상태일 때
-        if (wdYn === userDtlSlide_messages.readyToDelete) {
+        } else if (wdYn === userDtlGeneral_messages.readyToDelete) {  // 'Ready to delete' 상태
             let targetDate;
 
             if (wdDtCopy) {
                 targetDate = new Date(wdDtCopy);
             } else {
-                // 🆕 wdDtCopy 없을 경우 → 오늘 기준 30일 후로 설정
+                // wdDtCopy 없을 경우 → 오늘 기준 30일 후로 설정
                 targetDate = new Date();
                 targetDate.setDate(targetDate.getDate() + 30);
 
@@ -705,8 +715,8 @@
                     return this.nodeType === 3;
                 }).text().trim();
 
-                if (text === userDtlSlide_messages.f) return "F";
-                if (text === userDtlSlide_messages.m) return "M";
+                if (text === userDtlGeneral_messages.f) return "F";
+                if (text === userDtlGeneral_messages.m) return "M";
                 return "";
             })(),
             /*
@@ -768,7 +778,7 @@
         }
     });
 
-    $(document).on("click", "#checkEditBtn", function () {
+    $(document).off("click", "#checkEditBtn").on("click", "#checkEditBtn", function () {
         const checkPassword = $("#checkPwInput").val().trim();
 
         fetch("/user/checkPassword", {

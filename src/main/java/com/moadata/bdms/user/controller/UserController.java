@@ -522,7 +522,7 @@ public class UserController extends BaseController {
 			case "checkup-result":
 				System.out.println("tab : checkup-result");
 
-				return "user/userDtlCheckupResult";
+				return "user/userDtlCheckUpResult";
             default:
                 System.out.println("tab : general");
 
