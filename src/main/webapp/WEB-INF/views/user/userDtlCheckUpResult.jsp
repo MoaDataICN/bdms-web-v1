@@ -69,60 +69,60 @@
             </div>
         </div>
     </div>
-
-    <!-- submit 버튼 묶음-->
-    <div class="content-submit-ui mt-22px">
-        <div class="submit-ui-wrap">
-        </div>
-        <div class="submit-ui-wrap">
-            <button type="button" class="gray-submit-btn" onclick="checkUpResult_fnClear()">
-                <img src="/resources/images/reset-icon.svg" class="icon22">
-                <span>Reset</span>
-            </button>
-
-            <button type="button" class="point-submit-btn" onclick="checkUpResult_fnSearch()">
-                <img src="/resources/images/search-icon.svg" class="icon22">
-                <span>Search</span>
-            </button>
-        </div>
-    </div>
-
-    <div class="table-wrap mt-36px">
-        <div class="mt-16px table-data-wrap">
-            <p class="second-title-status">
-                <span class="bold-t-01" id="checkUpResultCurrentRowsCnt">0</span>
-                <spring:message code="common.outOf"/>
-                <span class="bold-t-01" id="checkUpResultTotalResultsCnt">0</span>
-                <spring:message code="common.results"/>
-            </p>
-            <div class="table-option-wrap">
-                <div class="dropdown02">
-                    <button class="dropdown-search input-line-b" id="checkUpResult_gridDropdownBtn"><spring:message code="common.viewResults" arguments="10" /> <span><img class="icon20"
-                                                                                                                                                                             alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
-                    <div class="dropdown-content" id="checkUpResult_viewCntDropdown">
-                        <a data-cnt="100"><spring:message code="common.viewResults" arguments="100" /></a>
-                        <a data-cnt="50"><spring:message code="common.viewResults" arguments="50" /></a>
-                        <a data-cnt="10"><spring:message code="common.viewResults" arguments="10" /></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- userDtlcheckUpResult Grid -->
-        <div class="table-wrap mt-14px" style="width:100%;">
-            <div class="w-line01 mt-8px"></div>
-            <div class="main-table">
-                <div class="tableWrapper">
-                    <table id="checkUpResult_grid" style="width:100%;"></table>
-                    <div id="checkUpResult_pager"></div>
-                    <div id="userDtlCustomPager" class="page-group mb-22px mt-10px"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="space-30"></div>
 </div>
+
+<!-- submit 버튼 묶음-->
+<div class="content-submit-ui mt-22px">
+    <div class="submit-ui-wrap">
+    </div>
+    <div class="submit-ui-wrap">
+        <button type="button" class="gray-submit-btn" onclick="checkUpResult_fnClear()">
+            <img src="/resources/images/reset-icon.svg" class="icon22">
+            <span>Reset</span>
+        </button>
+
+        <button type="button" class="point-submit-btn" onclick="checkUpResult_fnSearch()">
+            <img src="/resources/images/search-icon.svg" class="icon22">
+            <span>Search</span>
+        </button>
+    </div>
+</div>
+
+<div class="table-wrap mt-36px">
+    <div class="mt-16px table-data-wrap">
+        <p class="second-title-status">
+            <span class="bold-t-01" id="checkUpResultCurrentRowsCnt">0</span>
+            <spring:message code="common.outOf"/>
+            <span class="bold-t-01" id="checkUpResultTotalResultsCnt">0</span>
+            <spring:message code="common.results"/>
+        </p>
+        <div class="table-option-wrap">
+            <div class="dropdown02">
+                <button class="dropdown-search input-line-b" id="checkUpResult_gridDropdownBtn"><spring:message code="common.viewResults" arguments="10" /> <span><img class="icon20"
+                                                                                                                                                                         alt="" src="/resources/images/arrow-gray-bottom.svg"></span></button>
+                <div class="dropdown-content" id="checkUpResult_viewCntDropdown">
+                    <a data-cnt="100"><spring:message code="common.viewResults" arguments="100" /></a>
+                    <a data-cnt="50"><spring:message code="common.viewResults" arguments="50" /></a>
+                    <a data-cnt="10"><spring:message code="common.viewResults" arguments="10" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- userDtlcheckUpResult Grid -->
+    <div class="table-wrap mt-14px" style="width:100%;">
+        <div class="w-line01 mt-8px"></div>
+        <div class="main-table">
+            <div class="tableWrapper">
+                <table id="checkUpResult_grid" style="width:100%;"></table>
+                <div id="checkUpResult_pager"></div>
+                <div id="userDtlCustomPager" class="page-group mb-22px mt-10px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="space-30"></div>
 
 <script type="text/javascript">
 
