@@ -137,12 +137,30 @@
             jsonReader: {repeatitems: false},
             mtype: 'POST',
             colModel : [
-                { label: 'Checkup Date', name: 'chckDate', width:200, sortable : true},
-                { label: 'Checkup Type', name: 'chckKind', width:170, sortable : true},
-                { label: 'Result', name: 'chckJudge', width:170, sortable : true},
-                { label: 'Checkup Center', name: 'chckHspt', width:170, sortable : true},
-                { label: 'Doctor', name: 'chckDoctor', width:170, sortable : true},
-                { label: 'Biological Age', name: 'badVal', width:150, sortable : true}
+                { label: 'Checkup Date', name: 'chckDate', width:170, sortable : true},
+                { label: 'Checkup Type', name: 'chckKind', width:150, sortable : true},
+                { label: 'Result', name: 'chckJudge', width:150, sortable : true},
+                { label: 'Checkup Center', name: 'chckHspt', width:150, sortable : true},
+                { label: 'Doctor', name: 'chckDoctor', width:150, sortable : true},
+                { label: 'Biological Age', name: 'badVal', width:150, sortable : true},
+                {
+                    label: 'Details',
+                    name: 'details',
+                    width: 150,
+                    sortable: false,
+                    formatter: function(cellValue, options, rowObject) {
+                        return `
+                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
+                                <span>view result</span>
+                                <img src="/resources/images/arrow-num-right.svg" class="icon16">
+                            </button><br>
+                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
+                                <span>View analysis</span>
+                                <img src="/resources/images/arrow-num-right.svg" class="icon16">
+                            </button>
+                        `;
+                    }
+                }
             ],
             page: 1,
             autowidth : true,
