@@ -143,8 +143,7 @@
                 { label: 'Checkup Center', name: 'chckHspt', width:150, sortable : true},
                 { label: 'Doctor', name: 'chckDoctor', width:150, sortable : true},
                 { label: 'Biological Age', name: 'badVal', width:150, sortable : true},
-                {
-                    label: 'Details',
+                { label: 'Details',
                     name: 'details',
                     width: 150,
                     sortable: false,
