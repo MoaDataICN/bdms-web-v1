@@ -60,521 +60,524 @@
     <button type="button" class="second-tap-btn" data-tab="checkup-result"><spring:message code='common.tapMenu.checkupResult'/></button>
 </div>
 
-<div class="mt-16px table-data-wrap">
-    <p class="second-title-status">${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
-</div>
+<div class="alerts-wrap mt-30px">
 
-<!-- 주요 콘텐츠 시작 -->
-<div class="second-container mt-18px">
-    <div class="content-row">
-        <div class="second-title02">
-            Upload Checkup Data
-            <button class="data-select-btn" onClick="downform();">Download the form in CSV format</button>
-        </div>
-        <div id="drop-area" class="mt-14px">
-            <form class="dropzone" id="dropzone-file" name="dropzone-file" method="post" enctype="multipart/form-data">
-                <input type="file" value="" id="file" name="file" style="width:0px;">      <!-- multiple="true" -->
-                <img src="/resources/images/drap-icon.png" class="icon80">
-                <p class="mt-10px drop-text">Drag And Drop File Here</p>
-                <!--  <p class="drop-text02">OR</p>  -->
-                <!--  <input type="file" id="fileElem" style="display:none" onchange="handleFiles(this.files)">  -->
-                <!--  <button type="button" class="drag-btn mt-6px" onclick="document.getElementById('fileElem').click()">Browse File</button>  -->
-            </form>
-        </div>
+    <div class="mt-16px table-data-wrap">
+        <p class="second-title-status">${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
     </div>
-</div>
 
-<!-- 입력폼 그룹 -->
-<div class="second-container mt-18px" id="inputCheckup_dataFields">
-    <div class="content-row">
-        <div class="second-title02">
-            Input Checkup Information
-        </div>
-
-        <div class="row-md-100 mt-22px">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        1. Medical Checkup Type
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="text" class="input-txt02" placeholder="Input Checkup Type"
-                               oninput="limitLength(this, 30);" id="inputCheckup_chckType">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
+    <!-- 주요 콘텐츠 시작 -->
+    <div class="second-container mt-18px">
+        <div class="content-row">
+            <div class="second-title02">
+                Upload Checkup Data
+                <button class="data-select-btn" onClick="downform();">Download the form in CSV format</button>
             </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        2. Checkup result
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="text" class="input-txt02" placeholder="Input Checkup result"
-                               oninput="limitLength(this, 30);" id="inputCheckup_chckResult">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        3. Checkup center
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="text" class="input-txt02" placeholder="Input Checkup center"
-                               oninput="limitLength(this, 30);" id="inputCheckup_chckCt">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        4. Doctor
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="text" class="input-txt02" placeholder="Input Doctor Name"
-                               oninput="limitLength(this, 30);" id="inputCheckup_chckDctr">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
+            <div id="drop-area" class="mt-14px">
+                <form class="dropzone" id="dropzone-file" name="dropzone-file" method="post" enctype="multipart/form-data">
+                    <input type="file" value="" id="file" name="file" style="width:0px;">      <!-- multiple="true" -->
+                    <img src="/resources/images/drap-icon.png" class="icon80">
+                    <p class="mt-10px drop-text">Drag And Drop File Here</p>
+                    <!--  <p class="drop-text02">OR</p>  -->
+                    <!--  <input type="file" id="fileElem" style="display:none" onchange="handleFiles(this.files)">  -->
+                    <!--  <button type="button" class="drag-btn mt-6px" onclick="document.getElementById('fileElem').click()">Browse File</button>  -->
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<div class="second-container mt-18px">
-    <div class="content-row">
-        <div class="second-title02">
-            Input Checkup Data
-        </div>
+    <!-- 입력폼 그룹 -->
+    <div class="second-container mt-18px" id="inputCheckup_dataFields">
+        <div class="content-row">
+            <div class="second-title02">
+                Input Checkup Information
+            </div>
 
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100 mt-22px">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        1. Health Checkup Date(YYYY-MM-DD)
+            <div class="row-md-100 mt-22px">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            1. Medical Checkup Type
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="text" class="input-txt02" placeholder="Input Checkup Type"
+                                   oninput="limitLength(this, 30);" id="inputCheckup_chckType">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
                     </div>
-                    <div class="p-r">
-                        <input type="text" class="date-input input-txt02" id="inputCheckup_chckDt"
-                               placeholder="Health Checkup Date" pattern="^[0-9_]" maxlength="10">
-                        <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
-                             onclick="openCalendar('chkup_datePicker1')" alt="달력 아이콘">
-                        <input type="date" id="chkup_datePicker1" class="hidden-date"
-                               onchange="updateDate('chkup_datePicker1', 'inputCheckup_chckDt')">
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            2. Checkup result
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="text" class="input-txt02" placeholder="Input Checkup result"
+                                   oninput="limitLength(this, 30);" id="inputCheckup_chckResult">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        2. Date Of Birth(YYYY-MM-DD)
-                    </div>
-                    <div class="p-r">
-                        <input type="text" class="date-input input-txt02" id="inputCheckup_brthDt"
-                               placeholder="Date Of Birth" pattern="^[0-9_]" maxlength="10">
-                        <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
-                             onclick="openCalendar('chkup_datePicker2')" alt="달력 아이콘">
-                        <input type="date" id="chkup_datePicker2" class="hidden-date"
-                               onchange="updateDate('chkup_datePicker2', 'inputCheckup_brthDt')">
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        3. Gender
-                    </div>
-                    <div class="gender-btn-group">
-                        <input type="hidden" id="inputCheckup_gender">
-                        <!--<button type="button" class="sex-btn active" >Male</button>-->
-                        <button type="button" class="sex-btn">Male</button>
-                        <button type="button" class="sex-btn-f">Female</button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        4. Height(cm)
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="cm"
-                               oninput="limitLength(this, 3);" id="inputCheckup_hght">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            3. Checkup center
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="text" class="input-txt02" placeholder="Input Checkup center"
+                                   oninput="limitLength(this, 30);" id="inputCheckup_chckCt">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        5. Weight(kg)
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="kg"
-                               oninput="limitLength(this, 3);" id="inputCheckup_wght">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            4. Doctor
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="text" class="input-txt02" placeholder="Input Doctor Name"
+                                   oninput="limitLength(this, 30);" id="inputCheckup_chckDctr">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        6. Waist Circumference(cm)
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="cm"
-                               oninput="limitLength(this, 3);" id="inputCheckup_wst">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        7. Systolic Blood Pressure
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mmHg"
-                               oninput="limitLength(this, 3);" id="inputCheckup_sbp">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        8. Diastolic Blood Pressure
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mmHg"
-                               oninput="limitLength(this, 3);" id="inputCheckup_dbp">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        9. Fasting Blood Sugar
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mmHg"
-                               oninput="limitLength(this, 3);" id="inputCheckup_fbs">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        10. HbA1C
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="%"
-                               oninput="limitLength(this, 2);" id="inputCheckup_hba1c">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        11. Total Cholesterol
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 3);" id="inputCheckup_tc">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        12. HDL-C
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 3);" id="inputCheckup_hdl">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        13. LDL-C
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 3);" id="inputCheckup_ldl">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        14. Triglyceride
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 4);" id="inputCheckup_trgly">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        15. Serum Creatinine
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 3);" id="inputCheckup_sc">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        16. GFR (Glomerular Filtration Rate)
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="ml"
-                               oninput="limitLength(this, 3);" id="inputCheckup_gfr">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        17. Uric Acid
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 2);" id="inputCheckup_urAcd">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        18. BUN
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="mg/dL"
-                               oninput="limitLength(this, 3);" id="inputCheckup_bun">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        19. ALT
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="IU/L"
-                               oninput="limitLength(this, 4);" id="inputCheckup_alt">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        20. AST
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="IU/L"
-                               oninput="limitLength(this, 4);" id="inputCheckup_ast">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        21. γ-GTP
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="IU/L"
-                               oninput="limitLength(this, 4);" id="inputCheckup_gtp">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        22. Total Protein
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="g/dL"
-                               oninput="limitLength(this, 2);" id="inputCheckup_tprtn">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 입력폼 그룹 -->
-        <div class="row-md-100">
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        23. Bilirubin
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="g/dL"
-                               oninput="limitLength(this, 2);" id="inputCheckup_blrbn">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="row-wrap02">
-                <div class="row-input f-x-c">
-                    <div class="input-label03 mb-4px">
-                        24. ALP(Alkaline Phosphatase)
-                    </div>
-                    <div class="input-img-wrap">
-                        <input type="number" class="input-txt02" placeholder="IU/L"
-                               oninput="limitLength(this, 4);" id="inputCheckup_alp">
-                        <button type="button" class="input-text-del">
-                            <img src="/resources/images/text-del-icon.svg" class="icon20">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row-col-100 mb-16px">
-            <div class="input-label01 mb-4px">
-                25. Comment
-            </div>
-            <div class="wrap-form">
-                <textarea class="input-area" id="inputCheckup_comment" placeholder="Input checkup comment。"></textarea>
             </div>
         </div>
     </div>
-</div>
 
-<div class="content-submit-ui mt-22px">
-    <div class="submit-ui-wrap">
+    <div class="second-container mt-18px">
+        <div class="content-row">
+            <div class="second-title02">
+                Input Checkup Data
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100 mt-22px">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            1. Health Checkup Date(YYYY-MM-DD)
+                        </div>
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="inputCheckup_chckDt"
+                                   placeholder="Health Checkup Date" pattern="^[0-9_]" maxlength="10">
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                                 onclick="openCalendar('chkup_datePicker1')" alt="달력 아이콘">
+                            <input type="date" id="chkup_datePicker1" class="hidden-date"
+                                   onchange="updateDate('chkup_datePicker1', 'inputCheckup_chckDt')">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            2. Date Of Birth(YYYY-MM-DD)
+                        </div>
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="inputCheckup_brthDt"
+                                   placeholder="Date Of Birth" pattern="^[0-9_]" maxlength="10">
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon"
+                                 onclick="openCalendar('chkup_datePicker2')" alt="달력 아이콘">
+                            <input type="date" id="chkup_datePicker2" class="hidden-date"
+                                   onchange="updateDate('chkup_datePicker2', 'inputCheckup_brthDt')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            3. Gender
+                        </div>
+                        <div class="gender-btn-group">
+                            <input type="hidden" id="inputCheckup_gender">
+                            <!--<button type="button" class="sex-btn active" >Male</button>-->
+                            <button type="button" class="sex-btn">Male</button>
+                            <button type="button" class="sex-btn-f">Female</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            4. Height(cm)
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="cm"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_hght">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            5. Weight(kg)
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="kg"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_wght">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            6. Waist Circumference(cm)
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="cm"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_wst">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            7. Systolic Blood Pressure
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mmHg"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_sbp">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            8. Diastolic Blood Pressure
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mmHg"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_dbp">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            9. Fasting Blood Sugar
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mmHg"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_fbs">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            10. HbA1C
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="%"
+                                   oninput="limitLength(this, 2);" id="inputCheckup_hba1c">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            11. Total Cholesterol
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_tc">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            12. HDL-C
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_hdl">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            13. LDL-C
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_ldl">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            14. Triglyceride
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 4);" id="inputCheckup_trgly">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            15. Serum Creatinine
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_sc">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            16. GFR (Glomerular Filtration Rate)
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="ml"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_gfr">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            17. Uric Acid
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 2);" id="inputCheckup_urAcd">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            18. BUN
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="mg/dL"
+                                   oninput="limitLength(this, 3);" id="inputCheckup_bun">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            19. ALT
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="inputCheckup_alt">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            20. AST
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="inputCheckup_ast">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            21. γ-GTP
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="inputCheckup_gtp">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            22. Total Protein
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="g/dL"
+                                   oninput="limitLength(this, 2);" id="inputCheckup_tprtn">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            23. Bilirubin
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="g/dL"
+                                   oninput="limitLength(this, 2);" id="inputCheckup_blrbn">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-wrap02">
+                    <div class="row-input f-x-c">
+                        <div class="input-label03 mb-4px">
+                            24. ALP(Alkaline Phosphatase)
+                        </div>
+                        <div class="input-img-wrap">
+                            <input type="number" class="input-txt02" placeholder="IU/L"
+                                   oninput="limitLength(this, 4);" id="inputCheckup_alp">
+                            <button type="button" class="input-text-del">
+                                <img src="/resources/images/text-del-icon.svg" class="icon20">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-col-100 mb-16px">
+                <div class="input-label01 mb-4px">
+                    25. Comment
+                </div>
+                <div class="wrap-form">
+                    <textarea class="input-area" id="inputCheckup_comment" placeholder="Input checkup comment。"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="submit-ui-wrap">
-        <button type="button" class="gray-submit-btn" id="checkupreset">
-            <img src="/resources/images/reset-icon.svg" class="icon22">
-            <span>Reset</span>
-        </button>
 
-        <button type="button" class="point-submit-btn" id="checkupsave">
-            <img src="/resources/images/save-icon.svg" class="icon22">
-            <span>Save</span>
-        </button>
+    <div class="content-submit-ui mt-22px">
+        <div class="submit-ui-wrap">
+        </div>
+        <div class="submit-ui-wrap">
+            <button type="button" class="gray-submit-btn" id="checkupreset">
+                <img src="/resources/images/reset-icon.svg" class="icon22">
+                <span>Reset</span>
+            </button>
+
+            <button type="button" class="point-submit-btn" id="checkupsave">
+                <img src="/resources/images/save-icon.svg" class="icon22">
+                <span>Save</span>
+            </button>
+        </div>
     </div>
-</div>
 
-<div class="space-30"></div>
+    <div class="space-30"></div>
+</div>
 
 <script type="text/javascript">
     function downform(){

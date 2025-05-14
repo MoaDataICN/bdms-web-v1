@@ -16,176 +16,179 @@
     <button type="button" class="second-tap-btn" data-tab="checkup-result"><spring:message code='common.tapMenu.checkupResult'/></button>
 </div>
 
-    <div class="alerts-wrap mt-30px">
-        <!-- Mini userDtlGeneral -->
-        <div class="mt-16px table-data-wrap">
-            <p class="second-title-status">${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
-            <p class="title-status mr-12px">-<span class="bold-t-01" id="healthAlerts_cntTotal">{0}</span><spring:message code="healthAlertsTap.description"/></p>
-        </div>
+<div class="alerts-wrap mt-30px">
+    <!-- Mini userDtlGeneral -->
+    <div class="mt-16px table-data-wrap">
+        <p class="second-title-status">${userDtlGeneral.userNm}ㅣ${userDtlGeneral.brthDt}ㅣ${userDtlGeneral.sx}ㅣ${userDtlGeneral.mobile}ㅣ${userDtlGeneral.addr}</p>
+        <p class="title-status mr-12px">-<span class="bold-t-01" id="healthAlerts_cntTotal"></span>
+        <span id="desc_all" class="hidden-desc"><spring:message code="healthAlertsTap.description.all"/></span>
+        <span id="desc_last24" class="hidden-desc" style="display:none;"><spring:message code="healthAlertsTap.description.last24"/></span>
+        </p>
+    </div>
 
-        <div class="alerts-grid mt-12px">
-            <!-- userDtlHealthAlerts Chart -->
-            <div class="alerts-chart" style="overflow:visible !important">
-                <!--
-                <img src="../../resources/images/board-alerts-chart.png" class="mt-12px alerts-chart-size">
-                -->
-                <canvas id="healthAlerts_myChart" height="310" style="overflow:visible !important"></canvas>
-                <div class="chart-tap-group">
-                    <button type="button" class="chart-tap-btn left active" id="healthAlertsChartAllBtn">All</button>
-                    <button type="button" class="chart-tap-btn right" id="healthAlertsChartLast24Btn">Last 24h</button>
-                </div>
+    <div class="alerts-grid mt-12px">
+        <!-- userDtlHealthAlerts Chart -->
+        <div class="alerts-chart" style="overflow:visible !important">
+            <!--
+            <img src="../../resources/images/board-alerts-chart.png" class="mt-12px alerts-chart-size">
+            -->
+            <canvas id="healthAlerts_myChart" height="310" style="overflow:visible !important"></canvas>
+            <div class="chart-tap-group">
+                <button type="button" class="chart-tap-btn left active" id="healthAlertsChartAllBtn">All</button>
+                <button type="button" class="chart-tap-btn right" id="healthAlertsChartLast24Btn">Last 24h</button>
             </div>
-            <!-- 아이템 묶음-->
-            <div class="alerts-grid02">
-                <!-- 아이템 -->
-                <div class="alerts-item">
-                    <div class="alerts-icon-box">
-                        <img src="../../resources/images/activity-icon.svg">
-                    </div>
-                    <div class="alerts-text-group">
-                        <div class="alerts-item-text01">
-                            <spring:message code="common.activity"/> / <spring:message code="common.fall"/>
-                        </div>
-                        <div class="alerts-item-text02" id="healthAlerts_cntAF">
-                        </div>
-                    </div>
+        </div>
+        <!-- 아이템 묶음-->
+        <div class="alerts-grid02">
+            <!-- 아이템 -->
+            <div class="alerts-item">
+                <div class="alerts-icon-box">
+                    <img src="../../resources/images/activity-icon.svg">
                 </div>
-                <!-- 아이템 -->
-                <div class="alerts-item">
-                    <div class="alerts-icon-box">
-                        <img src="../../resources/images/heart-icon.svg">
+                <div class="alerts-text-group">
+                    <div class="alerts-item-text01">
+                        <spring:message code="common.activity"/> / <spring:message code="common.fall"/>
                     </div>
-                    <div class="alerts-text-group">
-                        <div class="alerts-item-text01">
-                            <spring:message code="common.heartrate"/>
-                        </div>
-                        <div class="alerts-item-text02" id="healthAlerts_cntH">
-                        </div>
-                    </div>
-                </div>
-                <!-- 아이템 -->
-                <div class="alerts-item">
-                    <div class="alerts-icon-box">
-                        <img src="../../resources/images/sleep-icon.svg">
-                    </div>
-                    <div class="alerts-text-group">
-                        <div class="alerts-item-text01">
-                            <spring:message code="common.sleep"/>
-                        </div>
-                        <div class="alerts-item-text02" id="healthAlerts_cntSL">
-                        </div>
-                    </div>
-                </div>
-                <!-- 아이템 -->
-                <div class="alerts-item">
-                    <div class="alerts-icon-box">
-                        <img src="../../resources/images/blood-icon.svg">
-                    </div>
-                    <div class="alerts-text-group">
-                        <div class="alerts-item-text01">
-                            <spring:message code="common.bloodoxygen"/>
-                        </div>
-                        <div class="alerts-item-text02" id="healthAlerts_cntB">
-                        </div>
-                    </div>
-                </div>
-                <!-- 아이템 -->
-                <div class="alerts-item">
-                    <div class="alerts-icon-box">
-                        <img src="../../resources/images/temperature-icon.svg">
-                    </div>
-                    <div class="alerts-text-group">
-                        <div class="alerts-item-text01">
-                            <spring:message code="common.temperature"/>
-                        </div>
-                        <div class="alerts-item-text02" id="healthAlerts_cntT">
-                        </div>
-                    </div>
-                </div>
-                <!-- 아이템 -->
-                <div class="alerts-item">
-                    <div class="alerts-icon-box">
-                        <img src="../../resources/images/stress-icon.svg">
-                    </div>
-                    <div class="alerts-text-group">
-                        <div class="alerts-item-text01">
-                            <spring:message code="common.stress"/>
-                        </div>
-                        <div class="alerts-item-text02" id="healthAlerts_cntST">
-                        </div>
+                    <div class="alerts-item-text02" id="healthAlerts_cntAF">
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- 검색 영역 -->
-        <div class="second-container mt-18px" id="userDtlHealthAlerts">
-            <div class="content-row">
-                <!-- 좌측 입력폼 그룹 -->
-                <div class="row-md-100">
-                    <div class="row-wrap">
-                        <div class="input-label01">
-                            Inquiry Period
-                        </div>
-                        <div class="row-input">
-                            <div class="p-r">
-                                <input type="text" class="date-input input-txt02" id="healthAlertsBgnDe" placeholder="ALL" readonly="">
-                                <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker1')" alt="달력 아이콘">
-                                <input type="date" id="healthAlerts_datePicker1" class="hidden-date" onchange="updateDate('healthAlerts_datePicker1', 'healthAlertsBgnDe')">
-                            </div>
-                            <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
-                            <div class="p-r">
-                                <input type="text" class="date-input input-txt02" id="healthAlertsEndDe" placeholder="ALL" readonly="">
-                                <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker2')" alt="달력 아이콘">
-                                <input type="date" id="healthAlerts_datePicker2" class="hidden-date" onchange="updateDate('healthAlerts_datePicker2', 'healthAlertsEndDe')">
-                            </div>
-                            <div class="day-button-wrap" id="healthAlerts_date">
-                                <button class="data-select-btn" data-period="today">Today</button>
-                                <button class="data-select-btn active" data-period="7-day">7day</button>
-                                <button class="data-select-btn" data-period="30-day">30day</button>
-                                <button class="data-select-btn" data-period="90-day">90day</button>
-                            </div>
-                        </div>
+            <!-- 아이템 -->
+            <div class="alerts-item">
+                <div class="alerts-icon-box">
+                    <img src="../../resources/images/heart-icon.svg">
+                </div>
+                <div class="alerts-text-group">
+                    <div class="alerts-item-text01">
+                        <spring:message code="common.heartrate"/>
+                    </div>
+                    <div class="alerts-item-text02" id="healthAlerts_cntH">
                     </div>
                 </div>
-
-                <div class="row-md-100">
-                    <div class="row-wrap mb-0px">
-                        <div class="input-label01">
-                            Alert type
-                        </div>
-                        <div class="row-input">
-                            <div class="day-button-wrap02" id="healthAlerts_altTp">
-                                <button class="data-select-btn active" data-filter="alertTpAll">All</button>
-                                <button class="data-select-btn" data-filter="AF">Activity/Falls</button>
-                                <button class="data-select-btn" data-filter="H">Heart rate</button>
-                                <button class="data-select-btn" data-filter="SL">Sleep</button>
-                                <button class="data-select-btn" data-filter="B">Blood oxygen</button>
-                                <button class="data-select-btn" data-filter="T">Temperature</button>
-                                <button class="data-select-btn" data-filter="ST">Stress</button>
-                            </div>
-                        </div>
+            </div>
+            <!-- 아이템 -->
+            <div class="alerts-item">
+                <div class="alerts-icon-box">
+                    <img src="../../resources/images/sleep-icon.svg">
+                </div>
+                <div class="alerts-text-group">
+                    <div class="alerts-item-text01">
+                        <spring:message code="common.sleep"/>
+                    </div>
+                    <div class="alerts-item-text02" id="healthAlerts_cntSL">
+                    </div>
+                </div>
+            </div>
+            <!-- 아이템 -->
+            <div class="alerts-item">
+                <div class="alerts-icon-box">
+                    <img src="../../resources/images/blood-icon.svg">
+                </div>
+                <div class="alerts-text-group">
+                    <div class="alerts-item-text01">
+                        <spring:message code="common.bloodoxygen"/>
+                    </div>
+                    <div class="alerts-item-text02" id="healthAlerts_cntB">
+                    </div>
+                </div>
+            </div>
+            <!-- 아이템 -->
+            <div class="alerts-item">
+                <div class="alerts-icon-box">
+                    <img src="../../resources/images/temperature-icon.svg">
+                </div>
+                <div class="alerts-text-group">
+                    <div class="alerts-item-text01">
+                        <spring:message code="common.temperature"/>
+                    </div>
+                    <div class="alerts-item-text02" id="healthAlerts_cntT">
+                    </div>
+                </div>
+            </div>
+            <!-- 아이템 -->
+            <div class="alerts-item">
+                <div class="alerts-icon-box">
+                    <img src="../../resources/images/stress-icon.svg">
+                </div>
+                <div class="alerts-text-group">
+                    <div class="alerts-item-text01">
+                        <spring:message code="common.stress"/>
+                    </div>
+                    <div class="alerts-item-text02" id="healthAlerts_cntST">
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- submit 버튼 묶음-->
-        <div class="content-submit-ui mt-22px">
-            <div class="submit-ui-wrap">
+    <!-- 검색 영역 -->
+    <div class="second-container mt-18px" id="userDtlHealthAlerts">
+        <div class="content-row">
+            <!-- 좌측 입력폼 그룹 -->
+            <div class="row-md-100">
+                <div class="row-wrap">
+                    <div class="input-label01">
+                        Inquiry Period
+                    </div>
+                    <div class="row-input">
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="healthAlertsBgnDe" placeholder="ALL" readonly="">
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker1')" alt="달력 아이콘">
+                            <input type="date" id="healthAlerts_datePicker1" class="hidden-date" onchange="updateDate('healthAlerts_datePicker1', 'healthAlertsBgnDe')">
+                        </div>
+                        <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
+                        <div class="p-r">
+                            <input type="text" class="date-input input-txt02" id="healthAlertsEndDe" placeholder="ALL" readonly="">
+                            <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('healthAlerts_datePicker2')" alt="달력 아이콘">
+                            <input type="date" id="healthAlerts_datePicker2" class="hidden-date" onchange="updateDate('healthAlerts_datePicker2', 'healthAlertsEndDe')">
+                        </div>
+                        <div class="day-button-wrap" id="healthAlerts_date">
+                            <button class="data-select-btn" data-period="today">Today</button>
+                            <button class="data-select-btn active" data-period="7-day">7day</button>
+                            <button class="data-select-btn" data-period="30-day">30day</button>
+                            <button class="data-select-btn" data-period="90-day">90day</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="submit-ui-wrap">
-                <button type="button" class="gray-submit-btn" onclick="healthAlerts_fnClear()">
-                    <img src="/resources/images/reset-icon.svg" class="icon22">
-                    <span><spring:message code='common.reset'/></span>
-                </button>
 
-                <button type="button" class="point-submit-btn" onclick="healthAlerts_fnSearch()">
-                    <img src="/resources/images/search-icon.svg" class="icon22">
-                    <span>Search</span>
-                </button>
+            <div class="row-md-100">
+                <div class="row-wrap mb-0px">
+                    <div class="input-label01">
+                        Alert type
+                    </div>
+                    <div class="row-input">
+                        <div class="day-button-wrap02" id="healthAlerts_altTp">
+                            <button class="data-select-btn active" data-filter="alertTpAll">All</button>
+                            <button class="data-select-btn" data-filter="AF">Activity/Falls</button>
+                            <button class="data-select-btn" data-filter="H">Heart rate</button>
+                            <button class="data-select-btn" data-filter="SL">Sleep</button>
+                            <button class="data-select-btn" data-filter="B">Blood oxygen</button>
+                            <button class="data-select-btn" data-filter="T">Temperature</button>
+                            <button class="data-select-btn" data-filter="ST">Stress</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+
+    <!-- submit 버튼 묶음-->
+    <div class="content-submit-ui mt-22px">
+        <div class="submit-ui-wrap">
+        </div>
+        <div class="submit-ui-wrap">
+            <button type="button" class="gray-submit-btn" onclick="healthAlerts_fnClear()">
+                <img src="/resources/images/reset-icon.svg" class="icon22">
+                <span><spring:message code='common.reset'/></span>
+            </button>
+
+            <button type="button" class="point-submit-btn" onclick="healthAlerts_fnSearch()">
+                <img src="/resources/images/search-icon.svg" class="icon22">
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
 
     <div class="table-wrap mt-36px">
         <div class="mt-16px table-data-wrap">
@@ -226,15 +229,16 @@
         </form>
     </div>
 
-<div class="space-30"></div>
+    <div class="space-30"></div>
+</div>
 
 <script type="text/javascript">
 
 
-    let healthAlertsChart = null;
+    var healthAlertsChart = null;
 
     function drawHealthAlertsChart(period) {
-        let healthAlertsCtx = document.getElementById('healthAlerts_myChart');
+        var healthAlertsCtx = document.getElementById('healthAlerts_myChart');
         if (!healthAlertsCtx) {
             console.warn("Canvas with id 'healthAlerts_myChart' not found.");
             return;
@@ -573,6 +577,8 @@
 
         $(this).addClass('active');
         $('#healthAlertsChartLast24Btn').removeClass('active');
+        $('#desc_last24').hide();
+        $('#desc_all').show();
 
         drawHealthAlertsChart('all');
     });
@@ -584,6 +590,8 @@
 
         $(this).addClass('active');
         $('#healthAlertsChartAllBtn').removeClass('active');
+        $('#desc_all').hide();
+        $('#desc_last24').show();
 
         drawHealthAlertsChart('last24h');
     });
