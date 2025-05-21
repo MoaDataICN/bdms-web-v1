@@ -7,12 +7,11 @@ import java.util.Map;
 
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.model.dto.*;
-import com.moadata.bdms.model.vo.CheckupVO;
+import com.moadata.bdms.model.vo.*;
 import org.springframework.stereotype.Repository;
 
 //import com.moadata.hsmng.common.annotation.PrivacySrch;
 import com.moadata.bdms.common.base.dao.BaseAbstractDao;
-import com.moadata.bdms.model.vo.UserVO;
 
 import static java.lang.Math.pow;
 
@@ -394,5 +393,27 @@ public class UserDao extends BaseAbstractDao {
 			list.get(0).setCnt((int)selectOne("user.selectUserSearchTotalRecords"));
 		}
 		return list;
+	}
+
+	public ReportVO selectOneLatestReportByUserId(String userId) {
+		return (ReportVO)selectOne("user.selectOneLatestReportByUserId", userId);
+	}
+
+	public List<HealthInfoVO> selectHealthInfoByReportId(String reportId) {
+		return selectList("user.selectHealthInfoByReportId", reportId);
+	}
+
+	/** 건강분석 인증키 업데이트 */
+	public void updateCheckupKey(UserInfoVO userInfo) {
+		update("user.updateCheckupKey", userInfo);
+	}
+
+	public UserInfoVO SelectUserInfoForGrpc(String userId) {
+		return (UserInfoVO)selectOne("user.selectUserInfoForGrpc", userId);
+	}
+
+	/** 생체나이 저장 S */
+	public void insertAnlyData(HealthInfoVO healthInfo) {
+		insert("user.insertAnlyData",healthInfo);
 	}
 }

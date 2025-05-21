@@ -246,6 +246,25 @@ public class UserServiceImpl implements UserService {
 		return userDao.selectUserInfo(userId);
 	}
 
+	@Override
+	public UserInfoVO selectUserInfoForGrpc(String userId) throws Exception {
+		if (userId != null && !userId.isEmpty()) { // null 체크 및 비어있는지 확인
+			try {
+				UserInfoVO user = userDao.SelectUserInfoForGrpc(userId); // 메서드명 수정
+				if (user != null) { // null 체크로 변경
+					// user가 비어있는지 확인할 수 있는 메서드가 없으면 삭제
+					user.setBrthDt(EncryptUtil.decryptText(user.getBrthDt()));
+					user.setUserNm(EncryptUtil.decryptText(user.getUserNm()));
+					user.setMobile(EncryptUtil.decryptText(user.getMobile()));
+					return user;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	@Override	
 	public UserVO selectUserInfoByUid(String uid) {
 		return userDao.selectUserInfoByUid(uid);
@@ -472,4 +491,26 @@ public class UserServiceImpl implements UserService {
 	public List<UserDtlCheckUpResultDTO> selectUserDtlCheckUpResults(UserDtlCheckUpResultDTO userDtlCheckUpResultDTO){
 		return userDao.selectUserDtlCheckUpResults(userDtlCheckUpResultDTO);
 	}
+
+	@Override
+	public ReportVO getOneLatestReportByUserId(String userId) {
+		return userDao.selectOneLatestReportByUserId(userId);
+	}
+
+	@Override
+	public List<HealthInfoVO> getHealthInfoByReportId(String reportId) {
+		return userDao.selectHealthInfoByReportId(reportId);
+	}
+
+	/** 건강분석 인증키 업데이트 */
+	public void updateCheckupKey(UserInfoVO userInfo) {
+		userDao.updateCheckupKey(userInfo);
+	}
+
+	/** 생체나이 저장 S */
+	@Override
+	public void insertAnlyData(HealthInfoVO healthInfo) {
+		userDao.insertAnlyData(healthInfo);
+	}
+
 }

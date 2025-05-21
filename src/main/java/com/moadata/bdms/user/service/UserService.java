@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.moadata.bdms.model.dto.*;
-import com.moadata.bdms.model.vo.CheckupVO;
-import com.moadata.bdms.model.vo.UserVO;
+import com.moadata.bdms.model.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -57,6 +56,8 @@ public interface UserService {
 	 * @return
 	 */
 	public UserVO selectUserInfo(String userId);
+
+	public UserInfoVO selectUserInfoForGrpc(String userId) throws Exception;
 	
 	/**
 	 * 사용자 상세
@@ -151,4 +152,12 @@ public interface UserService {
 	public void insertCheckUp(CheckupVO checkupVO) throws Exception;
 
 	public List<Map> selectValidMinMax();
+
+	public ReportVO getOneLatestReportByUserId(String userId) ;
+
+	public List<HealthInfoVO> getHealthInfoByReportId(String reportId) ;
+
+	public void updateCheckupKey(UserInfoVO userInfo) ;
+
+	public void insertAnlyData(HealthInfoVO healthInfo) ;
 }

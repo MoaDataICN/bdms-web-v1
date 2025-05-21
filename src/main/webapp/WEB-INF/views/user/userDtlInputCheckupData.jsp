@@ -569,7 +569,7 @@
                 <span>Reset</span>
             </button>
 
-            <button type="button" class="point-submit-btn" id="checkupsave">
+            <button type="button" class="point-submit-btn" id="checkupsave" onclick="checkupsave()">
                 <img src="/resources/images/save-icon.svg" class="icon22">
                 <span>Save</span>
             </button>
@@ -995,17 +995,102 @@
         return true;
     }
 
+    async function fetchAnalysisCheckupResult() {
+        var userId = userDtlGeneral.userId;
+        try {
+            //http://10.120.101.12:8080
+            const response = await fetch('https://bdms.moadata.ai:8088/mediwalk/analysisCheckupResult.mdo?userId=${userId}', {
+                //const response = fetch('https://bdms.moadata.ai:8088/mediwalk/analysisCheckupResult.mdo?userId=${userId}', {
+                method: 'GET'
+            });
+
+            const responseText = await response.text();
+            //const responseText = response.text();
+            console.log('Response Text:', responseText);
+
+            const result = JSON.parse(responseText)
+
+            if (!result.isError) {
+                console.log('Analysis completed successfully');
+            } else {
+                console.error('Analysis failed');
+                console.error(result.message);
+            }
+        } catch (err) {
+            console.error('Error during analysis: ', err);
+        } finally {
+            closeLoading();
+        }
+    }
+
+    function openLoading() {
+        let maskHeight = $(document).height();
+        let maskWidth = window.document.body.clientWidth;
+
+        let mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+        let loadingImg = '';
+        loadingImg += "<div id='easy-pop-wrap' style='position:absolute; top: calc(50% - (100px / 2)); width:100%; z-index:99999999;'>";
+        loadingImg += "<img src='/resources/images/loding.gif' style='position: relative; display: block; width: 127px; height: 91px; margin: 0px auto;' />";
+        loadingImg += "<div class='easy-pop-txt02 mt-24px' style='margin-top: 24px !important;, font-weight: 500px !important;, font-size: 16px !important;, line-height: 20px !important; text-align: center; color: #fff !important; position: relative; display: block; margin: 0px auto;'>Loading...</div>";
+        loadingImg += "</div>";
+
+        $('body').append(mask).append(loadingImg);
+
+        $('#mask').css({
+            'width': maskWidth,
+            'height': maskHeight,
+            'opacity': '0.3'
+        });
+
+        $('#mask').show();
+        $('#easy-pop-wrap').show();
+    }
+
+    // 로딩 화면 닫기
+    function closeLoading() {
+        $('#mask, #easy-pop-wrap').hide();
+        $('#mask, #easy-pop-wrap').empty();
+    }
+
     $(document).on('click','#checkupreset', function(){
         inputCheckup_fnClear();
     });
 
-    $(document).on('click','#checkupsave', function(){
+    //$(document).on('click','#checkupsave', function(){
+    function checkupsave() {
+        /*
+        if(confirm('Would you like to save an checkup data?')){
+            if (validation()) {
+                openLoading();
+                $.ajax({
+                    type: 'POST',
+                    url: '${contextPath}/user/checkupAdd',
+                    data: inputCheckup_setAddParam(),
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.isError){
+                            $.alert(data.message);
+                            console.log('ERROR', data.message);
+                            closeLoading()
+                        }else{
+                            //fetchAnalysisCheckupResult();
+                            inputCheckup_fnClear();
+                            $.alert(data.message);
+                            closeLoading()
+                        }
+                    }
+                });
+            }
+        } else {
+        }
+        */
         $.confirm({
             title: '',
             content: 'Would you like to save an checkup data?',
             buttons: {
                 OK: function () {
                     if (validation()) {
+                        openLoading();
                         $.ajax({
                             type: 'POST',
                             url: '${contextPath}/user/checkupAdd',
@@ -1015,9 +1100,11 @@
                                 if(data.isError){
                                     $.alert(data.message);
                                     console.log('ERROR', data.message);
+                                    closeLoading();
                                 }else{
                                     inputCheckup_fnClear();
                                     $.alert(data.message);
+                                    closeLoading();
                                 }
                             }
                         });
@@ -1027,7 +1114,8 @@
                 }
             }
         });
-    });
+    }
+    //});
 
     $(document).on('click', '.sex-btn-f', function() {
         if($(this).hasClass('active')){

@@ -1,0 +1,1479 @@
+syntax = "proto3"; // language version
+
+package api; // package 이름
+
+option go_package = "moadata.gitea.com/cloudworkspace/api/mediage"; // 실제 배포시 적용 될 경로
+
+// gRPC 서비스에 대한 HTTP 엔드포인트를 정의하는데 필요한 import
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+// fromage.proto
+// Version: 1.0.0
+
+// 서비스 정의
+service FromageService {
+    // 의학 항목 입력(Age-v1) API
+    // 의학생체나이 분석을 위한 검진 항목을 입력하는 API
+    rpc SetTestItem (SetTestItemRequest) returns (SetTestItemResponse) {
+        option (google.api.http) = {
+            post: "/v2/set-test-item"
+            body: "*"
+        };
+    }
+
+    // 문진/진료/투약 정보 입력
+    // 의학생체나이 고도화를 위한 문진/진료/투약 정보를 입력 하는 API
+    rpc SetPaperItem (SetPaperItemRequest) returns (SetPaperItemResponse) {
+        option (google.api.http) = {
+            post: "/v2/set-paper-item"
+            body: "*"
+        };
+    }
+
+    // 검진, 문진/진료/투약 정보를 입력 받아 분석한다.
+    // SetTestItem + SetPaperItem 을 합친 API
+    // 기존 의학 나이 계산 + 문진/진료/투약 정보를 이용한 고도화 적용
+    rpc Analysis (AnalysisRequest) returns (AnalysisResponse) {
+        option (google.api.http) = {
+            post: "/analysis"
+            body: "*"
+        };
+    }
+
+    // 의학생체나이 종합분석(MA-AnalysisResults-v1) API
+    // 측정된 의학생체나이 결과를 요청하기 위한 API
+    rpc GetAnalysis (GetAnalysisRequest) returns (GetAnalysisResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-result-analysis"
+            body: "*"
+        };
+    }
+    // 개별나이 및 주요요인 분석(MA-IndividualResults-v2) API 
+    // 개별나이 측정 결과를 요청하기 위한 API
+    rpc GetIndividualResult (GetIndividualRequest) returns (GetIndividualResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-result-individual"
+            body: "*"
+        };
+    }
+    
+    // 각 장기나이 분석 결과 Postman docs (MA-LifeExpectancy-v1) API
+    // 실제 함수 MA_Organ_Age_v2 API 
+    // 측정된 장기나이 분석 결과를 요청하기 위한 API
+    rpc GetOrganAnalysis (GetOrganAnalysisRequest) returns (GetOrganAnalysisResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-result-organ"
+            body: "*"
+        };
+    }
+    
+    // 노화지수 및 잔여수명 결과(MA-LifeExpectancy-v2) API 
+    // 측정된 지수 및 잔여수명 결과를 요청하기 위한 API
+    rpc GetLifeExpectancyResult (GetExpectancyRequest) returns (GetExpectancyResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-result-life-expectancy"
+            body: "*"
+        };
+    }
+
+    // 질병 위험도를 가져오는 API 
+    rpc GetAgingRelatedDiseaseRisk (GetArdRiskRequest) returns (GetArdRiskResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-ard-risk"
+            body: "*"
+        };
+    }
+
+    // 암 위험도를 가져오는 API
+    // 남/여 별로 대상 암이 다르다
+    rpc GetCancerRisk (GetCaRiskRequest) returns (GetCaRiskResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-ca-risk"
+            body: "*"
+        };
+    }
+
+    // 질병 위험도에 따른 건강가이드를 가져오는 API 
+    rpc GetAgingRelatedDiseaseRiskWithHealthGuide (GetArdRiskRequest) returns (GetArdRiskWithGuideResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-ard-risk-with-guide"
+            body: "*"
+        };
+    }
+
+    // 암 위험도와 위험도에 따른 건강가이드를 가져오는 API
+    // 남/여 별로 대상 암이 다르다
+    rpc GetCancerRiskWithHealthGuide (GetCaRiskRequest) returns (GetCaRiskWithGuideResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-ca-risk-with-guide"
+            body: "*"
+        };
+    }
+
+    // 질병 경고신호 리스트를 가져오는 API
+    // legacy 와 다르게 질병마다 경고신호 리스트만 가져온다.
+    rpc GetWarningSignalByDisease (GetWarningSignalRequest) returns (GetWarningSignalResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-ard-guides"
+            body: "*"
+        };
+    }
+
+    // 노화 관련 질병 경고신호 리스트를 파일에서 가져오는 API
+    rpc ListAgingRelatedDiseaseWarningSiganlFromFile (GetWarningSignalFromFileRequest) returns (GetWarningSignalFromFileResponse) {
+        option (google.api.http) = {
+            post: "/v2/list-ard-warning-signal-from-file"
+            body: "*"
+        };
+    }
+
+    // 암 경고신호 리스트를 파일에서 가져오는 API
+    rpc ListCancerWarningSiganlFromFile (GetWarningSignalFromFileRequest) returns (GetWarningSignalFromFileResponse) {
+        option (google.api.http) = {
+            post: "/v2/list-ca-warning-signal-from-file"
+            body: "*"
+        };
+    }
+
+    // 의료비용 예측 데이터 리스트 
+    // legacy 와 다르게 total_guide 컨텐츠는 제공하지 않는다. 
+    rpc ListMedicalExpenseExpectData (ListMedicalExpenseExpectDataRequest) returns (ListMedicalExpenseExpectDataResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-medical-expense"
+            body: "*"
+        };
+    }
+
+    // 진료/투약 분석 및 입력 정보 조회(get-diagnosis) API 
+    rpc GetDiagnosisResult (GetDiagnosisRequest) returns (GetDiagnosisResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-diagnosis"
+            body: "*"
+        };
+    }
+
+    rpc GetRetireFundCalc(GetRetireFundCalcRequest) returns (GetRetireFundCalcResponse){
+        option (google.api.http) = {
+            post: "/v2/get-retirefund"
+            body: "*"
+        };
+    }
+
+    // 최신 의료비 통계 자료를 가져온다
+    rpc GetMedicalExpenseStatistics(GetMedicalExpenseStatisticsRequest) returns (GetMedicalExpenseStatisticsResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-medicalexpense-statistics"
+            body: "*"
+        };
+    }
+
+    // 고객 정보와 KB 고객 속성 정보를 저장한다.
+    rpc SetUserInfoWithKB (SetUserInfoRequestWithKB) returns (SetUserInforResponse) {
+        option (google.api.http) = {
+            post: "/set-user-info-kb"
+            body: "*"
+        };
+    }
+    
+    // 환자 번호(pcust_nmbr)로 
+    // 저장 되어 있는 데이터의 생년월일(YYYYMMDD) 과 검진일자(YYYYMMDD)들을 가져온다
+    rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-user-info"
+            body: "*"
+        };
+    }
+
+    rpc GetDeathBenefit(GetDeathBenefitRequest) returns (GetDeathBenefitResponse){
+        option (google.api.http) = {
+            post: "/v2/get-deathbenfit"
+            body: "*"
+        };
+    }
+
+    // 발생률 통계 자료 
+    // 1. 질병 발생률 통계
+    rpc GetDiseaseIncidenceRateStatistics (GetDiseaseIncidenceRateStatisticsRequest) returns (GetDiseaseIncidenceRateStatisticsResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-disease-incidence-rate-statistics"
+            body: "*"
+        };
+    }
+    // 2. 암 발생률 통계
+    rpc GetCancerIncidenceRateStatistics (GetCancerIncidenceRateStatisticsRequest) returns (GetCancerIncidenceRateStatisticsResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-cancer-incidence-rate-statistics"
+            body: "*"
+        };
+    }
+
+    // KB 고객 약관 동의 항목 조회
+    rpc GetCustomerConsentKB (GetCustomerConsentKBRequest) returns (GetCustomerConsentKBResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-customer-consnet-kb"
+            body: "*"
+        };
+    }
+
+    // KB 고객 약관 동의 항목 업데이트
+    rpc UpdateCustomerConsentKB (UpdateCustomerConsentKBRequest) returns (UpdateCustomerConsentKBResponse) {
+        option (google.api.http) = {
+            post: "/v2/update-customer-consnet-kb"
+            body: "*"
+        };
+    }
+
+    // 고객 번호(pcust_nmbr)와 분석요청 생성일자(url에서 start_date)를 기반으로 한
+    // 트랜잭션의 유저 정보에 대해 조회해온다
+    rpc GetUserInfoWithDate(GetUserInfoWithDateRequest) returns (GetUserInfoWithDateResponse) {
+        option (google.api.http) = {
+            post: "/v2/get-user-info-with-date"
+            body: "*"
+        };
+    }
+
+    // 고객 정보를 삭제한다.
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+        option (google.api.http) = {
+            post: "/v2/delete-get-user"
+            body: "*"
+        };
+    }
+
+    // 삭제된 고객인지 확인한다.
+    rpc IsDeleteUser(IsDeleteUserRequest) returns (IsDeleteUserResponse) {
+        option (google.api.http) = {
+            post: "/v2/is-delete-user"
+            body: "*"
+        };
+    }
+}
+
+message Error {
+    string SUCS_YN = 1;
+    int32 SUCS_CNT = 2;
+    int32 FAIL_CNT = 3;
+    int32 INST_CNT = 4;
+    int32 UPDT_CNT = 5;
+    int32 TOTL_CNT = 6;
+    string Message = 7;
+    repeated MAErrorModel Errors = 8;
+}
+
+message MAErrorModel {
+    string message = 1;
+    string message_code = 2;
+    string message_date = 3;
+}
+
+// 전달 받은 PostMan의 입력 데이터 기준으로 작성 되었음
+// link: https://documenter.getpostman.com/view/6908722/2sA3e2eotw#f3837b36-b426-4bcd-b803-adef77c6b99f
+message SetTestItemData {
+    string srvc_code = 1; // 서비스 코드 
+    string rept_code = 2; // 레포트 코드 (고정 될 예정)
+    string cnty_code = 3; // 국가 코드
+    string chck_date = 4; // 검진 일자
+    string pcust_nmbr = 5; // 환자 번호
+    string pcust_name = 6; // 환자 이름
+    string brth_date = 7; // 생년월일 (ex:19880109)
+    double age = 8; // 나이
+    double gen = 9; // 성별 (남:1, 여:2)
+    optional double bw = 10; // 체중
+    optional double ht = 11; // 키
+    optional double bmi = 12; // 체질량 지수
+    optional double lbm = 13; // 근육량
+    optional double pbf = 14; // 체지방률
+    optional double wc = 15; // 허리 둘레
+    optional double sbp = 16; // 수축기 혈압
+    optional double dbp = 17; // 이완기 혈압
+    optional double tc = 18; // 총 콜레스테롤
+    optional double hdl = 19; // 고밀도 콜레스테롤
+    optional double tg = 20; // 중성 지방
+    optional double ldl = 21; // 저밀도 콜레스테롤
+    optional double fvc_p = 22; // 강제폐활량%
+    optional double fvc = 23;  // 강제폐활량
+    optional double fev1_p = 24; // 강제일초량%
+    optional double fev1 = 25; // 강제일초량
+    optional double tp = 26; // 총당백질
+    optional double alb = 27; // 알부민 (C# 원본 소스에 ALB와 alb가 있음 확인 필요)
+    optional double agr = 28; // 알부민 글로불린 비율
+    optional double alp = 29; // 에이엘피
+    optional double ast = 30; // 지오티
+    optional double alt = 31; // 지피티
+    optional double ggtp = 32; // 감마지티피
+    optional double tb = 33; // 총빌리루빈
+    optional double db = 34; // 직접빌리루빈
+    optional double fbs = 35; // 혈당
+    optional double hba1c = 36; // 당화혈색소
+    optional double cr = 37; // 크레아티닌
+    optional double bun = 38; // 혈중 요소 질소
+    optional double usg = 39; // 요질량
+    optional double uph = 40; // 요질량
+}
+
+
+message SetTestItemRequest {
+    string key = 1; // 암호화된 key 값
+    repeated SetTestItemData data = 2; // 분석 요청 데이터 리스트
+}
+
+message SetTestItemResponse {
+    string sucs_yn  = 1; // 성공 여부 (Y or N)
+    int32 sucs_cnt = 2; // 성공 개수
+    int32 fail_cnt = 3; // 실패 개수
+    int32 totl_cnt = 4; // 총 개수
+    string message = 5; // 분석에 대한 message
+    optional MAErrorModel errors = 6; // 분석요청 대한 error
+    repeated Data data = 7; // 각 요청에 대한 결과
+    message Data {
+        string srvc_code = 1; // 서비스 코드
+        string pcust_nmbr = 2; // 환자 번호
+        string message = 3; // 데이터 처리에 대한 메시지
+        string sucs_yn = 4; // 성공 여부
+        string chck_date = 5; // 검진일
+        string brth_date = 6; // 생년월일
+        string rept_code = 7; // 레포트 코드
+        string entity_status = 8;
+    }
+}
+
+message SetPaperDataItem {
+    string srvc_code = 1; // 서비스 코드 
+    string rept_code = 2; // 레포트 코드 (고정 될 예정)
+    string cnty_code = 3; // 국가 코드
+    string chck_date = 4; // 검진 일자
+    string pcust_nmbr = 5; // 환자 번호
+    string pcust_name = 6; // 환자 이름
+    string brth_date = 7; // 생년월일 (ex:19880109)
+    repeated PaperWeight paper_weight_list = 8; //문진 정보
+    repeated Diagnosis diagnosis_list = 9; // 진료/투약 정보
+    
+    // 문진 정보
+    message PaperWeight {
+        repeated Data data = 1;
+
+        message Data {
+            string code = 1; // 문진 정보 코드
+            string name = 2; // 문진 이름 (ex: 흡연 여부)
+            string value = 3; // 문진에 대한 값
+        }
+    }
+
+    // 진료/투약 정보
+    message Diagnosis {
+        repeated Data data = 1;
+
+        message Data {
+            string code = 1; // 진료/투약 정보 코드
+            string name = 2; // 진료/투약 정보 이름
+            // string or DataList
+            // 만약 value type이 단일 string인 경우 value_str에
+            // value type이 list인 경우 value_list에 값 전달
+            // (중요) name이 `dosage_list` 인 경우는 value_list에 값 전달 value_str에는 값 전달 X
+            optional string value_str = 3; 
+            repeated ListData value_list = 4; // 투약 정보의 List
+            
+            message ListData {
+                repeated CommonData data = 1;
+                message CommonData {
+                    string code = 1;
+                    string name = 2;
+                    string value = 3;
+                }
+            }
+        }
+    }
+}
+
+message SetPaperItemRequest {
+    string key = 1; // 암호화된 key 값
+    repeated SetPaperDataItem data = 2; // 분석 요청 데이터 리스트
+}
+
+message SetPaperItemResponse {
+    string sucs_yn  = 1; // 성공 여부 (Y or N)
+    int32 sucs_cnt = 2; // 성공 개수
+    int32 fail_cnt = 3; // 실패 개수
+    int32 totl_cnt = 4; // 총 개수
+    string message = 5; // 분석에 대한 message
+    optional MAErrorModel errors = 6; // 분석요청 대한 error
+    repeated Data data = 7; // 각 요청에 대한 결과
+    message Data {
+        string srvc_code = 1; // 서비스 코드
+        string pcust_nmbr = 2; // 환자 번호
+        string message = 3; // 데이터 처리에 대한 메시지
+        string sucs_yn = 4; // 성공 여부
+        string chck_date = 5; // 검진일
+        string brth_date = 6; // 생년월일
+        string rept_code = 7; // 레포트 코드
+        string entity_status = 8;
+    }
+}
+
+// 사용자 정보
+message User {
+    string name = 1; // 이름
+    string pcust_nmbr = 2; // 환자 관리 번호
+    string brth_date = 3; // 생년 월일
+    string gen = 4; // 성별
+    string phone_nmbr = 5; // 전화 번호
+    string srvc_code = 6; // 고객 형태 코드 (별도 코드정의 필요(ex: 00-대국민서비스로 고객, 01-기업제공 솔루션으로의 고객 등))
+}
+
+// KB 고객 속성 정보
+message PropertyKB {
+    optional string channel_code = 1; // 채널 코드(ex: 00, 01)
+    // 설계사 정보
+    optional string planner_code = 2; // 설계사 코드
+    optional string planner_phone_nmbr = 3; // 설계사 전화 번호
+    optional string planner_name = 4; // 설계사 이름
+    optional string planner_division = 5; // 설계사 소속
+    // 서비스 정보
+    optional google.protobuf.Timestamp service_start_date = 6; // 서비스 시작일(가입일) -> URL RequsetDate
+    optional google.protobuf.Timestamp service_end_date = 7; // 서비스 탈퇴일 
+    optional google.protobuf.Timestamp expire_date = 8; // 서비스 만료 일자 (YYYYMMDD) -> RequestDate + 1 Year
+    // 정보 제공 동의 여부 List
+    repeated Informed informed_consent_list = 9;
+}
+
+// 정보 제공 동의 여부
+message Informed {
+    InformedConsent name = 1; // 동의 여부 이름
+    string agree_yn = 2; // 동의 여부 Y,N
+    string channel_code = 3; // 동의 여부 체크한 channel 코드 (ex:00, 01...)
+    google.protobuf.Timestamp date = 4; // 동의 여부 일시
+
+    // 정보 제공 동의 항목들
+    enum InformedConsent {
+        personal_info_collect_use = 0; // 개인정보 수집-이용
+        sensitive_info_collect_use = 1; // 민감정보 수집-이용
+        personal_info_consent = 2; // 개인정보 제공 동의(계열사)
+        lms_service_consent= 3; // LMS 수신 동의 -- 사용 안함
+        personal_info_consent_planner = 4; // 개인 정보 제공 동의(설계사)
+    }
+}
+
+message SetUserInfoRequestWithKB {
+    string key = 1;
+    User user = 2;
+    PropertyKB property = 3;
+}
+
+message SetUserInforResponse {
+    string sucs_yn = 1;
+    optional MAErrorModel errors = 2;
+}
+
+message AnalysisRequest {
+    string key = 1;
+    repeated Data data = 2;
+
+    message Data {
+        string srvc_code = 1; // 서비스 코드 
+        string rept_code = 2; // 레포트 코드
+        string cnty_code = 3; // 국가 코드
+        string chck_date = 4; // 검진 일자 (스크래핑 통해서 가져오는 데이터)
+        string pcust_nmbr = 5; // 환자 번호
+        string pcust_name = 6; // 환자 이름
+        string brth_date = 7; // 생년월일 (ex:19880109)
+
+        // URL 에들어있는 요청 일자
+        google.protobuf.Timestamp request_date = 8; // 
+
+        // 채널 코드 (00 희망 똑똑, 01 대표앱)
+        string channel_code = 9;
+
+        // 스크래핑
+        bool scrap_sucs_yn = 10; // 스크래핑 성공 여부
+        bool scrap_data_valid_yn = 11; // 스크래핑 데이터 분석 가능 여부
+        google.protobuf.Timestamp scrap_date = 12; // 스크래핑 요청 일시
+
+        // 스크래핑된 데이터들
+        optional Checkup checkup_data = 13; // 검진 정보 (스크래핑 통해서 가져오는 데이터)
+        repeated PaperWeight paper_weight_list = 14; // 문진 정보 (스크래핑 통해서 가져오는 데이터)
+        repeated Diagnosis diagnosis_list = 15; // 진료/투약 정보 (스크래핑 통해서 가져오는 데이터)
+
+        // 검진 데이터
+        message Checkup {
+            double age = 1; // 나이
+            double gen = 2; // 성별 (남:1, 여:2)
+            optional double bw = 3; // 체중
+            optional double ht = 4; // 키
+            optional double bmi = 5; // 체질량 지수
+            optional double lbm = 6; // 근육량
+            optional double pbf = 7; // 체지방률
+            optional double wc = 8; // 허리 둘레
+            optional double sbp = 9; // 수축기 혈압
+            optional double dbp = 10; // 이완기 혈압
+            optional double tc = 11; // 총 콜레스테롤
+            optional double hdl = 12; // 고밀도 콜레스테롤
+            optional double tg = 13; // 중성 지방
+            optional double ldl = 14; // 저밀도 콜레스테롤
+            optional double fvc_p = 15; // 강제폐활량%
+            optional double fvc = 16;  // 강제폐활량
+            optional double fev1_p = 17; // 강제일초량%
+            optional double fev1 = 18; // 강제일초량
+            optional double tp = 19; // 총당백질
+            optional double alb = 20; // 알부민 (C# 원본 소스에 ALB와 alb가 있음 확인 필요)
+            optional double agr = 21; // 알부민 글로불린 비율
+            optional double alp = 22; // 에이엘피
+            optional double ast = 23; // 지오티
+            optional double alt = 24; // 지피티
+            optional double ggtp = 25; // 감마지티피
+            optional double tb = 26; // 총빌리루빈
+            optional double db = 27; // 직접빌리루빈
+            optional double fbs = 28; // 혈당
+            optional double hba1c = 29; // 당화혈색소
+            optional double cr = 30; // 크레아티닌
+            optional double bun = 31; // 혈중 요소 질소
+            optional double usg = 32; // 요질량
+            optional double uph = 33; // 요산도
+            // 20250313 추가
+            optional string sight = 34; // 시력 
+            optional string hearing = 35; // 청력
+            optional string upt = 36; // 요단백
+            optional double hemo = 37; // 혈색소(헤모글로빈)
+            optional double gfr = 38; // 신사구체여과율(GFR)
+        }
+
+         // 문진 정보
+        message PaperWeight {
+            repeated PaperWeigthData data = 1;
+
+            message PaperWeigthData {
+                string code = 1; // 문진 정보 코드
+                string name = 2; // 문진 이름 (ex: 흡연 여부)
+                string value = 3; // 문진에 대한 값
+            }
+        }
+
+        // 진료/투약 정보
+        message Diagnosis {
+            repeated DiagnosisData data = 1;
+
+            message DiagnosisData {
+                string code = 1; // 진료/투약 정보 코드
+                string name = 2; // 진료/투약 정보 이름
+                // string or DataList
+                // 만약 value type이 단일 string인 경우 value_str에
+                // value type이 list인 경우 value_list에 값 전달
+                // (중요) name이 `dosage_list` 인 경우는 value_list에 값 전달 value_str에는 값 전달 X
+                optional string value_str = 3; 
+                repeated ListData value_list = 4; // 투약 정보의 List
+                
+                message ListData {
+                    repeated CommonData data = 1;
+                    message CommonData {
+                        string code = 1;
+                        string name = 2;
+                        string value = 3;
+                    }
+                }
+            }
+        }
+    }
+}
+
+message AnalysisResponse {
+    string sucs_yn  = 1; // 성공 여부 (Y or N)
+    int32 sucs_cnt = 2; // 성공 개수
+    int32 fail_cnt = 3; // 실패 개수
+    int32 totl_cnt = 4; // 총 개수
+    string message = 5; // 분석에 대한 message
+    optional MAErrorModel errors = 6; // 분석요청 대한 error
+    repeated Data data = 7; // 각 요청에 대한 결과
+    message Data {
+        string srvc_code = 1; // 서비스 코드
+        string pcust_nmbr = 2; // 환자 번호
+        string message = 3; // 데이터 처리에 대한 메시지
+        string sucs_yn = 4; // 성공 여부
+        string chck_date = 5; // 검진일
+        string brth_date = 6; // 생년월일
+        string rept_code = 7; // 레포트 코드
+        string entity_status = 8;
+    }
+}
+
+message GetAnalysisRequest {
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string srvc_code = 1; // 서비스 코드
+        string rept_code = 2; // 레포트 코드
+        string cnty_code = 3; // 국가 코드
+        string chck_date = 4; // 검진 일자
+        string pcust_nmbr = 5; // 환자 번호
+    }
+}
+
+// This one is based on the legacy code
+// C# MASerivce.svc.cs:693:718
+message GetAnalysisResponse {
+    optional string sucs_yn = 1; // 성공 여부
+    optional int32 totl_cnt = 2; // 총 개수
+    repeated Data data = 3; 
+    optional string message = 4;
+    optional MAErrorModel errors = 5;
+    message Data {
+        optional string pcust_nmbr = 1; // 환자 번호
+        string chck_date = 2; // 검진일
+        string cnty_code = 3; // 국가 코드
+        string sucs_yn = 4; // 성공 여부
+        string message = 5; // 데이터에 대한 mesasge
+        double age = 6; // 주민등록나이
+        double gen = 7; // 성별 ()
+        double bio_age = 8; // 생체 나이
+        string totl_guid = 9; // 가이드
+        string pcust_name = 10; // 환자 번호
+    }
+}
+
+message GetIndividualRequest {
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string pcust_nmbr = 1; // 환자 번호
+        string chck_date = 2; // 검진 일자
+        string srvc_code = 3; // 서비스 코드
+        string rept_code = 4; // 레포트 코드
+        string cnty_code = 5; // 국가 코드
+    }
+}
+
+//This one is based on the legacy code
+// C# MAService.svc.cs:MA_IndividualResult_v2()
+message GetIndividualResponse {
+    optional string sucs_yn = 1; // 성공 여부
+    optional int32 totl_cnt = 2; // 총 개수
+    repeated Data data = 3; 
+    optional string messeage = 4;
+    optional MAErrorModel errors= 5;
+
+    message Data {
+        optional double whr_age = 1;           // null이 허용됨
+        optional double alb_age = 2;
+        optional double ast = 3;
+        optional double agr_age = 4;
+        optional double tb = 5;
+        optional double hdl = 6;
+        optional double ldl = 7;
+        optional double bmi_age = 8;
+        optional double dbp = 9;
+        string pcust_nmbr = 10;
+        optional double amylase = 11;          // null이 허용됨
+        string message = 12;          // null이 허용됨
+        optional double pbm = 13;
+        optional double db = 14;
+        optional double pbf_age = 15;
+        optional double tg_age = 16;
+        optional double wc_age = 17;
+        optional double hba1c_age = 18;
+        optional double ccr_age = 19;
+        optional double ccr = 20;
+        optional double cpk = 21;              // null이 허용됨
+        optional double pbm_age = 22;
+        optional double ggtp = 23;
+        optional double fev1_p = 24;
+        optional double bun_age = 25;
+        optional double fvc = 26;              // null이 허용됨
+        optional double alt_age = 27;
+        optional double tg = 28;
+        optional double fvc_p = 29;
+        optional double fvc_age = 30;
+        optional double homo_age = 31;         // null이 허용됨
+        optional double ldl_age = 32;
+        optional double amylase_age = 33;
+        optional double cr_age = 34;
+        optional double bun = 35;
+        optional double tp_age = 36;
+        optional double homo = 37;             // null이 허용됨
+        optional double fev1 = 38;             // null이 허용됨
+        optional double hba1c = 39;
+        optional double ldh_age = 40;
+        optional double sbp = 41;
+        optional double tc_age = 42;
+        optional double ldh = 43;              // null이 허용됨
+        optional double fbs_age = 44;
+        optional double sbp_age = 45;
+        optional double alt = 46;
+        optional double cpk_age = 47;
+        optional double tc = 48;
+        optional double wc = 49;
+        optional double tb_age = 50;
+        optional double alp_age = 51;
+        string chck_date = 52;
+        optional double hdl_age = 53;
+        optional double db_age = 54;
+        string sucs_yn = 55;
+        optional double whr = 56;              // null이 허용됨
+        optional double fev1_age = 57;
+        optional double bmi = 58;
+        optional double dbp_age = 59;
+        optional double pbf = 60;
+        optional double pp_age = 61;
+        optional double fbs = 62;
+        optional double alb = 63;
+        optional double ggtp_age = 64;
+        optional double alp = 65;
+        optional double agr = 66;
+        optional double cr = 67;
+        optional double ast_age = 68;
+        optional double pp = 69;               // null이 허용됨
+        optional double tp = 70;
+    }
+}
+
+// 노화 관련 질병 위험도 조회를 위한 요청
+message GetArdRiskRequest {
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string pcust_nmbr = 1; // 환자 관리 번호
+        string chck_date = 2; // 검진 일자
+        string srvc_code = 3; // 서비스 코드
+        string rept_code = 4; // 레포트 코드
+        string cnty_code = 5; // 국가 코드
+    }
+}
+
+message GetArdRiskResponse {
+    optional string sucs_yn = 1;
+    optional int32 totl_cnt = 2;
+    repeated Data data = 3;
+    optional string messeage = 4;
+    optional MAErrorModel errors= 5;
+
+    message Data {
+        string pcust_name = 1; // 환자명
+        string pcust_nmbr = 2; // 환자 관리 코드
+        string chck_date = 3; // 검진일
+        string cnty_code = 4; // 국가 코드
+        double age = 5; // 나이
+        double gen = 6; // 성별 코드 (1.0:남성, 2.0:여성)
+        repeated RiskAnalysis risk_analysis = 7; //위험도 분석 결과
+
+        message RiskAnalysis {
+            string dise_calc_name = 1; //: "10년 이내 비만 발생 위험율(%)",
+            string dise_code = 2; //: "0301FA02",
+            string dise_grade = 3; //: "고위험",
+            double dise_value = 4; //": 264.4759,
+            string dise_grade_code = 5; //: "FATP0008",
+            string age_ref_desc = 6; //": "국내 여성 전체",
+            string dise_name = 7; //: "Obesity",
+            double dise_calc_value = 8; //: 19.28,
+            double age_ref = 9; //: -1.0,
+            string dise_calc_code = 10; // : "0301FB02"
+        }
+    }
+}
+
+message GetArdRiskWithGuideResponse {
+    optional string sucs_yn = 1;
+    optional int32 totl_cnt = 2;
+    repeated Data data = 3;
+    optional string messeage = 4;
+    optional MAErrorModel errors= 5;
+
+    message Data {
+        string pcust_name = 1; // 환자명
+        string pcust_nmbr = 2; // 환자 관리 코드
+        string chck_date = 3; // 검진일
+        string cnty_code = 4; // 국가 코드
+        double age = 5; // 나이
+        double gen = 6; // 성별 코드 (1.0:남성, 2.0:여성)
+        repeated RiskAnalysis risk_analysis = 7; //위험도 분석 결과
+
+        message RiskAnalysis {
+            string dise_calc_name = 1; //: "10년 이내 비만 발생 위험율(%)",
+            string dise_code = 2; //: "0301FA02",
+            string dise_grade = 3; //: "고위험",
+            double dise_value = 4; //": 264.4759,
+            string dise_grade_code = 5; //: "FATP0008",
+            string age_ref_desc = 6; //": "국내 여성 전체",
+            string dise_name = 7; //: "Obesity",
+            double dise_calc_value = 8; //: 19.28,
+            double age_ref = 9; //: -1.0,
+            string dise_calc_code = 10; // : "0301FB02"
+            AgingDiseaseHealthGuide health_guide = 11; // 건강 가이드 List
+
+            message AgingDiseaseHealthGuide {         
+                string disease_code = 1; // 질병 코드
+                repeated DiseaseGuide guide_contents = 2; // 가이드 리스트
+    
+                message DiseaseGuide {
+                    string guide_content = 1; // 내용
+                    int32 guide_order = 2; // 순서
+                    int32 guide_sub_order = 3; // 부 순서
+                }
+            }
+        }
+    }
+}
+
+
+message GetCaRiskRequest {
+    string key = 1;
+    repeated Data data =2;
+
+    message Data {
+        string pcust_nmbr = 1;
+        string chck_date = 2;
+        string srvc_code = 3;
+        string rept_code = 4;
+        string cnty_code = 5;
+    }
+} 
+
+message GetCaRiskResponse {
+    optional string sucs_yn = 1;
+    optional int32 totl_cnt = 2;
+    repeated Data data = 3;
+    optional string messeage = 4;
+    optional MAErrorModel errors= 5;
+
+    message Data {
+        string pcust_name = 1; // 환자명
+        string pcust_nmbr = 2; // 환자 관리 코드
+        string chck_date = 3; // 검진일
+        string cnty_code = 4; // 국가 코드
+        double age = 5; // 나이
+        double gen = 6; // 성별 코드 (1.0:남성, 2.0:여성)
+        repeated RiskAnalysis risk_analysis = 7; //위험도 분석 결과
+
+        message RiskAnalysis {         
+            string canr_grade = 1; // 위험도: "고위험",
+            int32 canr_order = 2; // 우선 순위: 6,
+            string canr_rate_desc = 3; //암 발생률에 대한 설명: "연간 인구 10만 명당 폐암 발생",
+            string canr_grade_code = 4; //위험도 등급 코드: "FATP0008",
+            string canr_code = 5; // 암 코드: "0301CA05",
+            double canr_value = 6; //암 상대 위험도 값: 59.9251,
+            string canr_name = 7; // 암 이름: "폐암",
+            double canr_rate = 8; // 암 발생률(%): 35.4
+        }
+    }
+}
+
+message GetCaRiskWithGuideResponse {
+    optional string sucs_yn = 1; // 성공여부
+    optional int32 totl_cnt = 2; // 총 개수
+    repeated Data data = 3; // 데이터
+    optional string messeage = 4;
+    optional MAErrorModel errors= 5;
+
+    message Data {
+        string pcust_name = 1; // 환자명
+        string pcust_nmbr = 2; // 환자 관리 코드
+        string chck_date = 3; // 검진일
+        string cnty_code = 4; // 국가 코드
+        double age = 5; // 나이
+        double gen = 6; // 성별 코드 (1.0:남성, 2.0:여성)
+        repeated RiskAnalysis risk_analysis = 7; //위험도 분석 결과
+
+        message RiskAnalysis {         
+            string canr_grade = 1; //: "고위험",
+            int32 canr_order = 2; //: 6,
+            string canr_rate_desc = 3; //: "연간 인구 10만 명당 폐암 발생",
+            string canr_grade_code = 4; //: "FATP0008",
+            string canr_code = 5; //: "0301CA05",
+            double canr_value = 6; //: 59.9251,
+            string canr_name = 7; //: "폐암",
+            double canr_rate = 8; //: 35.4
+             CancerHealthGuide health_guide = 9; // 건강 가이드 List
+
+            message CancerHealthGuide {         
+                string disease_code = 1; // 질병 코드
+                repeated DiseaseGuide guide_contents = 2; // 가이드 리스트
+    
+                message DiseaseGuide {
+                    string guide_content = 1; // 내용
+                    int32 guide_order = 2; // 순서
+                    int32 guide_sub_order = 3; // 부 순서
+                }
+            }
+        }
+    }
+}
+  
+message Guide {
+    string age_type = 1; // baa, caa, paa, hea, pua, rea
+    string code = 2;     // ATAG_CODE
+    string code_name = 3;// ATAG_NAME
+    string title = 4;
+    string content = 5;
+    string age = 6;      // Antiaging Atag_Age
+    int32 order = 7;
+}
+  
+message BAASubGuide {
+    string guide_type = 1;         // F : 기능성 , W : 경고
+    int32 order = 2;
+    string content = 3;
+    string content_effect = 4;     // Content_Effect in C#
+}
+  
+message CustomizedPrescriptionModel {
+    string cstm_code = 1;  // CSTM_CODE in C#
+    string guide = 2;      // GUIDE in C#
+    string habit_code = 3; // HABIT_CODE in C#
+    optional double age = 4;   // AGE in C#, nullable decimal
+}
+
+// This one is based on the legacy code
+// C# MASerivce.svc.cs:MA_BioAge_Analysis_v2
+message GetOrganAnalysisRequest {
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string srvc_code = 1;
+        string rept_code = 2;
+        string cnty_code = 3;
+        string chck_date = 4;
+        string pcust_nmbr = 5;
+    }
+}
+
+// This one is based on the legacy code
+// C# MASerivce.svc.cs:MA_BioAge_Analysis_v2
+message GetOrganAnalysisResponse {
+    string sucs_yn = 1; // 성공 여부
+    int32 totl_cnt = 2; // 총 개수
+    repeated Data data = 3;
+    string message = 4;
+    MAErrorModel errors = 5;
+
+    message Data {
+        string cnty_code = 1; // 국가 코드
+        string pcust_nmbr = 2; // 환자 관리 번호
+        double bfa = 3; // 체지방 나이
+        string chck_date = 4; // 검진일
+        string sucs_yn = 5; // 성공 여부
+        string message = 6; // 메시지
+        double aoa = 7; // 복부 비만 나이
+        double paa = 8; // 췌장 나이
+        double rea = 9; // 신장 나이
+        double pua = 10; // 폐 나이
+        double age = 11; // 주민등록 나이
+        double hea = 12; // 간장 나이
+        repeated MiddleAgeGuide middle_age_guide = 13; 
+        repeated BaaSubGuide baa_sub_guide = 14;
+        double baa = 15; // 비만 체형 나이
+        double caa = 16; // 심장 나이
+    }
+
+    // 중형 나이에 대한 가이드(baa, caa)
+    message MiddleAgeGuide {
+        string content = 1; // 내용
+        string age_type = 2; // 나이 유형
+        int32 order = 3; // 순서
+        string title = 4; // 제목
+    }
+
+    // baa(비만 체형 나이)에 대한 추가 가이드
+    message BaaSubGuide {
+        string guide_type = 1; // 가이드 유형
+        string content = 2; // 내용
+        string content_effect = 3; // 
+        int32 order = 4; // 순서
+    }
+}
+
+message GetExpectancyRequest{
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string pcust_nmbr = 1; // 환자 번호
+        string chck_date = 2; // 검진일
+        string srvc_code = 3; // 서비스 코드
+        string rept_code = 4; // 레포트 코드
+        string cnty_code = 5; // 국가 코드 (ko-KR)
+    }
+}
+
+message GetExpectancyResponse{
+    optional string sucs_yn = 1; // 성공 여부
+    optional int32 totl_cnt = 2; // 총 개수
+    repeated Data data = 3;
+
+    message Data {
+        string cnty_code = 1; // 국가 코드
+        double tle = 2; // 기대 수명 (생체나이 기반으로 계산한 기대 수명)
+        string pcust_nmbr = 3; // 환자 번호
+        double aging_index = 4; // 노화지수
+        string sucs_yn = 5; // 성공 여부
+        string chck_date = 6; // 검진일
+        string message = 7; 
+        double tle_avg = 8; // 기대 수명 (남녀 평균 수명 통계 기반으로 계산한 기대 수명)
+        double aging_rank = 9; // 노화 등수
+        // 20250110 deprecated aging_rank_renewal values 
+        // double aging_rank_renewal = 10; //노화등수 KB손보 신규 수식으로 인한 값 추가(deprecated)
+    }
+    optional string message = 4;
+    optional MAErrorModel errors= 5;
+}
+
+message GetWarningSignalRequest {
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string pcust_nmbr = 1; // 환자 번호
+        string chck_date = 2; // 검진일
+        string srvc_code = 3; // 서비스 코드
+        string rept_code = 4; // 레포트 코드
+        string cnty_code = 5;// 국가 코드
+    }
+}
+
+message GetWarningSignalResponse {
+    optional string sucs_yn = 1; // 성공 여부
+    optional int32 totl_cnt = 2; // 총개수
+    repeated Data data = 3;
+    optional string message = 4;
+    optional MAErrorModel errors = 5;
+    
+    message Data {
+        string pcust_name = 1; // 환자명
+        string pcust_nmbr = 2; // 환자 관리 코드
+        string chck_date = 3; // 검진일
+        string cnty_code = 4; // 국가 코드
+        double age = 5; // 나이
+        double gen = 6; // 성별 코드 (1.0:남성, 2.0:여성)
+        repeated AgingDiseaseWarningSignal warning_sign = 7; // 위험 신호 list
+
+        message AgingDiseaseWarningSignal {         
+            string disease_code = 1; // 질병 코드
+            repeated DiseaseGuide guide_contents = 2; // 가이드 리스트
+
+            message DiseaseGuide {
+                string guide_content = 1; // 내용
+                int32 guide_order = 2; // 순서
+                int32 guide_sub_order = 3; // 부 순서
+            }
+        }
+    }
+}
+
+// 파일로부터 가져오는 경고신호 요청
+message GetWarningSignalFromFileRequest {
+    string key = 1; // 암호화된 key 값
+    string cnty_code = 2; // 국가 코드
+}
+
+// 파일로부터 가져오는 경고신호 응답
+message GetWarningSignalFromFileResponse {
+    repeated WarningSignal warning_sign = 1; // 경고 신호 list
+
+    message WarningSignal {         
+        string disease_code = 1; // 질병 코드
+        repeated DiseaseGuide guide_contents = 2; // 가이드 리스트
+
+        message DiseaseGuide {
+            string guide_content = 1; // 내용
+            int32 guide_order = 2; // 순서
+            int32 guide_sub_order = 3; // 부 순서
+        }
+    }
+}
+
+message ListMedicalExpenseExpectDataRequest {
+    string key = 1; // 암호화된 key 값
+    repeated Data data = 2; // 조희 요청 데이터 리스트
+
+    message Data {
+        string pcust_nmbr = 1; // 환자 번호
+        string chck_date = 2; // 검진일
+        string srvc_code = 3; // 서비스 코드
+        string rept_code = 4; // 레포트 코드
+        string cnty_code = 5;// 국가 코드
+    }
+}
+
+message ListMedicalExpenseExpectDataResponse {
+    optional string sucs_yn = 1; // 성공 여부
+    optional int32 totl_cnt = 2; // 총 개수
+    repeated Data data = 3; // 의료비 예측 데이터 list
+    optional string message = 4;
+    optional MAErrorModel errors = 5;
+
+    message Data {
+        double gen = 1; // 성별
+        repeated MedicalExpense medical_expenses = 2; // 의료비 예측 list
+        string chck_date = 3; // 검진일
+        double age = 4; // 나이 (ca : 주민등록상 나이)
+        string pcust_name = 5; // 환자 이름
+        string pcust_nmbr = 6; // 환자 번호
+        double total_guide_sign = 7; // 가이드
+        string cnty_code = 8; // 국가 코드
+        optional ElderYoungerSet elder_younger_set = 9; // 노년, 비노년 기준 의료비 예측 set
+
+        message MedicalExpense {
+            double medical_expenses_value = 1; // 의료비 예측 값
+            string me_code = 2; // 의료비 코드
+            string medical_expenses_desc = 3; // 의료비 예측 설명
+            string medical_expenses_code = 4; // 의료비 예측 코드
+        }
+        message ElderYoungerSet {
+            optional string category = 1;    // ("E","Y") Elder(노년)인지 Younger(비노년)에 대한 값
+            // Common 공통
+            optional double me_0y = 2;      //나의 내년도 의료비(내년 1년치이므로 토탈 1년치 총의료비와 동일함)
+            optional double me_0y_sa = 3;   //동년배의 내년도 의료비(내년 1년치이므로 토탈 1년치 총의료비와 동일함)
+            optional double ba_minus_ca = 4; // (생체나이-주민나이)생체나이에서 주민등록나이를 뺀 값
+            optional double ambul = 5;     //나의 내년도 외래 진료 일수(내년 1년치이므로 토탈 1년치 총 외래와 동일함)
+            optional double ambul_sa = 6;    //동년배의 내년도 외래 진료 일수(내년 1년치이므로 토탈 1년치 총 외래와 동일함)
+            optional double hospital = 7; // 나의 내년도 입원 일수(내년 1년치이므로 토탈 1년치 총 입원과 동일함)
+            optional double hospital_sa = 8; //동년배의 내년도 입원 일수(내년 1년치이므로 토탈 1년치 총 입원과 동일함)
+            // Elder case 노년일때 (남 70세 이상, 여 76세 이상)
+            optional double me_5y = 9;       //나의 5년 후 의료비
+            optional double me_5y_sa = 10;   //동년배의 5년 후 의료비
+            optional double me_10y = 11;     //나의 10년 후 의료비
+            optional double me_10y_sa = 12;  //동년배의 10년 후 의료비
+            optional double expense_comp = 13; //동년배 대비 10년후 의료비 예측 비교( (-)값이면 동년배 대비 적음, (+)값이면 동년배 대비 많음)
+            optional double annual_avg = 14;    //나의 연 평균 의료비
+            optional double annual_avg_sa = 15; //동년배의 연 평균 의료비
+            optional double ambul_5y = 16;      //나의 5년 후 외래 진료 일수
+            optional double ambul_5y_sa = 17;   //동년배의 5년 후 외래 진료일수
+            optional double ambul_10y = 18;     //나의 10년 후 외래 진료 일수
+            optional double ambul_10y_sa = 19; //동년배의 10년 후 외래 진료 일수
+            optional double hospital_5y = 20; // 나의 5년 후 입원 일수
+            optional double hospital_5y_sa = 21; //동년배의 5년 후 입원 일수
+            optional double hospital_10y = 22; // 나의 10년 후 입원 일수
+            optional double hospital_10y_sa = 23; //동년배의 10년 후 입원 일수
+            // Younger case 비노년일때 (남 70세 미만, 여 76세 미만)
+            optional double me_10y_ag  = 24;    //나의 10년 누적 총의료비
+            optional double me_10y_sa_ag = 25;  //동년배의 10년 누적 총 의료비
+            optional double me_all_ag = 26; //나의 생애 누적 총 의료비
+            optional double me_all_sa_ag = 27; //동년배의 생애 누적 총 의료비
+            optional double monthly_avg = 28; //나의 기대수명까지 월평균 의료비
+            optional double monthly_avg_sa = 29; //동년배의 기대수명까지 월평균 의료비
+            optional double ambul_10y_ag = 30;  //나의 10년 누적 외래 일수
+            optional double ambul_10y_sa_ag = 31; //동년배의 10년 누적 외래 일수
+            optional double ambul_all_ag = 32; //나의 생애 누적 외래 일수
+            optional double ambul_all_sa_ag = 33; //동년배의 생애 누적 외래 일수
+            optional double hospital_10y_ag = 34; //나의 10년 누적 입원 일수
+            optional double hospital_10y_sa_ag = 35; //동년배의 10년 누적 입원 일수
+            optional double hospital_all_ag = 36; //나의 생애 누적 입원 일수
+            optional double hospital_all_sa_ag = 37; //동년배의 생애 누적 입원 일수
+        }
+    }
+}
+
+message GetDiagnosisRequest {
+    string key = 1;
+    repeated Data data = 2;
+
+    message Data{
+        string srvc_code = 1;
+        string rept_code = 2;
+        string cnty_code = 3;
+        string chck_date = 4;
+        string pcust_nmbr = 5;
+    }
+}
+
+message GetDiagnosisResponse {
+    string sucs_yn = 1;
+    int32 totl_cnt = 2;
+    repeated Data data = 3;
+    optional string message = 4;
+    optional MAErrorModel errors = 5;
+
+    message Data{
+        string gen = 1; //해당 parameter 이용되지 않는것으로 보임. 확인 후 삭제필요.
+        repeated DiagnosisInfo diagnosis_info = 2;
+        repeated DrugAnalysis drug_analysis = 3;
+        string chck_date = 4;
+        string age = 5;
+        string pcust_name = 6;
+        string pcust_nmbr = 7;
+        string cnty_code = 8;
+        string sucs_yn = 9;
+    }
+    
+    message DiagnosisInfo{
+        string treat_days = 1;
+        string treat_type = 2;
+        string start_date = 3;
+        string prescr_cnt = 4;
+        string in_days = 5;
+        repeated Drug drug_list = 6;
+        string hospital_name = 7;
+
+        message Drug {
+            string drug_name = 1;
+            string prescr_days = 2;
+            string drug_effect = 3;
+        }
+    }
+
+    message DrugAnalysis{
+        string drug_div_name = 1;
+        optional int32 age_grade = 2;
+        string organ_type = 3;
+        string organ_type_name = 4;
+        string drug_script = 5;
+        repeated string drug_list = 6;
+        string drug_div = 7;
+    }
+}
+message GetRetireFundCalcResponse {
+    string sucs_yn = 1;                   // 성공 여부
+    int32 totl_cnt = 2;                   // 총 카운트
+    repeated RetirementFundData data = 3;          // 은퇴 자금 데이터
+    string message = 4;                   // 메시지
+    optional MAErrorModel error = 5;    // 에러 메시지, 옵셔널 처리
+    
+    // RetirementFundData 메시지 정의
+    message RetirementFundData {
+        string pcust_nmbr = 1;                // 환자 번호
+        string chck_date = 2;                 // 검진 날짜
+        string age = 3;                       // 주민등록 나이
+        string retire_age = 4;                // 은퇴 예상 나이
+        string remain_to_retire = 5;          // 은퇴까지 남은 기간
+        string retire_to_death_duration = 6;  // 은퇴 후 기대수명까지 생활 기간
+        string tle = 7;                       // 기대수명
+        string living_expense = 8;            // 노후 적정 월간 생활비
+        string total_retire_fund = 9;         // 은퇴시점 필요한 노후 자금
+        string inflation_rate = 10;           // 연간 물가 상승률
+        string interest_rate = 11;            // 세후 예,적금 이자율
+    }
+}
+
+// RetirementFundRequestParam 메시지 정의
+message GetRetireFundCalcRequest {
+    string key = 1;
+    repeated Data data = 2;
+
+    message Data {
+        string srvc_code = 1;                 // 서비스 코드 (241217 현재 해당값에 임의의 값 전송해도 됨)
+        string rept_code = 2;                 // 리포트 코드 (241217 현재 해당값에 임의의 값 전송해도 됨)
+        string chck_date = 3;                 // 검진 날짜
+        string pcust_nmbr = 4;                // 환자 번호
+    }
+}
+
+// 의료비 통계 자료 조회 요청
+message GetMedicalExpenseStatisticsRequest {
+    string key = 1;
+}
+
+// 의료비 통계 자료 조회 응답
+message GetMedicalExpenseStatisticsResponse {
+    string sucs_yn = 1;                   // 성공 여부 
+    repeated StatisticsData data = 2;     // 의료비 통계 데이터 리스트
+    optional MAErrorModel erros = 3;      // 에러 정보 
+
+    // 통계 데이터
+    message StatisticsData {
+        string disease = 1;                      // 질병명
+        string base_year = 2;                    // 기준년도
+        string disease_code = 3;                 // 질병코드
+        double avg_hospitalization_days = 4;     // 평균 입원일수
+        double avg_outpatient_days = 5;          // 평균 외래일수
+        int32 personal_burden = 6;               // 개인부담금
+        int32 nursing_cost = 7;                  // 간병비
+        int32 non_covered_cost = 8;              // 비급여
+        int32 total_annual_cost = 9;             // 연간 총 의료비
+        string disease_type = 10;                // 질병 유형
+    }
+}
+
+// 유저 정보를 가져오기 위한 Requset
+message GetUserInfoRequest {
+    string key = 1;
+    string pcust_nmbr = 2; // 환자 번호
+    //추후 추가 필요
+    //string ecust_nmbr = 3; // 기업 번호
+} 
+
+// 환자 번호와 매칭 되는 저장 되어 있던 데이터의 정보 
+message GetUserInfoResponse {
+    string brth_date = 1; // 저장 되어 있는 생년월일 (yyyymmdd)
+    repeated UserInfo list_user_info = 2; // 저장 되어 있는 유저 정보
+    message UserInfo {
+        string chck_date = 1; // 검진 일자
+        string rept_code = 2; // 레포트 코드
+        string request_date = 3; // 분석요청이 들어온 날짜(yyyymmdd)
+        string req_seq_no = 4; // 요청 시퀀스 번호(분석 요청 하위 건별)
+        string cust_seq_no= 5; //고객 시퀀스 번호(고객 별 고유 번호)
+        string planner_code = 6; //설계사 코드
+        string planner_phone_nmbr = 7; //설계사 번호
+        string planner_name = 8; // 설계사 이름
+        string planner_division = 9; //설계사 소속
+    }
+}
+
+message GetDeathBenefitRequest{
+    string key = 1; // 암호화된 고객번호
+    repeated Data data = 2;
+
+    message Data {
+        string srvc_code = 1;                 // 서비스 코드 (241217 현재 해당값에 임의의 값 전송해도 됨)
+        string rept_code = 2;                 // 리포트 코드 (241217 현재 해당값에 임의의 값 전송해도 됨)
+        string chck_date = 3;                 // 검진 날짜
+        string pcust_nmbr = 4;                // 환자 번호
+    }
+}
+message GetDeathBenefitResponse{
+    string sucs_yn = 1;                   // 성공 여부
+    int32 totl_cnt = 2;                   // 총 카운트
+    repeated DeathBenefitData data = 3;          // 사망보험금 데이터
+    string message = 4;                   // 메시지
+    optional MAErrorModel error = 5;    // 에러 메시지, 옵셔널 처리
+    
+    // DeathBenefitData 메시지 정의
+    message DeathBenefitData {
+        string pcust_nmbr = 1;                // 환자 번호
+        string chck_date = 2;                 // 검진 날짜
+        string age = 3;                       // 주민등록 나이
+        string interest = 4;                // 최근 10년 연 평균 물가상승률
+        string tle = 5;                       // 기대수명
+        string expect_cost = 6;            // 권장사망보험금(실제로는 사망 즉시 들어가는 혹은 들어갈 비용에대한 예상치)
+        string recommand_death_benefit = 7;        //추천사망보험금 = (권장사망보험금*(1+이자율)^(기대수명-현재나이)
+    }
+}
+
+// 질병, 암 발생률 통계 자료 
+// 1. 질병 발생률 통계 자료 
+// 1-1. 요청 
+message GetDiseaseIncidenceRateStatisticsRequest {
+    string key = 1;         // 암호화된 key 값
+    string pcust_nmbr = 2;  // 환자 번호
+}
+
+// 1-2. 응답 
+message GetDiseaseIncidenceRateStatisticsResponse {
+    string sucs_yn = 1;
+    optional MAErrorModel erros = 2;
+    Data data = 3;
+
+    message Data {
+        repeated DiseaseIncidenceRateStatistics male = 1;     // 남성 해당 나이대 질병 발생률 통계
+        repeated DiseaseIncidenceRateStatistics female = 2;   // 여성 해당 나이대 질병 발생률 통계
+    }
+
+    message DiseaseIncidenceRateStatistics {
+        string disease_code = 1;
+        string disease_name = 2;
+        string disease_type = 3;            // 주요(major), 만성(chronic) 질환 분류
+        AgeGroupIncidence age_incidence = 4; 
+    }
+
+    message AgeGroupIncidence {
+        string age_group = 1;                // 연령대 구분 (예: "<40", "40-49" 등)
+        double incidence_rate = 2;           // 발생률 (%)
+    }
+}
+// 2. 암 발생률 통계 자료 
+// 2-1. 요청
+message GetCancerIncidenceRateStatisticsRequest {
+    string key = 1;         // 암호화된 key 값
+    string pcust_nmbr = 2;  // 환자 번호
+}
+
+// 2-2. 응답
+message GetCancerIncidenceRateStatisticsResponse {
+    string sucs_yn = 1;
+    optional MAErrorModel errors = 2;
+    Data data = 3;
+
+    message Data {
+        repeated CancerIncidenceRateStatistics male = 1;    // 남성 해당 나이대 암 발생률 통계
+        repeated CancerIncidenceRateStatistics female = 2;  // 여성 해당 나이대 암 발생률 통계
+    }
+
+    message CancerIncidenceRateStatistics {
+        string cancer_code = 1;                 // 암코드
+        string cancer_name = 2;                 // 암 이름 
+        bool gender_specific = 3;               // 성별별 암 특이성 여부
+        AgeGroupIncidence age_incidence = 4;    // repeated 제거
+    }
+
+    message AgeGroupIncidence {
+        string age_group = 1;                   // 연령대 구분 (예: "<40", "40-49" 등)
+        double incidence_rate = 2;              // 발생률 (%)
+    }
+}
+
+// KB 고객 약관 동의 
+// 조회
+message GetCustomerConsentKBRequest {
+    string key = 1;         // 암호화된 key 값
+    string pcust_nmbr = 2;  // 환자 번호
+}
+
+message GetCustomerConsentKBResponse {
+    string sucs_yn = 1;
+    repeated Informed informed_consent_list = 3; // 정보 제공 동의 여부 List
+}
+
+// 업데이트
+message UpdateCustomerConsentKBRequest {
+    string key = 1;         // 암호화된 key 값
+    string pcust_nmbr = 2;  // 환자 번호
+    repeated Informed informed_consent_list = 3; // 정보 제공 동의 여부 List
+} 
+
+message UpdateCustomerConsentKBResponse {
+    string sucs_yn = 1;
+}
+
+message GetUserInfoWithDateRequest{
+    string key =1;
+    string pcust_nmbr=2;
+    string start_date=3;
+}
+
+message GetUserInfoWithDateResponse{
+    string sucs_yn = 1; // 조회 성공 여부
+    repeated UserSeqInfoData user_seq_info = 2;
+    message UserSeqInfoData{
+        string pcust_nmbr = 1;              //고객사에서 부여한 고객 번호
+        string cust_seq_no = 2;             //고객개인별 고유 시퀀스 번호
+        string pcust_birth_date = 3;        //고객 개인생년월일
+        string pcust_name = 4;              //고객 이름
+        string pcust_gender = 5;            //고객 성별
+        string pcust_phone = 6;             //고객 전화번호
+        string planner_code = 7;            //설계사 고유 코드
+        string planner_name = 8;            //설계사 이름
+        string planner_nmbr = 9;            //설계사 번호(전화)
+        string planner_division = 10;       //설계사 소속부서
+        string req_seq_no = 11;             //요청별 고유 시퀀스 번호
+        string chck_date = 12;              //검진 일자
+        string request_date = 13;           //분석 요청 일자
+        string channel_code = 14;           //요청 채널 코드
+        string scrap_success = 15;          //스크래핑 성공 여부
+        string scrap_request_date = 16;     //스크래핑 요청일자
+        string analysis_success = 17;       //분석 성공 여부
+        string analysis_success_date = 18;  //분석 성공 일자
+        string pdf_create_success = 19;     //PDF생성 여부
+        string pdf_create_success_date = 20;//PDF생성 일자
+        string scrap_data_valid = 21; //해당 데이터의 분석 유효성 (Y:분석 가능, N:분석 불가)
+    }
+}
+
+message DeleteUserRequest {
+    string key =1;
+    string pcust_nmbr=2; // 고객 번호
+}
+
+message DeleteUserResponse {
+    string sucs_yn = 1; // 삭제 성공 여부 Y,N
+}
+
+message IsDeleteUserResponse {
+    bool is_deleted = 1; // true면 삭제되어 있음, false면 삭제되어 있지 않음
+    bool request_date_exist = 2; // 조회 요청에 포함되어 있던 요청일자가 해지 테이블에 있는지 확인 (있으면 true, 없으면 false)
+}
+
+message IsDeleteUserRequest {
+    string key =1;
+    string pcust_nmbr=2; // 고객 번호
+    string request_date=3; // 요청 일자 (20250325)
+}

@@ -3,6 +3,7 @@ package com.moadata.bdms.user.controller;
 import java.time.LocalDate;
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.moadata.bdms.common.grpc.service.GrpcService;
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.common.util.StringUtil;
 import com.moadata.bdms.group.service.GroupService;
@@ -17,14 +19,16 @@ import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.*;
 import com.moadata.bdms.nutri.service.NutriService;
 import org.springframework.beans.factory.annotation.Value;
-import com.moadata.bdms.model.vo.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 
 import com.moadata.bdms.common.base.controller.BaseController;
-import com.moadata.bdms.common.exception.ProcessException;
 import com.moadata.bdms.support.code.service.CodeService;
 import com.moadata.bdms.support.menu.service.MenuService;
 import com.moadata.bdms.user.service.UserService;
@@ -58,6 +62,9 @@ public class UserController extends BaseController {
 
 	@Resource(name = "nutriService")
 	private NutriService nutriService;
+
+	@Resource(name = "grpcService")
+	private GrpcService grpcService;
 
     @Value("${file.save.dir.linux}")
     private String linuxPreOpenFilePath;
@@ -1305,6 +1312,9 @@ public class UserController extends BaseController {
 	@RequestMapping(value="/checkupAdd", method=RequestMethod.POST)
 	public @ResponseBody Map<String, Object> checkupAdd(@ModelAttribute("checkup") CheckupVO checkup) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		BufferedReader in = null;
+		UserInfoVO userInfo = null;
+		String userId = null;
 
 		boolean isError = false;
 		String message = "";
@@ -1313,7 +1323,59 @@ public class UserController extends BaseController {
 			checkup.setAdminId(vo.getUserId());
 			userService.insertCheckUp(checkup);
 
-			nutriService.insertNutriAnly(checkup.getUserId());
+			// 사용자 등록
+			userInfo = userService.selectUserInfoForGrpc(checkup.getUserId());
+			if (userInfo == null) {
+				isError = true;
+				throw new Exception("User information not found for userId: " + checkup.getUserId());
+			}
+			grpcService.registerPatient(userInfo);
+
+			// 검진 데이터 등록
+			ReportVO latestReport = userService.getOneLatestReportByUserId(checkup.getUserId());
+			if (latestReport != null) {
+				String reportId = latestReport.getReportId();
+				List<HealthInfoVO> healthInfoList = userService.getHealthInfoByReportId(reportId);
+				try {
+					grpcService.registerCheckupData(latestReport,healthInfoList, userInfo);
+				}catch(Exception e) {
+					isError = true;
+					map.put("message", "registering checkup data fail");
+				}
+
+				map.put("hasResult", true);
+			}else {
+				isError = true;
+				map.put("message", "latestReport not exist");
+				map.put("hasResult", false);
+			}
+
+			// checkupkey 발급 / 저장
+			String generateCheckupKeyUrl = "https://bdms.moadata.ai:8912/api/external/user-url";
+			String userNm = userInfo.getUserNm();
+			userId = checkup.getUserId().length() > 30 ? userInfo.getUserId().substring(0, 30) : checkup.getUserId();
+			String urlWithParams = generateCheckupKeyUrl + "?userNo=" + userId + "&userNm=" + URLEncoder.encode(userNm, StandardCharsets.UTF_8.toString());
+
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> response = restTemplate.exchange(urlWithParams, HttpMethod.GET, null, String.class);
+
+			// API 응답 처리
+			if (response.getStatusCode() == HttpStatus.OK) {
+				String checkupKey = response.getBody();
+				userInfo.setCheckupKey(checkupKey);
+				userService.updateCheckupKey(userInfo);
+			} else {
+				isError = true;
+				map.put("message", "generateCheckupKeyUrl request failed.");
+			}
+
+			Thread.sleep(5000);
+			// 분석 나이 API 호출
+			boolean analysisError = grpcService.fetchAndProcessAnalysisAge(userInfo,true);
+			if(analysisError) {
+				isError = true;
+				map.put("message", "analysis failed.");
+			}
 
 			//이력 추가.
 			Map<String,String> param = new HashMap<String,String>();
