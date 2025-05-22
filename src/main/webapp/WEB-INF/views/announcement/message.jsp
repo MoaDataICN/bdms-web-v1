@@ -9,7 +9,7 @@
 <script src="../../resources/js/grid/pager.js"></script>
 
 <style>
-    .editable {
+	.editable {
         max-width: 100%;
         -webkit-appearance: none;
         writing-mode: horizontal-tb !important;

@@ -135,6 +135,7 @@ async function drawChart(searchData) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: false
@@ -172,6 +173,7 @@ async function drawUserChart(searchData) {
         },
         options : {
             responsive: true,
+            maintainAspectRatio: false,
             scale : {
                 x : {
                     title : {

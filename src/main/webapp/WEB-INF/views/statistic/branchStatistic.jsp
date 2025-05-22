@@ -11,6 +11,10 @@
 	    margin-left:20px;
 	    width:unset;
     }
+    
+    .add-btn {
+	    height: auto;
+    }
 </style>
 
 <main class="main">

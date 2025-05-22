@@ -758,7 +758,7 @@
                         usePointStyle: true,
                         pointStyle: 'rectRounded',
                         font: {
-                            size: 14
+                            size: '15em'
                         },
                         generateLabels: (chart) => {
                             const datasets = chart.data.datasets;

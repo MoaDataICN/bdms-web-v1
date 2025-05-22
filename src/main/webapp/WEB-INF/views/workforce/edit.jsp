@@ -73,7 +73,7 @@
                         <spring:message code="common.userNm"/>
                     </div>
                     <div class="row-input">
-                        <input type="text" class="input-txt02 hold" id="wrkfrcNm" placeholder="Please enter"
+                        <input type="text" class="input-txt02" id="wrkfrcNm" placeholder="Please enter"
                                oninput="limitLength(this, 30);">
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                         <spring:message code="common.wrkfrcNb"/>
                     </div>
                     <div class="row-input">
-                        <input type="text" class="input-txt02 hold" id="wrkfrcNmbr" placeholder="Please enter"
+                        <input type="text" class="input-txt02" id="wrkfrcNmbr" placeholder="Please enter"
                                oninput="limitLength(this, 30);">
                     </div>
                 </div>

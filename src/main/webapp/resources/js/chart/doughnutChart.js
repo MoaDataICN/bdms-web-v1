@@ -3,25 +3,32 @@
 const doughnutLabel = {
     id: 'doughnutLabel',
     beforeDatasetsDraw(chart, args, pluginOptions) {
-        const {ctx, data} = chart;
+        const { ctx, chartArea, width, height, data } = chart;
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data || meta.data.length === 0) return;
 
         ctx.save();
-        const xCoor = chart.getDatasetMeta(0).data[0].x;
-        const yCoor = chart.getDatasetMeta(0).data[0].y;
 
-        ctx.font = 'bold 50px sans-serif';
-        ctx.fillStyle= 'rgba(79, 80, 82, 1)';
+        const xCoor = meta.data[0].x;
+        const yCoor = meta.data[0].y;
+
+        const baseFontSize = Math.min(width, height);
+        const mainFontSize = baseFontSize * 0.15;
+        const subFontSize = baseFontSize * 0.03;
+
+        ctx.font = `bold ${mainFontSize}px sans-serif`;
+        ctx.fillStyle = 'rgba(79, 80, 82, 1)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(summation(data.datasets[0].data), xCoor, yCoor-5);
+        ctx.fillText(summation(data.datasets[0].data), xCoor, yCoor - subFontSize * 2);
 
-        ctx.font = 'bold 15px sans-serif';
-        ctx.fillStyle= 'rgba(135, 138, 142, 1)';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText("Today's Total Status", xCoor, yCoor+30);
+        ctx.font = `bold ${subFontSize}px sans-serif`;
+        ctx.fillStyle = 'rgba(135, 138, 142, 1)';
+        ctx.fillText("Today's Total Status", xCoor, yCoor + subFontSize * 2);
+
+        ctx.restore();
     }
-}
+};
 
 const shadowCirclePlugin = {
     id: 'shadowCirclePlugin',

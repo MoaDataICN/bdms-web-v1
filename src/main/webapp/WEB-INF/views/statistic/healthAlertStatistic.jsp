@@ -55,7 +55,7 @@
 		</div>
 	</div>
 	
-	<div class="chartWrapper" style="width:100%;">
+	<div class="chartWrapper" style="width:100%; height:50vh;">
 		<canvas id="chart"></canvas>
 	</div>
 </div>

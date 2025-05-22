@@ -2495,9 +2495,11 @@ textarea {
         align-items: start;
     }
 
+    /*
     .content-submit-ui button span {
         display: none;
     }
+    */
 
     .content-submit-ui button {
         padding: 6px 10px;
