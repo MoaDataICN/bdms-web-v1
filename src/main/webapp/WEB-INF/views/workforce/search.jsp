@@ -545,7 +545,9 @@
         let cnt = $(this).data('cnt');
 
         rowNumsVal = cnt;
-        $('#gridDropdownBtn').text($(this).text());
+        $('#gridDropdownBtn').contents().filter(function() {
+            return this.nodeType === 3;
+        }).first().replaceWith($(this).text());
         $("#workforceList").setGridParam({ rowNum: cnt });
         fnSearch();
     })

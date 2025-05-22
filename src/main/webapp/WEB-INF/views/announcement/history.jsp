@@ -102,6 +102,15 @@
     return {};
   }
 
+  function fnSearch(){
+      $('#messageHistoryList').jqGrid('setGridParam', {
+          url: 'selectMessageHistory',
+          datatype: 'json',
+          postData : setSearchParam()
+      });
+      $('#messageHistoryList').trigger('reloadGrid', [{page:1, current:true}]);
+  }
+
   $(document).ready(function() {
     $('#messageHistoryList').jqGrid({
       url : '${contextPath}/announcement/selectMessageHistory',
@@ -166,5 +175,16 @@
 
   $(window).on('resize.jqGrid', function() {
     jQuery("#messageHistoryList").jqGrid('setGridWidth', $(".table-wrap").width());
+  })
+
+  $('.table-wrap .dropdown-content a').click(function(){
+      let cnt = $(this).data('cnt');
+		
+      rowNumsVal = cnt;
+      $('#gridDropdownBtn').contents().filter(function() {
+          return this.nodeType === 3;
+      }).first().replaceWith($(this).text());
+      $("#messageHistoryList").setGridParam({ rowNum: cnt });
+      fnSearch();
   })
 </script>
