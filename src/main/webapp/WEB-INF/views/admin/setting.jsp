@@ -14,7 +14,33 @@
 
 <style>
 
-	#adminPager {
+    .cbox {
+        display: inline-block;
+        width: auto;
+        min-height: 24px;
+        height: auto;
+        line-height: 24px;
+        padding: 0;
+        border: 0;
+    }
+
+    .cbox:before {
+        content: "";
+        display: inline-block;
+        vertical-align: top;
+        width: 23px;
+        height: 23px;
+        background: url('/resources/images/rect-check2.svg') 0 -23px no-repeat; /* 체크되지 않은 상태의 이미지 */
+        background-size: 20px 48px;
+    }
+
+    /* 체크된 상태의 체크박스 */
+    .cbox:checked:before {
+        background: url('/resources/images/rect-check2.svg') 0 0px no-repeat; /* 체크된 상태의 이미지 */
+        background-size: 20px 48px;
+    }
+
+    #adminPager {
 		display:none;
 	}
 
@@ -410,6 +436,7 @@
 			sortorder : 'DESC',
 			shrinkToFit: true,
 			rownumbers: true,
+			multiselect: true,
 			loadonce : false,
 			pager : '#adminPager',
 			viewrecords: true,

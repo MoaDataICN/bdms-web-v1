@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 43.39">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #2ee554;
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        stroke: #fff;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        fill: none;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2, .cls-4 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-3, .cls-4 {
+        stroke: #cdcdcb;
+      }
+    </style>
+  </defs>
+  <g id="icon">
+    <rect id="BG" class="cls-1" width="20" height="20" rx="4" ry="4"/>
+    <path id="Check" class="cls-2" d="m5,10.63l3.45,3.37,6.55-8"/>
+  </g>
+  <g id="icon-2" data-name="icon">
+    <rect id="BG-2" data-name="BG" class="cls-3" x=".75" y="24.14" width="18.5" height="18.5" rx="3.25" ry="3.25"/>
+    <path id="Check-2" data-name="Check" class="cls-4" d="m5,34.02l3.45,3.37,6.55-8"/>
+  </g>
+</svg>
