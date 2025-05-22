@@ -555,13 +555,16 @@
             return;
         }
 
+        $(this).toggleClass('active');
         if(this.dataset['filter'] === 'all') {
-            $('.alertBtns').removeClass('active');
-
-            $(this).addClass('active');
+            $('.alertBtns').not('[data-filter="all"]').removeClass('active');
         } else {
-            $('[data-filter="all"]').removeClass('active');
-            $(this).toggleClass('active');
+            if($('.alertBtns.active').not('[data-filter="all"]').length == 7) {
+                $('.alertBtns').removeClass('active');
+                $('.alertBtns[data-filter="all"]').toggleClass('active');
+            } else {
+                $('[data-filter="all"]').removeClass('active');
+            }
         }
     })
 

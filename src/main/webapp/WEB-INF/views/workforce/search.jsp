@@ -518,14 +518,16 @@
         if($('.svcBtns.active').length === 1 && $('.svcBtns.active')[0] == this){
             return;
         }
-
+        $(this).toggleClass('active');
         if(this.dataset['filter'] === 'all') {
-            $('.svcBtns').removeClass('active');
-
-            $(this).addClass('active');
+            $('.svcBtns').not('[data-filter="all"]').removeClass('active');
         } else {
-            $('[data-filter="all"]').removeClass('active');
-            $(this).toggleClass('active');
+            if($('.svcBtns.active').not('[data-filter="all"]').length == 4) {
+                $('.svcBtns').removeClass('active');
+                $('.svcBtns[data-filter="all"]').toggleClass('active');
+            } else {
+                $('[data-filter="all"]').removeClass('active');
+            }
         }
     })
 
