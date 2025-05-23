@@ -112,8 +112,23 @@
 
     $(".menu-btn").click(function () {
         $(".sidebar").toggleClass("active");
-    });
 
+        if ($(".sidebar").hasClass("active")) {
+            $('.menu .sub-menu').hide();
+            $('.menu li').removeClass('active');
+        } else {
+            var currentUrl = window.location.pathname;
+            $('.menu a').each(function (el, index) {
+                if($(index).attr('href') === currentUrl) {
+                    var current = $(index);
+                    if(!current.closest('ul').hasClass('wrap')) {
+                        current.closest('ul')[0].style.display='block';
+                        current.closest('ul')[0].closest('li').classList.add('active');
+                    }
+                }
+            });
+        }
+    });
 
     var currentUrl = window.location.pathname;
 
