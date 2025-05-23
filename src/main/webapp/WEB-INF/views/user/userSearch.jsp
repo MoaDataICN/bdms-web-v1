@@ -112,7 +112,7 @@
                         <spring:message code='common.userNm'/>
                     </div>
                     <div class="row-input">
-                        <input type="text" class="input-txt02 hold" id="userNm" placeholder="Please enter"
+                        <input type="text" class="input-txt02" id="userNm" placeholder="Please enter"
                                oninput="limitLength(this, 30);" tabindex="1">
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                         <spring:message code='common.loginId'/>
                     </div>
                     <div class="row-input">
-                        <input type="text" class="input-txt02 hold" id="emailId" placeholder="Please enter"
+                        <input type="text" class="input-txt02" id="emailId" placeholder="Please enter"
                                oninput="limitLength(this, 30);" tabindex="2">
                     </div>
                 </div>
@@ -296,7 +296,7 @@
         </div>
     </div>
 
-    <div class="table-wrap mt-36px">
+    <div class="table-wrap mt-36px" style="width:100%;">
         <div class="mt-16px table-data-wrap">
             <p class="second-title-status">
                 <span class="bold-t-01" id="searchCurrentRowsCnt">0</span>
@@ -319,7 +319,7 @@
         <div class="w-line01 mt-8px"></div>
         <div class="main-table">
             <div class="tableWrapper">
-                <table id="userSearch_grid"></table>
+                <table id="userSearch_grid" style="width:100%;"></table>
                 <div id="userSearch_pager"></div>
                 <div id="customPager" class="page-group mb-22px mt-10px"></div>
             </div>
@@ -400,6 +400,8 @@
     let inChargeId = "";
     let inChargeNm = "";
 
+    var userDtlPeriod = "all";
+
     // 담당자명 팝업 열기
     $(document).on('click', '#userSearch_inChargeNm', function () {
         $(".charge-search-popup-container").load("/user/chargeSearchPopup", function () {
@@ -462,7 +464,7 @@
             //inChargeNm: $('#userSearch_inChargeNmDropdown').text().trim() !== "All" ? $('#userSearch_inChargeNmDropdown').text().trim() : "",
             grpTp : $('#userSearch_grpTpDropdown').text().trim() !== "All" ? $('#userSearch_grpTpDropdown').text().trim() : "",
             // 기존 reqTp/altTp → Exists, N/A로 단순화
-            reqTp: $('.serviceBtns.active').data('filter') === 'serviceTpExists'
+            reqTp: $('#userSearch_reqTp .data-select-btn.active').data('filter') === 'serviceTpExists'
                 ? "Exists"
                 : "N/A",
             altTp: $('#userSearch_altTp .data-select-btn.active').data('filter') === 'alertTpExists'
@@ -610,6 +612,7 @@
                 $('#searchTotalResultsCnt').text(data.records);
                 $('#searchCurrentRowsCnt').text(data.rows.length);
                 createCustomPager('userSearch_grid');
+                resizeUserSearchGrid();
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             gridComplete: function() {
@@ -624,9 +627,15 @@
         })
     })
 
-    $(window).on('resize.jqGrid', function() {
-        jQuery("#userSearch_grid").jqGrid('setGridWidth', $(".table-wrap").width());
-    })
+    function resizeUserSearchGrid() {
+        const containerWidth = $(".main").width();
+
+        $("#userSearch_grid").jqGrid("setGridWidth", containerWidth - 40);
+    }
+
+    $(window).on("resize.jqGrid", function () {
+        resizeUserSearchGrid();
+    });
 
     // 달력 아이콘 클릭 시, date input 활성화
     function openCalendar(dateInputId) {

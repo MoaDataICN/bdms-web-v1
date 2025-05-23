@@ -112,12 +112,12 @@ function loadUserDetailTab(tab = 'general', userId) {
 
 $(document).on("click", ".detail-btn.open-slide-btn", function () {
     let userId = $(this).data("uid");
-    $('.userdtl-slide-popup-container').attr('data-uid', userId);
+    $('.userdtl-slide-popup-container').data('uid', userId);
 
     openPopup();
     loadUserDetailTab('general', userId);  // 기본 탭 로딩
 
-   console.log("1 : " + userId);
+    console.log("userId : " + userId);
 });
 
 $(document).on('click', '.second-tap-btn', function () {
@@ -129,5 +129,5 @@ $(document).on('click', '.second-tap-btn', function () {
     let tab = $(this).data('tab');  // 'health-alerts', 'service-requests' 등
     loadUserDetailTab(tab, userId);
 
-    console.log("2 : " + userId);
+    console.log("userId : " + userId);
 });
