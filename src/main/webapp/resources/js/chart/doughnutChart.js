@@ -1,7 +1,7 @@
 <!-- Chart External Plugins & custom -->
 
-const doughnutLabel = {
-    id: 'doughnutLabel',
+const dashBoardDoughnutLabel = {
+    id: 'dashBoardDoughnutLabel',
     beforeDatasetsDraw(chart, args, pluginOptions) {
         const { ctx, chartArea, width, height, data } = chart;
         const meta = chart.getDatasetMeta(0);
@@ -25,6 +25,40 @@ const doughnutLabel = {
         ctx.font = `bold ${subFontSize}px sans-serif`;
         ctx.fillStyle = 'rgba(135, 138, 142, 1)';
         ctx.fillText("Today's Total Status", xCoor, yCoor + subFontSize * 2);
+
+        ctx.restore();
+    }
+};
+
+const userDtlDoughnutLabel = {
+    id: 'userDtlDoughnutLabel',
+    beforeDatasetsDraw(chart, args, pluginOptions) {
+        const {ctx, chartArea, data} = chart;
+        const centerX = (chartArea.left + chartArea.right) / 2;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+        // 도넛 차트 크기에 따라 폰트 크기 조절
+        const baseFontSize = Math.min(chartArea.width, chartArea.height);
+        const totalFontSize = Math.round(baseFontSize / 6);  // 숫자 크기
+        const labelFontSize = Math.round(baseFontSize / 18);  // 라벨 크기
+
+        ctx.save();
+
+        // 총합 숫자
+        ctx.font = `bold ${totalFontSize}px sans-serif`;
+        ctx.fillStyle = 'rgba(79, 80, 82, 1)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(summation(data.datasets[0].data), centerX, centerY - totalFontSize / 3);
+
+        let labelText = userDtlPeriod == 'all'
+            ? "All Total Status"
+            : "Today's Total Status";
+
+        // 하단 라벨
+        ctx.font = `bold ${labelFontSize}px sans-serif`;
+        ctx.fillStyle = 'rgba(135, 138, 142, 1)';
+        ctx.fillText(labelText, centerX, centerY + totalFontSize / 2.8);
 
         ctx.restore();
     }

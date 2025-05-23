@@ -233,9 +233,20 @@
 </div>
 
 <script type="text/javascript">
-
-
     var healthAlertsChart = null;
+
+    function getAltTpFullName(code) {
+        switch(code) {
+            case 'A': return 'Activity';
+            case 'F': return 'Falls';
+            case 'H': return 'Heart Rate';
+            case 'SL': return 'Sleep';
+            case 'B': return 'Blood Oxygen';
+            case 'T': return 'Temperature';
+            case 'ST': return 'Stress';
+            default: return code;
+        }
+    }
 
     function drawHealthAlertsChart(period) {
         var healthAlertsCtx = document.getElementById('healthAlerts_myChart');
@@ -248,6 +259,8 @@
         if (healthAlertsChart) {
             healthAlertsChart.destroy();
         }
+
+        userDtlPeriod = period;
 
         let healthAlertsChartUrl = period === 'all'
             ? '/user/healthAlertsCnt/all'
@@ -274,21 +287,35 @@
                 $("#healthAlerts_cntT").text(healthAlertsCntMap['T'] || 0);
                 $("#healthAlerts_cntST").text(healthAlertsCntMap['ST'] || 0);
 
+                const fixedAltTpOrder = ['A', 'F', 'H', 'SL', 'B', 'T', 'ST'];
+
+                const altTpData = fixedAltTpOrder
+                    .filter(key => healthAlertsCntMap[key] !== undefined)
+                    .map(key => ({
+                        key: key,
+                        fullName: getAltTpFullName(key),
+                        value: healthAlertsCntMap[key]
+                    }));
+
+                const altTpLabels = altTpData.map(item => item.fullName);
+                const altTpValues = altTpData.map(item => item.value);
+
                 healthAlertsChart = new Chart(healthAlertsCtx, {
                     type: 'doughnut',
                     data: {
-                        labels: Object.keys(healthAlertsCntMap),
+                        labels: altTpLabels,
                         datasets: [
                             {
                                 label: '',
-                                data: Object.values(healthAlertsCntMap),
+                                data: altTpValues,
                                 backgroundColor: [
                                     'rgba(82, 158, 232, 1)',
                                     'rgba(160, 205, 255, 1)',
                                     'rgba(255, 202, 134, 1)',
                                     'rgba(238, 147, 144, 1)',
                                     'rgba(251, 228, 137, 1)',
-                                    'rgba(216, 216, 216, 1)'
+                                    'rgba(216, 216, 216, 1)',
+                                    'rgba(102, 102, 102, 1)'
                                 ]
                             }
                         ]
@@ -322,8 +349,8 @@
                                     generateLabels: (chart) => {
                                         const datasets = chart.data.datasets;
                                         return datasets[0].data.map((data, i) => ({
-                                            text: chart.data.labels[i] + '(' + data + ')',
-                                            strokeStyle: 'rgba(0,0,0,0)',
+                                            text: chart.data.labels[i] + ' (' + data + ')',
+                                            strokeStyle: 'rgba(0, 0, 0, 0)',
                                             lineWidth: 0,
                                             fillStyle: datasets[0].backgroundColor[i],
                                             index: i,
@@ -357,7 +384,7 @@
                             }
                         }
                     },
-                    plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
+                    plugins: [userDtlDoughnutLabel, ChartDataLabels, shadowCirclePlugin]
                 });
             },
             error: function (error) {
@@ -389,33 +416,8 @@
             mtype: 'POST',
             colModel : [
                 { label: 'Detected Time', name: 'dctDt', width:240, sortable : true},
-                { label: 'Alert Type', name: 'altTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
-                    switch(cellValue) {
-                        case 'A' :
-                            return 'Activity';
-                            break;
-                        case 'F' :
-                            return 'Falls';
-                            break;
-                        case 'H' :
-                            return 'Heart Rate';
-                            break;
-                        case 'SL' :
-                            return 'Sleep';
-                            break;
-                        case 'B' :
-                            return 'Blood Oxygen';
-                            break;
-                        case 'T' :
-                            return 'Temperature';
-                            break;
-                        case 'ST' :
-                            return 'Stress';
-                            break;
-                        default :
-                            return cellValue;
-                            break;
-                    }
+                { label: 'Alert Type', name: 'altTp', width:130, sortable : true, formatter: function(cellValue) {
+                    return getAltTpFullName(cellValue);
                 }},
                 { label: 'Alert Reason', name: 'altRmrk', width:130, sortable : false},
                 { label: 'Group', name: 'grpNm', width:130, sortable : true},
@@ -465,6 +467,7 @@
             },
             gridComplete: function() {
                 createUserDtlCustomPager('healthAlerts_grid');
+                resizeHealthAlertsGrid();
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             onSortCol: function (index, columnIndex, sortOrder) {
@@ -528,9 +531,15 @@
         healthAlerts_fnSearch();
     }
 
-    $(window).on('resize.jqGrid', function() {
-        jQuery("#healthAlerts_grid").jqGrid('setGridWidth', $(".userdtl-slide-popup-container").width() - 74);
-    })
+    function resizeHealthAlertsGrid() {
+        const containerWidth = $(".userdtl-slide-popup-container").width();
+
+        $("#healthAlerts_grid").jqGrid("setGridWidth", containerWidth - 74);
+    }
+
+    $(window).on("resize.jqGrid", function () {
+        resizeHealthAlertsGrid();
+    });
 
     $(document).on('click', '#healthAlerts_date .data-select-btn', function () {
         //console.log('✅ healthAlerts data-select-btn clicked!');

@@ -197,6 +197,15 @@
 <script type="text/javascript">
     var serviceRequestsChart = null;
 
+    function getReqTpFullName(code) {
+        switch(code) {
+            case 'N': return 'Nursing';
+            case 'A': return 'Ambulance';
+            case 'T': return 'TeleHealth';
+            default: return code;
+        }
+    }
+
     function drawServiceRequestsChart(period) {
         let serviceRequestsCtx = document.getElementById('serviceRequests_myChart');
         if (!serviceRequestsCtx) {
@@ -208,6 +217,8 @@
         if (serviceRequestsChart) {
             serviceRequestsChart.destroy();
         }
+
+        userDtlPeriod = period;
 
         let serviceRequestsChartUrl = period === 'all'
             ? '/user/serviceRequestsCnt/all'
@@ -230,21 +241,35 @@
                 $("#serviceRequests_cntA").text(serviceRequestsCntMap['A'] || 0);
                 $("#serviceRequests_cntT").text(serviceRequestsCntMap['T'] || 0);
 
+                const fixedReqTpOrder = ['N', 'A', 'T'];
+
+                const reqTpData = fixedReqTpOrder
+                    .filter(key => serviceRequestsCntMap[key] !== undefined)
+                    .map(key => ({
+                        key: key,
+                        fullName: getReqTpFullName(key),
+                        value: serviceRequestsCntMap[key]
+                    }));
+
+                const reqTpLabels = reqTpData.map(item => item.fullName);
+                const reqTpValues = reqTpData.map(item => item.value);
+
                 serviceRequestsChart = new Chart(serviceRequestsCtx, {
                     type: 'doughnut',
                     data: {
-                        labels: Object.keys(serviceRequestsCntMap),
+                        labels: reqTpLabels,
                         datasets: [
                             {
                                 label: '',
-                                data: Object.values(serviceRequestsCntMap),
+                                data: reqTpValues,
                                 backgroundColor: [
                                     'rgba(82, 158, 232, 1)',
                                     'rgba(160, 205, 255, 1)',
                                     'rgba(255, 202, 134, 1)',
                                     'rgba(238, 147, 144, 1)',
                                     'rgba(251, 228, 137, 1)',
-                                    'rgba(216, 216, 216, 1)'
+                                    'rgba(216, 216, 216, 1)',
+                                    'rgba(102, 102, 102, 1)'
                                 ]
                             }
                         ]
@@ -279,7 +304,7 @@
                                         const datasets = chart.data.datasets;
                                         return datasets[0].data.map((data, i) => ({
                                             text: chart.data.labels[i] + '(' + data + ')',
-                                            strokeStyle: 'rgba(0,0,0,0)',
+                                            strokeStyle: 'rgba(0, 0, 0, 0)',
                                             lineWidth: 0,
                                             fillStyle: datasets[0].backgroundColor[i],
                                             index: i,
@@ -313,7 +338,7 @@
                             }
                         }
                     },
-                    plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
+                    plugins: [userDtlDoughnutLabel, ChartDataLabels, shadowCirclePlugin]
                 });
             },
             error: function (error) {
@@ -345,21 +370,8 @@
             mtype: 'POST',
             colModel : [
                 { label: 'Requested Time', name: 'reqDt', width:240, sortable : true},
-                { label: 'Service Type', name: 'reqTp', width:130, sortable : true, formatter: function(cellValue, options, rowObject) {
-                    switch(cellValue) {
-                        case 'N' :
-                            return 'Nursing';
-                            break;
-                        case 'A' :
-                            return 'Ambulance';
-                            break;
-                        case 'T' :
-                            return 'TeleHealth';
-                            break;
-                        default :
-                            return cellValue;
-                            break;
-                    }
+                { label: 'Service Type', name: 'reqTp', width:130, sortable : true, formatter: function(cellValue) {
+                    return getReqTpFullName(cellValue);
                 }},
                 { label: 'Group', name: 'grpNm', width:130, sortable : true},
                 { label: 'In Charge', name: 'inChargeNm', width:130, sortable : false},
@@ -408,6 +420,7 @@
             },
             gridComplete: function() {
                 createUserDtlCustomPager('serviceRequests_grid');
+                resizeServiceRequestsGrid();
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             onSortCol: function (index, columnIndex, sortOrder) {
@@ -469,9 +482,15 @@
         serviceRequests_fnSearch();
     }
 
-    $(window).on('resize.jqGrid', function() {
-        jQuery("#serviceRequests_grid").jqGrid('setGridWidth', $(".userdtl-slide-popup-container").width() - 74);
-    })
+    function resizeServiceRequestsGrid() {
+        const containerWidth = $(".userdtl-slide-popup-container").width();
+
+        $("#serviceRequests_grid").jqGrid("setGridWidth", containerWidth - 74);
+    }
+
+    $(window).on("resize.jqGrid", function () {
+        resizeServiceRequestsGrid();
+    });
 
     $(document).on('click', '#serviceRequests_date .data-select-btn', function () {
         //console.log('✅ serviceRequests data-select-btn clicked!');
