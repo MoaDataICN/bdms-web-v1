@@ -807,7 +807,7 @@
                 }
             }
         },
-        plugins: [doughnutLabel, ChartDataLabels, shadowCirclePlugin]
+        plugins: [dashBoardDoughnutLabel, ChartDataLabels, shadowCirclePlugin]
     });
     <!-- Chart E -->
 
