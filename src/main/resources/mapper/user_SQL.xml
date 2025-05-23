@@ -28,7 +28,7 @@
 		LEFT OUTER JOIN
 			t_walk.t_wlk_mng_req req ON req.USER_ID = my.USER_ID
 		LEFT OUTER JOIN
-			t_walk.t_wlk_mng_alt alt ON req.ALRM_ID = alt.ALRM_ID
+			t_walk.t_wlk_mng_alt alt ON alt.USER_ID = my.USER_ID
 		LEFT OUTER JOIN
 			t_walk.t_wlk_mng_user admin ON admin.USER_ID = my.IN_CHARGE_ID
 		WHERE
@@ -601,7 +601,7 @@
 	<select id="selectTotalRecords" resultType="int">
 		SELECT FOUND_ROWS();
 	</select>
-	
+
 	<!-- 사용자 상세 - USER_ID -->
 	<select id="selectUserInfo" parameterType="String" resultType="userVO">
 		SELECT UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT,
@@ -616,7 +616,7 @@
 		from T_WLK_MY my inner join T_WLK_cmm_alrm_stt alrm on alrm.USER_ID = my.USER_ID
 		where my.user_id = #{userId}
 	</select>
-	
+
 	<!-- 사용자 상세 - UID -->
 	<select id="selectUserInfoByUid" parameterType="String" resultType="userVO">
 		SELECT UID, USER_ID, USER_NM, USER_PW, EMAIL_ADDR, PHONE_NO, LOGIN_DT, LOGIN_YN, DEPT_NM, USERGROUP_ID, LOCK_YN, USE_YN, USER_TYPE, USER_DESC, REGIST_ID, REGIST_DT, MODIFY_ID, MODIFY_DT,
@@ -624,21 +624,21 @@
 		FROM   t_wlk_MNG_USER
 		WHERE  UID = #{uid}
 	</select>
-	
+
 	<!-- 사용자 확인 -->
 	<select id="selectUserIdCnt" parameterType="String" resultType="int">
 		SELECT COUNT(USER_ID) AS CNT
 		FROM   t_wlk_MNG_USER
 		WHERE  USER_ID = #{userId}
 	</select>
-	
+
 	<!-- 사용자 확인  - 사용자 그룹 아이디 -->
 	<select id="selectUserCntByUserGroupId" parameterType="String" resultType="int">
 		SELECT COUNT(USER_ID) AS CNT
 		FROM   t_wlk_MNG_USER
 		WHERE  USERGROUP_ID = #{userGroupId}
 	</select>
-	
+
 	<!-- 사용자 등록 -->
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="uid" parameterType="userVO">
 		INSERT INTO t_wlk_MNG_USER
@@ -648,8 +648,8 @@
 		)
 		VALUES
 		(
-			#{uid}, #{userId}, #{userNm}, #{userPw}, #{emailAddr}, #{phoneNo, jdbcType=VARCHAR}, 'Y', #{deptNm, jdbcType=VARCHAR}, 
-		
+			#{uid}, #{userId}, #{userNm}, #{userPw}, #{emailAddr}, #{phoneNo, jdbcType=VARCHAR}, 'Y', #{deptNm, jdbcType=VARCHAR},
+
 			<choose>
 				<when test='lockYn != null and lockYn !=""'>
 					#{lockYn},
@@ -657,7 +657,7 @@
 				<otherwise>
 					'N',
 				</otherwise>
-			</choose>	
+			</choose>
 			#{useYn}, #{userType}, #{userDesc, jdbcType=VARCHAR}, #{registId}, NOW(), #{modifyId}, NOW(), NOW(), #{connectIp1}, #{connectIp2}, #{connectIp3},
 			<choose>
 				<when test='usergroupId == "null" or usergroupId == ""'>
