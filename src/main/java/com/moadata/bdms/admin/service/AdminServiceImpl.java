@@ -68,4 +68,9 @@ public class AdminServiceImpl implements AdminService {
 		}
 		adminDao.updateAdmin(user);
 	}
+
+	@Override
+	public void adminDelete(UserVO user){
+		adminDao.adminDelete(user.getParamList());
+	}
 }

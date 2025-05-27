@@ -36,4 +36,8 @@ public class AdminDao extends BaseAbstractDao {
 	public void updateAdmin(UserVO user) {
 		update("admin.updateAdminInfo", user);
 	}
+
+	public void adminDelete(List<Map> paramList) {
+		delete("admin.adminDelete", paramList);
+	}
 }

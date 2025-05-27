@@ -79,4 +79,5 @@ public class UserVO extends BaseSearchObject {
 	private String grpNm;
 
 	private String showType;
+	private List<Map> paramList;
 }

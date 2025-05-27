@@ -53,9 +53,7 @@
                 ASC
             </otherwise>
         </choose>
-        <if test="(rowNo != null and rowNo != '') and (rows != null and rows != '')">
-            LIMIT #{rowNo}, #{rows}
-        </if>
+        LIMIT #{rowNo}, #{rows}
     </select>
 
     <!-- User 목록 total -->
@@ -254,4 +252,14 @@
         MODIFY_DT	  = NOW()
         WHERE USER_ID = #{userId}
     </update>
+
+    <delete id="adminDelete" parameterType="java.util.List">
+        DELETE FROM T_WLK_MNG_USER
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+                (UID = #{item.uid})
+            </foreach>
+        </where>
+    </delete>
+
 </mapper>

@@ -12,4 +12,5 @@ public interface AdminService {
 	public int selectAdminIdCnt(String userId);
 	public List<Map> selectManagerGroupList(String grpId);
 	public void updateAdmin(UserVO user);
+	public void adminDelete(UserVO user);
 }

@@ -322,6 +322,7 @@
 
 <script type="text/javascript">
 	const inChargeId = '${inChargeId}';
+	var delParamList = [];
 
 	// Grid 하단 페이저 숫자
 	const pageSize = 10;
@@ -429,6 +430,7 @@
 				{ label: 'Last Login', name: 'loginDt', width:180, sortable : false},
 				{ label: 'Creator', name: 'registId', width:180, sortable : true},
 				{ label: 'Creation Date', name: 'registDt', width:180, sortable : false},
+				{ label: 'UID', name: 'uid', width:10, hidden : true, sortable : false},
 			],
 			page: 1,
 			autowidth: true,
@@ -635,6 +637,32 @@
 		});
 	});
 
+	function fnDelAdmin(delParamList){
+		var params = {
+			paramList: delParamList
+		};
+		console.log("params ::", params);
+		$.ajax({
+			url : "${contextPath}/admin/adminDelete",
+			contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+			dataType : "json",
+			data : params,
+			cache : false,
+			type : 'post',
+			success: function(data) {
+				console.log("## data :: ", data);
+				if (data.isError) {
+					$.alert(data.message);
+					fnSearch();
+				} else {
+					$.alert(data.message);
+					delParamList = []; //초기화.
+					$("#adminList").trigger("reloadGrid", [{page: 1, current: true}]);
+				}
+			}
+		});
+	}
+
 	function fnAdd() {
 		fnClear();
 		$('.popup-title').html("Create Admin Account");
@@ -643,7 +671,33 @@
 	}
 
 	function fnDelete() {
+		var selectIds = $("#adminList").getGridParam('selarrrow');
+		var searchType = false;
 
+		if(selectIds.length > 0){
+			for(var i =0; i< selectIds.length; i++){
+				var selectRowData =  $("#adminList").jqGrid("getRowData",selectIds[i]);
+				delParamList.push($("#adminList").jqGrid("getRowData",selectIds[i]));
+			}
+			if(delParamList.length > 0){
+				$.confirm({
+					title: '',
+					content: '<spring:message code="Admin.Delete"/>',
+					buttons: {
+						OK: function () {
+							fnDelAdmin(delParamList);
+							$("#adminList").jqGrid("resetSelection");
+						},
+						CANCEL: function () {
+							delParamList = []; //초기화.
+						}
+					}
+				});
+			}
+
+		}else{
+			$.alert("삭제할 데이터를 선택해주세요.");
+		}
 	}
 
 	<!-- 달력 스크립트 -->

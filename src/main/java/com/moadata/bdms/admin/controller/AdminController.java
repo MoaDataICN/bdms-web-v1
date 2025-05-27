@@ -194,4 +194,33 @@ public class AdminController extends BaseController {
 		map.put("message", message);
 		return map;
 	}
+
+
+	/**
+	 * 데이터 삭제
+	 *
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/adminDelete", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> adminDelete(@ModelAttribute("user") UserVO user)throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		boolean isError = false;
+		String message = "";
+
+		try {
+			adminService.adminDelete(user);
+			message = "Has been deleted.";
+		} catch(Exception e) {
+			LOGGER.error(e.toString());
+			isError = true;
+			map.put("message", e.getMessage());
+		}
+
+		map.put("isError", isError);
+		map.put("message", message);
+		return map;
+	}
+
 }
