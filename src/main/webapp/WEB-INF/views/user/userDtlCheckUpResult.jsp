@@ -33,13 +33,13 @@
                     </div>
                     <div class="row-input">
                         <div class="p-r">
-                            <input type="text" class="date-input input-txt02" id="checkUpResultBgnDe" placeholder="ALL" readonly="">
+                            <input type="text" class="date-input input-txt02" id="checkUpResultBgnDe" placeholder="ALL" >
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('checkUpResult_datePicker1')" alt="달력 아이콘">
                             <input type="date" id="checkUpResult_datePicker1" class="hidden-date" onchange="updateDate('checkUpResult_datePicker1', 'checkUpResultBgnDe')">
                         </div>
                         <img src="/resources/images/minus-icon.svg" class="icon14 img-none">
                         <div class="p-r">
-                            <input type="text" class="date-input input-txt02" id="checkUpResultEndDe" placeholder="ALL" readonly="">
+                            <input type="text" class="date-input input-txt02" id="checkUpResultEndDe" placeholder="ALL" >
                             <img src="/resources/images/calendar-icon.svg" class="icon22 calendar-icon" onclick="openCalendar('checkUpResult_datePicker2')" alt="달력 아이콘">
                             <input type="date" id="checkUpResult_datePicker2" class="hidden-date" onchange="updateDate('checkUpResult_datePicker2', 'checkUpResultEndDe')">
                         </div>
@@ -143,17 +143,20 @@
                 { label: 'Checkup Center', name: 'chckHspt', width:150, sortable : true},
                 { label: 'Doctor', name: 'chckDoctor', width:150, sortable : true},
                 { label: 'Biological Age', name: 'badVal', width:150, sortable : true},
+                { label: 'ReportItemGroup', name: 'reportItemGroup', width:10, sortable : true, hidden : true},
+                { label: 'userId', name: 'userId', width:10, sortable : true, hidden : true},
+                { label: 'checkupKey', name: 'checkupKey', width:10, sortable : true, hidden : true},
                 { label: 'Details',
                     name: 'details',
                     width: 150,
                     sortable: false,
                     formatter: function(cellValue, options, rowObject) {
                         return `
-                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
+                            <button type="button" class="detail-btn1 open-slide-btn" data-type="result" data-uid="` + rowObject.userId + `" data-chckDate="` + rowObject.chckDate + `" data-reportItemGroup="` + rowObject.reportItemGroup + `" onclick="columnClick(this)">
                                 <span>view result</span>
                                 <img src="/resources/images/arrow-num-right.svg" class="icon16">
                             </button><br>
-                            <button type="button" class="detail-btn open-slide-btn" data-uid="` + rowObject.userId + `">
+                            <button type="button" class="detail-btn1 open-slide-btn" data-type="analysis" data-uid="` + rowObject.userId + `" data-checkupKey="` + rowObject.checkupKey + `" onclick="columnClick(this)">
                                 <span>View analysis</span>
                                 <img src="/resources/images/arrow-num-right.svg" class="icon16">
                             </button>
@@ -340,4 +343,21 @@
                 });
             });
     });
+
+    // $(document).on('click', '.detail-btn', function(){
+    function columnClick(obj) {
+        var dataType = $(obj)[0].dataset.type;
+        if (dataType === 'result') {
+            var urlStr = 'https://bdms.moadata.ai:8088/mediwalk/report/summary.mdo?userId=' + $(obj)[0].dataset.uid + '&chckDate=' + $(obj)[0].dataset.chckdate + '&reportItemGroup=' + $(obj)[0].dataset.reportitemgroup;
+            // https://bdms.moadata.ai:8088/mediwalk/report/summary.mdo?userId=229a5836-912e-4514-a8af-67bcf80fda6c&chckDate=2017-07-21&reportItemGroup=00001
+            openPopupView(urlStr);
+        } else if (dataType === 'analysis') {
+            var urlStr = 'https://bdms.moadata.ai:8912/'+$(obj)[0].dataset.checkupkey;
+            openPopupView(urlStr);
+        }
+    }
+
+    function openPopupView(urlStr){
+        var childPopup = window.open(urlStr,"PopView", "width=550, height=900, scrollbars=yes");
+    }
 </script>

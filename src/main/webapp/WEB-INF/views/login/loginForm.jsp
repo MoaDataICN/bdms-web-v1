@@ -113,14 +113,14 @@ function limitLength(element, maxLength) {
 		Welcome! This is the medical support system.
 	</div>
 	<form name="loginForm" id="loginForm" class="full-panel-form" data-toggle="validator" role="form" action="<c:url value='/login/login'/>" method="post" onsubmit="return false">
-		<div class="row-input2 mt-42px">
+		<div class="login-input mt-42px">
 			<input type="text" id="userId" name="userId"class="input-txt05" placeholder="Enter Member ID" oninput="limitLength(this, 12);" required>
 			<div class="img-left">
 				<img src="/resources/images/login-mail-icon.svg" class="icon24">
 				<div class="h-line"></div>
 			</div>
 		</div>
-		<div class="row-input2 mt-20px">
+		<div class="login-input mt-20px">
 			<input type="password" id="userPw" name="userPw" class="input-txt05" placeholder="Enter Password" oninput="limitLength(this, 12);" required>
 			<div class="img-left">
 				<img src="/resources/images/login-lock-icon.svg" class="icon24">
@@ -129,9 +129,6 @@ function limitLength(element, maxLength) {
 		</div>
 		<button type="button" type="submit" id="loginBtn" class="point-login-btn mt-34px" onclick="goLogin()">LOGIN</button>
 	</form>
-
-
-
 	<div class="login-w-line mt-42px"></div>
 	<div class="login-copyright mt-20px">Copyright © 2025 MOAdata. All rights reserved.</div>
 </div>

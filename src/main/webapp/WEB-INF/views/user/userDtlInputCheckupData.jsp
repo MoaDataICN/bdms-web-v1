@@ -580,6 +580,8 @@
 </div>
 
 <script type="text/javascript">
+    var dropzoneFile;
+
     function downform(){
         let _url = "${contextPath}/user/downform";
         let _jsonData = {
@@ -617,7 +619,7 @@
             Dropzone.instances.forEach(instance => instance.destroy());
         }
 
-        let dropzoneFile = new Dropzone("#dropzone-file",{
+        dropzoneFile = new Dropzone("#dropzone-file",{
             url:'${contextPath}/user/getChckUpExcelImport',
             maxFilesize:5000000,
             parallelUploads:2,     //한번에 올릴 파일 수
@@ -720,6 +722,7 @@
         $('#inputCheckup_alp').val('');      $('#inputCheckup_comment').val('');
         $('.sex-btn-f').removeClass('active');
         $('.sex-btn').removeClass('active');
+        dropzoneFile.removeAllFiles(true);
     }
 
     function inputCheckup_setAddParam() {

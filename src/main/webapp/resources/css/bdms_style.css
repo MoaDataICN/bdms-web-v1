@@ -1582,6 +1582,36 @@ textarea {
     gap: 10px;
 }
 
+.login-input > input[type=text],
+.login-input > input[type=password],
+.login-input > input[type=submit],
+.login-input > input[type=search],
+.login-input > input[type=number],
+.login-input > input[type=email],
+.login-input > input[type=password],
+.login-input > textarea {
+    -webkit-appearance: none;
+    writing-mode: horizontal-tb !important;
+    padding-block: 1px;
+    padding-inline: 60px !important;
+    box-sizing: border-box;
+    padding-inline-end: 50px;
+}
+
+.login-input {
+    position: relative;
+}
+
+.login-input .img-left {
+    position: absolute;
+    left: 32px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .h-line {
     width: 1px;
     height: 30px;

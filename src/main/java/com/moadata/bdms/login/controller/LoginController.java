@@ -154,9 +154,9 @@ public class LoginController extends BaseController {
 
 					String logFailMsg = "";
 					if (pwFailCnt < 5) {
-					   logFailMsg = "아이디 또는 비밀번호가 일치하지 않습니다. (" + pwFailCnt + "회)" ;
+					   logFailMsg = "ID or Password does not match. (Attempt " + pwFailCnt + ")" ;
 					} else {
-					   logFailMsg = "계정이 잠김 상태로 변경되었습니다. 관리자에게 문의 하세요.";
+					   logFailMsg = "Your account has been locked. Please contact your administrator.";
 					}
 					
 					LOGGER.debug(logFailMsg);
@@ -171,7 +171,7 @@ public class LoginController extends BaseController {
 						param.put("hisEndDt", "");
 						param.put("prssUsrId", loginUser.getUserId());
 						String loginIp = StringUtil.getServerIP(request);
-						String tempMsg = "사용자 " + loginUser.getUserId() + " - " + "{0} ("+pwFailCnt+"회) (Login IP : " +loginIp + ")";
+						String tempMsg = "user " + loginUser.getUserId() + " - " + "{0} ("+pwFailCnt+") (Login IP : " +loginIp + ")";
 						param.put("msgEtc", tempMsg);
 						
 						//historyInfoService.commInsertHistory(param,"");
@@ -183,7 +183,7 @@ public class LoginController extends BaseController {
 						param.put("hisEndDt", "");
 						param.put("prssUsrId", loginUser.getUserId());
 						String loginIp = StringUtil.getServerIP(request);
-						String tempMsg = "사용자 " + loginUser.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
+						String tempMsg = "user " + loginUser.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
 						param.put("msgEtc", tempMsg);
 						
 						//historyInfoService.commInsertHistory(param,"");
@@ -213,7 +213,7 @@ public class LoginController extends BaseController {
 							param.put("hisEndDt", "");
 							param.put("prssUsrId", loginUser.getUserId());
 							String loginIp = StringUtil.getServerIP(request);
-							String tempMsg = "사용자 " + loginUser.getUserId() + " - " + "{0} ("+pwFailCnt+"회) (Login IP : " +loginIp + ")";
+							String tempMsg = "user " + loginUser.getUserId() + " - " + "{0} ("+pwFailCnt+") (Login IP : " +loginIp + ")";
 							param.put("msgEtc", tempMsg);
 							
 							//historyInfoService.commInsertHistory(param,"");
@@ -225,7 +225,7 @@ public class LoginController extends BaseController {
 							param.put("hisEndDt", "");
 							param.put("prssUsrId", loginUser.getUserId());
 							String loginIp = StringUtil.getServerIP(request);
-							String tempMsg = "사용자 " + loginUser.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
+							String tempMsg = "user " + loginUser.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
 							param.put("msgEtc", tempMsg);
 							
 							//historyInfoService.commInsertHistory(param,"");
@@ -244,7 +244,7 @@ public class LoginController extends BaseController {
 						param.put("hisEndDt", "");
 						param.put("prssUsrId", loginUser.getUserId());
 						String loginIp = StringUtil.getServerIP(request);
-						String tempMsg = "사용자 " + loginUser.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
+						String tempMsg = "user " + loginUser.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
 						param.put("msgEtc", tempMsg);
 						
 						//historyInfoService.commInsertHistory(param,"");
@@ -255,7 +255,7 @@ public class LoginController extends BaseController {
 							//로그인 실패 횟수가 5번 이상이면 10분간 로그인 차단.
 							logLockChCnt = loginService.selectLoginLockCk(loginUser.getUserId()); //로그인 한지 10분이 지나면 logLockChCnt 값은 1
 							if(logLockChCnt == 0) {								
-								String message = "로그인 실패 5회가 넘어서 10분간 로그인을 할 수 없습니다.";
+								String message = "If you fail to log in more than 5 times, you will be unable to log in for 10 minutes.";
 								LOGGER.debug(message);
 								
 								//이력 남기기  -로그인 잠김
@@ -281,7 +281,7 @@ public class LoginController extends BaseController {
 							if((90) < diffDt) {
 								if(loginUser.getUserId().equals(adminId)) {
 									//로그인 아이디가 관리자 이면 패스워드 변경 메시지만 출력
-									String message = "패스워드 변경후 90일이 경과하였습니다. 패스워드를 변경해주세요.";						
+									String message = "It has been 90 days since you changed your password. Please change your password.";
 									redirectAttr.addFlashAttribute("errorMessage", message);						
 								}else {
 									//일반 사용자이면 페스워드 변경 팝업 활성화. 패스워드 변경 팝업화면 추가후 수정.
@@ -299,7 +299,7 @@ public class LoginController extends BaseController {
 							if((90) < diffDt) {
 								if(loginUser.getUserId().equals(adminId)) {
 									//로그인 아이디가 관리자 이면 패스워드 변경 메시지만 출력
-									String message = "패스워드 변경후 90일이 경과하였습니다. 패스워드를 변경해주세요.";						
+									String message = "It has been 90 days since you changed your password. Please change your password.";
 									redirectAttr.addFlashAttribute("errorMessage", message);						
 								}else {
 									//일반 사용자이면 페스워드 변경 팝업 활성화. 패스워드 변경 팝업화면 추가후 수정.
@@ -321,7 +321,7 @@ public class LoginController extends BaseController {
 		if(!loginUser.getUserId().equals(adminId)) {
 			loginCkDt = DateUtil.getTwoDatesDifference(loginUser.getLoginDt(), loginUser.getToday());
 			if(90 < loginCkDt) {				
-				String message = "최종 로그인 이후 90일이 경과되어 자동 계정잠금처리 되었습니다. 관리자에게 문의하세요.";						
+				String message = "Your account has been automatically locked as it has been 90 days since your last login. Please contact the administrator.";
 				redirectAttr.addFlashAttribute("errorMessage", message);	
 				loginVO.setLockYn("Y");				
 				loginService.updateLoginUser(loginVO);
@@ -381,7 +381,7 @@ public class LoginController extends BaseController {
 		param.put("hisEndDt", "");
 		param.put("prssUsrId", user.getUserId());
 		String loginIp = StringUtil.getServerIP(request);
-		String tempMsg = "사용자 " + user.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
+		String tempMsg = "user " + user.getUserId() + " - " + "{0} (Login IP : " +loginIp + ")";
 		param.put("msgEtc", tempMsg);
 		
 		//historyInfoService.commInsertHistory(param,"");
@@ -442,7 +442,7 @@ public class LoginController extends BaseController {
 			//if(checkUser != null) {
 			if(checkUser > 0) {
 				isError = true;
-				message = "이미 등록된 아이디입니다.";
+				message = "This ID has already been registered.";
 			} else {
 				String encryptPassword = EncryptUtil.encryptSha(user.getUserPw());
 				user.setUserPw(encryptPassword);
@@ -459,7 +459,7 @@ public class LoginController extends BaseController {
 				user.setModifyId(user.getUserId()); 
 				userService.insertUser(user);
 				
-				message = "관리자에게 사용 승인을 요청하세요.";
+				message = "Please ask your administrator for permission to use it.";
 				
 				//이력 추가.
 				Map<String,String> param = new HashMap<String,String>();
@@ -468,7 +468,7 @@ public class LoginController extends BaseController {
 				param.put("prssType", "HS06");
 				param.put("hisEndDt", "");
 				param.put("prssUsrId", user.getUserId());				
-				String tempMsg = "사용자 " + user.getUserId() + " - " + "{0}" + " 성공 하였습니다.";
+				String tempMsg = "user " + user.getUserId() + " - " + "{0}" + " It was a success.";
 				param.put("msgEtc", tempMsg);
 				
 				//historyInfoService.commInsertHistory(param,"");
@@ -477,7 +477,7 @@ public class LoginController extends BaseController {
 		} catch(Exception e) {
 			LOGGER.error(e.toString());
 			isError = true;
-			message = "등록에 실패했습니다.";
+			message = "Registration failed.";
 			
 			//이력 추가.
 			Map<String,String> param = new HashMap<String,String>();
@@ -486,7 +486,7 @@ public class LoginController extends BaseController {
 			param.put("prssType", "HS06");
 			param.put("hisEndDt", "");
 			param.put("prssUsrId", user.getUserId());				
-			String tempMsg = "사용자 " + user.getUserId() + " - " + "{0}" + " 실패 하였습니다.";
+			String tempMsg = "user " + user.getUserId() + " - " + "{0}" + " It was a failure.";
 			param.put("msgEtc", tempMsg);
 			
 			//historyInfoService.commInsertHistory(param,"");
@@ -603,7 +603,7 @@ public class LoginController extends BaseController {
                 ck.setPath("/");
                 response.addCookie(ck);
 
-                message = "연장되었습니다.";
+                message = "It has been extended.";
             } else {
                 message = "";
             }

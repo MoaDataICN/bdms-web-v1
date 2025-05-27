@@ -20,4 +20,6 @@ public class UserDtlCheckUpResultDTO extends BaseSearchObject {
     private String badVal;
     private String searchBgnDe;
     private String searchEndDe;
+    private String reportItemGroup;
+    private String checkupKey;
 }

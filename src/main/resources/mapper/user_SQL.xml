@@ -855,13 +855,14 @@
 	<select id="selectCheckUpResult" parameterType="UserDtlCheckUpResultDTO" resultType="UserDtlCheckUpResultDTO">
 		select SQL_CALC_FOUND_ROWS
 		       AA.chck_date, AA.chck_kind, AA.chck_judge,
-			   AA.chck_hspt, AA.chck_doctor,
-			   AA.report_id, AA.user_id, AA.upt_dt,
+			   AA.chck_hspt, AA.chck_doctor, DD.checkup_key,
+			   AA.report_id, AA.user_id, AA.upt_dt, AA.report_item_group,
 			   case when IFNULL (cast(BB.BAD_VAL AS CHAR), '')  = '' then BB.BAD_VAL
 				    when cast(BB.BAD_VAL AS CHAR) = '0' then BB.BAD_VAL
 				    when BB.BAD_VAL <![CDATA[<]]> 0 then BB.BAD_VAL
 				    else CONCAT('+', cast(BB.BAD_VAL AS CHAR)) end BAD_VAL
 		from T_WLK_REPORT AA,
+		     T_WLK_MY DD,
 			 (
 				 select report.chck_date, report.user_id, max(report.upt_dt) as upt_dt
 				 from t_wlk_report report, t_wlk_nutri_anly anly
@@ -871,6 +872,7 @@
 			 ) CC
 			 left outer join T_WLK_NUTRI_ANLY BB on CC.USER_ID = BB.USER_ID and DATE_FORMAT(CC.UPT_DT,'%Y-%m-%d')  = DATE_FORMAT(BB.RCV_DT,'%Y-%m-%d')
 		WHERE AA.USER_ID   = CC.USER_ID
+		  AND CC.USER_ID   = DD.USER_ID
 		  AND AA.CHCK_DATE = CC.CHCK_DATE
 		  and AA.UPT_DT    = CC.UPT_DT
 		<if test="chckKind != null and chckKind != ''">

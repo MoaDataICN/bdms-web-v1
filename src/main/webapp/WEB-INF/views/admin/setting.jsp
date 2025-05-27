@@ -152,10 +152,14 @@
 		<div class="submit-ui-wrap">
 		</div>
 		<div class="submit-ui-wrap">
-
 			<button type="button" class="gray-submit-btn" id="add" onclick="fnAdd()">
-				<img src="/resources/images/reset-icon.svg" class="icon22">
+				<img src="/resources/images/add-line-icon.svg" class="icon22">
 				<span><spring:message code="common.btn.add"/></span>
+			</button>
+
+			<button type="button" class="gray-submit-btn" id="delete" onclick="fnDelete()">
+				<img src="/resources/images/del-line-icon.svg" class="icon22">
+				<span><spring:message code="common.btn.delete"/></span>
 			</button>
 
 			<button type="button" class="gray-submit-btn" id="reset" onclick="fnClear()">
@@ -636,6 +640,10 @@
 		$('.popup-title').html("Create Admin Account");
 		$('#showType').val('A');
 		$('#add_popup').show();
+	}
+
+	function fnDelete() {
+
 	}
 
 	<!-- 달력 스크립트 -->
