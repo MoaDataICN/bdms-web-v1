@@ -8,7 +8,7 @@
         SELECT  SQL_CALC_FOUND_ROWS
         UID, USER_ID, USER_NM, EMAIL_ADDR, PHONE_NO, DATE_FORMAT(LOGIN_DT, '%Y-%m-%d %T') AS LOGIN_DT, LOGIN_YN, DEPT_NM, LOCK_YN, LOCK_YN AS oldLockYn, USE_YN,
         USER_TYPE, USER_DESC, REGIST_ID, DATE_FORMAT(REGIST_DT, '%Y-%m-%d %T') AS REGIST_DT, MODIFY_ID, DATE_FORMAT(MODIFY_DT, '%Y-%m-%d %T') AS MODIFY_DT,
-        CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP, LST_LOGIN_DT, TP_NM
+        CONNECT_IP1, CONNECT_IP2, CONNECT_IP3, USERGROUP_ID, WRK_TP, LST_LOGIN_DT, TP_NM, USER_PW
         FROM T_WLK_MNG_USER
         <where>
             <if test='userId != null and userId != "" '>
@@ -249,6 +249,9 @@
         GRP_LV        = #{grpLv},
         TP_NM         = #{tpNm},
         MODIFY_ID	  = #{modifyId},
+        <if test='userPw != null and userPw !=""'>
+            USER_PW   = #{userPw},
+        </if>
         MODIFY_DT	  = NOW()
         WHERE USER_ID = #{userId}
     </update>

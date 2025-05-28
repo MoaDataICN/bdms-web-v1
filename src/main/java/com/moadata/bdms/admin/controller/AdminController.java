@@ -156,8 +156,22 @@ public class AdminController extends BaseController {
 		UserVO vo = (UserVO) getRequestAttribute("user");
 		try {
 			user.setModifyId(vo.getUserId());
-			adminService.updateAdmin(user);
-
+			if (user.getUserPrePw() != null && !user.getUserPrePw().equals("")) {
+				String encryptPrePassword = EncryptUtil.encryptSha(user.getUserPrePw());
+				String encryptPassword = EncryptUtil.encryptSha(user.getUserPw());
+				//이전 password와 변경 password가
+				if (encryptPrePassword.equals(user.getOriginPw())) {
+					user.setUserPw(encryptPassword);
+					adminService.updateAdmin(user);
+					message = "Edited.";
+				} else {
+					isError = true;
+					message = "The previous password and the new password are different.";
+				}
+			} else if(user.getUserPw() == null || user.getUserPw().equals("")) {
+				adminService.updateAdmin(user);
+				message = "Edited.";
+			}
 			//이력 추가.
 			Map<String, String> param = new HashMap<String, String>();
 			param.put("hisType", "HT16");
@@ -167,11 +181,7 @@ public class AdminController extends BaseController {
 			param.put("prssUsrId", vo.getUserId());
 			String tempMsg = "사용자 " + user.getUserId() + " - " + "{0}" + " 성공 하였습니다.";
 			param.put("msgEtc", tempMsg);
-
 			//historyInfoService.commInsertHistory(param,"");
-
-			message = "Edited.";
-
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 			isError = true;
@@ -194,7 +204,6 @@ public class AdminController extends BaseController {
 		map.put("message", message);
 		return map;
 	}
-
 
 	/**
 	 * 데이터 삭제

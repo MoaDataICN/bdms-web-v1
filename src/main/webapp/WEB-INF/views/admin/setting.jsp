@@ -230,6 +230,25 @@
 					</div>
 					<div class="row-input">
 						<input type="password" class="input-txt02" id="adminpw" placeholder="Enter password" oninput="limitLength(this, 30);">
+						<input type="hidden" id="originpw">
+					</div>
+				</div>
+
+				<div class="row-wrap">
+					<div class="input-label02">
+						Password to change<span class="red-point-color"> </span>
+					</div>
+					<div class="row-input">
+						<input type="password" class="input-txt02" id="aftadminpw" placeholder="Enter password" oninput="limitLength(this, 30);">
+					</div>
+				</div>
+
+				<div class="row-wrap">
+					<div class="input-label02">
+						Password to confirm<span class="red-point-color"> </span>
+					</div>
+					<div class="row-input">
+						<input type="password" class="input-txt02" id="cfmadminpw" placeholder="Enter password" oninput="limitLength(this, 30);">
 					</div>
 				</div>
 
@@ -351,20 +370,25 @@
 
 	function setAddParam(showType) {
 		return {
-			showType: showType,
-			userId  : $('#adminid').val(),
-			userPw  : $('#adminpw').val(),
-			grpLv   : $('#au').val(),
-			grpId   : $('#grpId').val(),
-			userNm  : $('#adminnm').val(),
-			tpNm    : $('#tpNm').val(),
-			phoneNo : $('#adminphone').val().replaceAll('-','')
+			showType  : showType,
+			userId    : $('#adminid').val(),
+			userPrePw : $('#adminpw').val(),
+			userPw    : $('#aftadminpw').val(),
+			originPw  : $('#originpw').val(),
+			grpLv     : $('#au').val(),
+			grpId     : $('#grpId').val(),
+			userNm    : $('#adminnm').val(),
+			tpNm      : $('#tpNm').val(),
+			phoneNo   : $('#adminphone').val().replaceAll('-','')
 		};
 	}
 
 	function setClearAddParam() {
 		$('#adminid').val('');
 		$('#adminpw').val('');
+		$('#aftadminpw').val('');
+		$('#originpw').val('');
+		$('#cfmadminpw').val('');
 		$('#adminphone').val('');
 		$('#adminnm').val('');
 		$('#grpId').val('');
@@ -374,8 +398,8 @@
 		$('#au').val('');
 		$('#au').text('Select Authority Type');
 		$('#adminid').removeClass('hold');
-		$('#adminpw').removeClass('hold');
-		$("#adminpw").removeAttr("disabled");
+		//$('#adminpw').removeClass('hold');
+		//$("#adminpw").removeAttr("disabled");
 		$("#adminid").removeAttr("disabled");
 	}
 
@@ -431,6 +455,7 @@
 				{ label: 'Creator', name: 'registId', width:180, sortable : true},
 				{ label: 'Creation Date', name: 'registDt', width:180, sortable : false},
 				{ label: 'UID', name: 'uid', width:10, hidden : true, sortable : false},
+				{ label: 'PS', name: 'userPw', width:10, hidden : true, sortable : false},
 			],
 			page: 1,
 			autowidth: true,
@@ -483,7 +508,37 @@
 		$('#add_popup').hide();
 	})
 
+	function input_filter() {
+		var prePw = $('#adminpw').val();
+		var password = $('#aftadminpw').val();
+		var confirmPw = $('#cfmadminpw').val();
+
+		//비밀번호 정규식 추가 (비밀번호 8자리 이상, 숫자포함, 영대 문자포함, 영소문자포함, 특수문자포함)
+		var reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+		//ip 정규식 추가
+		var reg_ip = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+		if (prePw != '') {
+			if (password == '') {
+				$.alert("You must enter a change password.");
+				return false;
+			} else if (password != confirmPw) {
+				$.alert("The password to be changed and the confirmation password do not match.");
+				$('#aftadminpw').val('');
+				$('#cfmadminpw').val('');
+				return false;
+			}
+		}
+		return true;
+	}
+
 	function validation(){
+
+		if(!input_filter()){
+			return false;
+		}
+
 		//Admin ID Validation
 		if ($('#adminid').val() != null && $('#adminid').val() != "") {
 			if ($('#adminid').val().length < 4) {
@@ -500,10 +555,13 @@
 				$.alert("Password must have at least 4 characters.");
 				return false;
 			}
-		} else {
-			$.alert("Password must have at least 4 characters.");
-			return false;
+
+			if ($('#aftadminpw').val().length < 4 && $('#adminpw').val().length > 0) {
+				$.alert("Password to change must have at least 4 characters.");
+				return false;
+			}
 		}
+
         //Authority Type Validation
 		if ($('#au').val() == null || $('#au').val() == "") {
 			$.alert("You must select an Authority Type.");
@@ -537,7 +595,7 @@
 		return true;
 	}
 
-	function selectAdminRowId(userId){
+	function selectAdminRowId(userId) {
 		$.ajax({
 			type: 'POST',
 			url: '${contextPath}/user/selectAdminById',
@@ -552,13 +610,13 @@
 					var rowData = data.row;
 
 					$('#adminid').val(rowData.userId);
-					$('#adminpw').val(rowData.userPw);
+					//$('#adminpw').val(rowData.userPw);
 
-					$("#adminpw").attr("disabled",true);
+					//$("#adminpw").attr("disabled",true);
 					$('#adminid').attr("disabled",true);
 
 					$('#adminid').addClass('hold');
-					$('#adminpw').addClass('hold');
+					//$('#adminpw').addClass('hold');
 
 					$('#au').val(rowData.grpLv);
 					if (rowData.grpLv == '1'){
@@ -583,7 +641,7 @@
 					} else if (rowData.tpNm == 'H'){
 						$('#tpNm').text('<spring:message code="Admin.Type.HealthManager"/>');
 					}
-
+					$('#originpw').val(rowData.userPw);
 					$('#adminphone').val(rowData.phoneNo);
 					$('#showType').val('M');
 					$('#add_popup').show();
@@ -597,12 +655,12 @@
 		var suburl = '';
 		if ($('#showType').val() == 'M') {
 			msgcontent = 'Would you like to save an Admin?';
-			$("#adminpw").attr("disabled",true);
+			//$("#adminpw").attr("disabled",true);
 			$('#adminid').attr("disabled",true);
 			suburl = 'adminUpdate';
 		} else if ($('#showType').val() == 'A') {
 			msgcontent = 'Would you like to add an Admin?';
-			$("#adminpw").removeAttr("disabled");
+			//$("#adminpw").removeAttr("disabled");
 			$("#adminid").removeAttr("disabled");
 			suburl = 'adminAdd';
 		}
@@ -619,11 +677,11 @@
 							dataType: 'json',
 							success: function(data) {
 								if(data.isError){
-									showToast('Processing failed.', 'point');
+									showToast(data.message, 'point');
 									console.log('ERROR', data.message);
 								}else{
 									setClearAddParam();
-									showToast('The admin account has been created.');
+									showToast('The admin account has been saved.');
 									$('#add_popup').hide();
 									fnSearch();
 								}
@@ -650,7 +708,6 @@
 			cache : false,
 			type : 'post',
 			success: function(data) {
-				console.log("## data :: ", data);
 				if (data.isError) {
 					$.alert(data.message);
 					fnSearch();

@@ -30,6 +30,7 @@ public class UserVO extends BaseSearchObject {
 	private String userId;
 	private String userNm;
 	private String userPw;
+	private String originPw;
 	private String userPrePw;
 	private String emailAddr;
 	private String phoneNo;

@@ -757,7 +757,7 @@
 			mngUser.LOGIN_YN, mngUser.DEPT_NM, mngUser.LOCK_YN, mngUser.USE_YN, mngUser.USER_TYPE, mngUser.USER_DESC,
 			mngUser.REGIST_ID, mngUser.REGIST_DT,mngUser.MODIFY_ID, mngUser.MODIFY_DT,  mngUser.CONNECT_IP1, mngUser.CONNECT_IP2, mngUser.CONNECT_IP3,
 			mngUser.USERGROUP_ID, mngUser.WRK_TP, userGroup.USERGROUP_NM AS userGroupNm, mngCode.CODE_NAME AS wrkNm,
-			mngUser.TP_NM, mngUser.LST_LOGIN_DT, mngUser.GRP_ID, mngUser.GRP_LV,
+			mngUser.TP_NM, mngUser.LST_LOGIN_DT, mngUser.GRP_ID, mngUser.GRP_LV, mngUser.USER_PW,
 		    (SELECT GRP_NM FROM T_WLK_MNG_GRP WHERE GRP_ID = mngUser.GRP_ID) AS GRP_NM
 		FROM   t_wlk_MNG_USER mngUser
 		LEFT OUTER JOIN t_wlk_MNG_USERGROUP userGroup ON mngUser.USERGROUP_ID = userGroup.USERGROUP_ID
