@@ -681,7 +681,7 @@
 									console.log('ERROR', data.message);
 								}else{
 									setClearAddParam();
-									showToast('The admin account has been saved.');
+									showToast('The admin account has been edited.');
 									$('#add_popup').hide();
 									fnSearch();
 								}
