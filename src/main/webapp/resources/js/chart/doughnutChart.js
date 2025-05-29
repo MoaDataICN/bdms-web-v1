@@ -52,8 +52,8 @@ const userDtlDoughnutLabel = {
         ctx.fillText(summation(data.datasets[0].data), centerX, centerY - totalFontSize / 3);
 
         let labelText = userDtlPeriod == 'all'
-            ? "All Total Status"
-            : "Today's Total Status";
+            ? "All"
+            : "Last 24H";
 
         // 하단 라벨
         ctx.font = `bold ${labelFontSize}px sans-serif`;
