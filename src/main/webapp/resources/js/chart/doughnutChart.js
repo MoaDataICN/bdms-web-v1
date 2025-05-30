@@ -12,9 +12,10 @@ const dashBoardDoughnutLabel = {
         const xCoor = meta.data[0].x;
         const yCoor = meta.data[0].y;
 
-        const baseFontSize = Math.min(width, height);
-        const mainFontSize = baseFontSize * 0.15;
-        const subFontSize = baseFontSize * 0.03;
+        // 도넛 차트 크기에 따라 폰트 크기 조절
+        const baseFontSize = Math.min(chartArea.width, chartArea.height);
+        const mainFontSize = Math.round(baseFontSize / 6);  // 숫자 크기
+        const subFontSize = Math.round(baseFontSize / 18);  // 라벨 크기
 
         ctx.font = `bold ${mainFontSize}px sans-serif`;
         ctx.fillStyle = 'rgba(79, 80, 82, 1)';

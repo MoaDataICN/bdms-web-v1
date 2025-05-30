@@ -460,7 +460,7 @@
 
         <div class="alerts-grid mt-12px">
             <!-- Today's health-chart-->
-            <div class="alerts-chart" style="overflow:visible !important">
+            <div class="alerts-chart" style="overflow:visible !important;  height: 100%; max-height: 350px;">
                 <!--
                 <img src="../../resources/images/board-alerts-chart.png" class="mt-12px alerts-chart-size">
                 -->
