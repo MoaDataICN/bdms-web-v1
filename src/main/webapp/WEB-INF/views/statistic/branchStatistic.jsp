@@ -106,7 +106,7 @@
 	
 	<div class="second-tap-menu mt-30px" >
 		<div class="buttonWrapper" style="width:100%; display:flex; gap: 6px;">
-			<button type="button" class="second-tap-btn tabBtn" id="userTab" data-url="/statistic/user">User</button>
+			<button type="button" class="second-tap-btn tabBtn" id="userAmountTab" data-url="/statistic/user">User</button>
 			<button type="button" class="second-tap-btn tabBtn" id="healthAlertTab" data-url="/statistic/healthAlert">Health Alerts</button>
 			<button type="button" class="second-tap-btn tabBtn" id="serviceRequestTab" data-url="/statistic/serviceRequest">Service Request</button>
 		</div>
@@ -166,7 +166,7 @@
                 resetDate();
                 
                 getStatisticData(function(data) {
-                    if(tabType === 'user') {
+                    if(tabType === 'userAmount') {
                         drawUserChart(data.resultList);
                     } else {
                         drawChart(data.resultList);
@@ -180,6 +180,89 @@
     }
     
     $(document).ready(function(){
-        $('#userTab').click();
+        $('#userAmountTab').click();
     })
+</script>
+
+<script>
+	$(document).on('click', '.excelBtn', function(){
+        
+        const payload = {
+            startDt: startDt,
+            endDt : endDt,
+            type: $('.tabBtn.active').attr('id').replace('Tab', '')
+        };
+        
+        const diffDate = moment(endDt).diff(moment(startDt), "days");
+        console.log(diffDate);
+        if(diffDate > 10) {
+            if(payload.type === 'userAmount' && diffDate <= 90) {
+                openLoading();
+                exportExcel(payload);
+            } else {
+                showToast('There is a wide range of start and end dates. Please set it within 10 days', 'point', 5000)
+            }
+        } else {
+            openLoading();
+            exportExcel(payload);
+        }
+	})
+	
+    function exportExcel(payload) {
+        fetch("/statistic/exportStatisticExcel", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("*.csv creation failure");
+                return res.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = $('.tabBtn.active').attr('id').replace('Tab','')+'_'+startDt+'_'+endDt+".xlsx";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                closeLoading();
+            })
+            .catch(err => {
+                alert(err.message);
+                closeLoading();
+            });
+    }
+
+    function openLoading() {
+        let maskHeight = $(document).height();
+        let maskWidth = window.document.body.clientWidth;
+
+        let mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+        let loadingImg = '';
+        loadingImg += "<div id='easy-pop-wrap' style='position:absolute; top: calc(50% - (100px / 2)); width:100%; z-index:99999999;'>";
+        loadingImg += "<img src='/resources/images/loding.gif' style='position: relative; display: block; width: 127px; height: 91px; margin: 0px auto;' />";
+        loadingImg += "<div class='easy-pop-txt02 mt-24px' style='margin-top: 24px !important;, font-weight: 500px !important;, font-size: 16px !important;, line-height: 20px !important; text-align: center; color: #fff !important; position: relative; display: block; margin: 0px auto;'>Loading...</div>";
+        loadingImg += "</div>";
+
+        $('body').append(mask).append(loadingImg);
+
+        $('#mask').css({
+            'width': maskWidth,
+            'height': maskHeight,
+            'opacity': '0.3'
+        });
+
+        $('#mask').show();
+        $('#easy-pop-wrap').show();
+    }
+
+    // 로딩 화면 닫기
+    function closeLoading() {
+        $('#mask, #easy-pop-wrap').hide();
+        $('#mask, #easy-pop-wrap').empty();
+    }
 </script>

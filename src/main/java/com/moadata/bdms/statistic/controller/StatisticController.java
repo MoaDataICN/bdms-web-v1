@@ -1,15 +1,17 @@
 package com.moadata.bdms.statistic.controller;
 
-import com.moadata.bdms.model.vo.UserRequestVO;
 import com.moadata.bdms.my.service.MyService;
+import com.moadata.bdms.statistic.service.StatisticServiceImpl;
 import com.moadata.bdms.tracking.service.TrackingService;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -22,7 +24,10 @@ public class StatisticController {
 	@Resource(name="trackingService")
 	private TrackingService trackingService;
 
-    @GetMapping("/branchStatistic")
+	@Resource(name="statisticService")
+	private StatisticServiceImpl statisticService;
+
+	@GetMapping("/branchStatistic")
     public String branchStatistic(ModelMap model) {
 
 		model.addAttribute("userCntMap", myService.selectUserCntGrp());
@@ -109,5 +114,19 @@ public class StatisticController {
 		map.put("message", message);
 
 		return map;
+	}
+
+	@ResponseBody
+	@PostMapping("/exportStatisticExcel")
+	public ResponseEntity<byte[]> exportSummary(@RequestBody Map<String, Object> param) throws IOException {
+
+		ByteArrayOutputStream excelFile = statisticService.generateExcel(param);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentDisposition(ContentDisposition.attachment()
+				.filename("summary.xlsx").build());
+
+		return new ResponseEntity<>(excelFile.toByteArray(), headers, HttpStatus.OK);
 	}
 }

@@ -11,7 +11,7 @@
 	<!-- 타이틀 -->
 	<div class="second-title03 f-x">
 		User Amount
-		<button class="add-btn ml-10px" onclick="showToast(`It's in the process of development.`)">Download the meta data
+		<button class="add-btn ml-10px excelBtn">Download the meta data
 			<img src="/resources/images/down-icon.svg" class="icon20">
 		</button>
 	</div>

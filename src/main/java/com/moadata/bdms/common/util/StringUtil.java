@@ -1,5 +1,8 @@
 package com.moadata.bdms.common.util;
 
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -9,10 +12,6 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * StringUtil
@@ -923,27 +922,27 @@ public final class StringUtil {
 		String ip ="";
 		
 		ip = request.getHeader("X-Forwarded-For");
-		System.out.println("X-FORWARDED-FOR : " + ip);
+		//System.out.println("X-FORWARDED-FOR : " + ip);
 	   
 		if (ip == null) {
 	        ip = request.getHeader("Proxy-Client-IP");
-	        System.out.println("Proxy-Client-IP : " + ip);
+	        //System.out.println("Proxy-Client-IP : " + ip);
 	    }
 	    if (ip == null) {
 	        ip = request.getHeader("WL-Proxy-Client-IP");
-	        System.out.println("WL-Proxy-Client-IP : " + ip);
+	        //System.out.println("WL-Proxy-Client-IP : " + ip);
 	    }
 	    if (ip == null) {
 	        ip = request.getHeader("HTTP_CLIENT_IP");
-	        System.out.println("HTTP_CLIENT_IP : " + ip);
+	        //System.out.println("HTTP_CLIENT_IP : " + ip);
 	    }
 	    if (ip == null) {
 	        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-	        System.out.println("HTTP_X_FORWARDED_FOR : " + ip);
+	        //System.out.println("HTTP_X_FORWARDED_FOR : " + ip);
 	    }
 	    if (ip == null) {
 	        ip = request.getRemoteAddr();
-	        System.out.println("getRemoteAddr : "+ip);
+	        //System.out.println("getRemoteAddr : "+ip);
 	    }
 		return ip;
 	}

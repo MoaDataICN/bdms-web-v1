@@ -52,11 +52,11 @@ function updateDate(dateInputId, displayId) {
 
 <!-- Search Function -->
 function getStatisticData(callback) {
-    let param = {'startDt' : startDt, 'endDt' : moment(endDt).format('YYYY-MM-DD')};
+    let param = {'startDt' : startDt, 'endDt' : moment(endDt).format('YYYY-MM-DD')+' 23:59:59'};
     let url = '';
 
     switch(tabType) {
-        case 'user' :
+        case 'userAmount' :
             url = '/statistic/selectUserCnt'
             break;
         case 'healthAlert' :
@@ -152,7 +152,6 @@ async function drawChart(searchData) {
 }
 
 async function drawUserChart(searchData) {
-    console.log(searchData);
     const labels = searchData.map(item => item.dt);
     const userCnt = searchData.map(item => item.user_cnt);
 
@@ -193,6 +192,7 @@ async function drawUserChart(searchData) {
         }
     })
     userChart = newChart;
+    console.log(userChart)
 }
 
 $(document).on('click', '.periodBtn', function(){
@@ -213,17 +213,17 @@ $(document).on('click', '.periodBtn', function(){
         $('#searchBgnDe').val(calcDt);
     }
     startDt = $('#searchBgnDe').val();
-    endDt = $('#searchEndDe').val();
+    endDt = $('#searchEndDe').val()+' 23:59:59';
 
     $('#searchBgnDe').trigger('change');
 });
 
 $(document).on('change', '#searchBgnDe, #searchEndDe', function(){
-    let param = {'startDt' : startDt, 'endDt' : moment(endDt).format('YYYY-MM-DD')};
+    let param = {'startDt' : startDt, 'endDt' : moment(endDt).format('YYYY-MM-DD')+' 23:59:59'};
     let url = '';
 
     switch(tabType) {
-        case 'user' :
+        case 'userAmount' :
             url = '/statistic/selectUserCnt'
             break;
         case 'healthAlert' :
@@ -244,7 +244,7 @@ $(document).on('change', '#searchBgnDe, #searchEndDe', function(){
         contentType: 'application/json; charset=utf-8',
         datatype: 'json',
         success: function (data) {
-            if(tabType === 'user') {
+            if(tabType === 'userAmount') {
                 updateUserChart(data);
             } else {
                 updateChart(data.resultList);
@@ -264,7 +264,6 @@ function updateChart(searchData) {
     var dataMap = {};
     for (var i = 0; i < searchData.length; i++) {
         var item = searchData[i];
-        console.log(item);
         var fullName = (tabType === 'healthAlert' ? alertTp : requestTp)[item.tp];
         if (fullName) {
             dataMap[item.dt + '_' + fullName] = item.cnt;

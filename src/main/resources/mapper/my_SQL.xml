@@ -13,15 +13,20 @@
 
     <select id="selectUserCnt" parameterType="java.util.Map" resultType="java.util.Map">
         WITH RECURSIVE date_range AS (
-        SELECT #{startDt} AS dt
+        SELECT DATE(#{startDt}) AS dt
         UNION ALL
         SELECT DATE_ADD(dt, INTERVAL 1 DAY)
         FROM date_range
-        WHERE dt <![CDATA[<]]> #{endDt}
+        WHERE dt <![CDATA[<]]> DATE(#{endDt})
         )
         SELECT
         d.dt,
-        (SELECT COUNT(*) FROM t_wlk_my u WHERE u.regist_dt <![CDATA[<=]]> d.dt) AS user_cnt
+        (
+        SELECT COUNT(*)
+        FROM t_wlk_my u
+        WHERE u.regist_dt <![CDATA[<=]]> DATE_ADD(DATE_ADD(DATE(d.dt), INTERVAL 23 HOUR), INTERVAL 59 MINUTE)
+        AND (u.wd_dt IS NULL OR u.wd_dt > DATE_ADD(DATE_ADD(DATE(d.dt), INTERVAL 23 HOUR), INTERVAL 59 MINUTE))
+        ) AS user_cnt
         FROM date_range d
     </select>
 

@@ -72,8 +72,6 @@ public class GroupController extends BaseController {
 	@RequestMapping(value="/findChild", method = RequestMethod.GET)
 	@ResponseBody
 	public String findChildGroup(@RequestParam Map<String, Object> param) throws JsonProcessingException {
-		System.out.println(param);
-
 		String grpId = (String)param.get("grpId");
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("id", grpId);

@@ -4,16 +4,26 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    <!-- 모든 JDBC 관련 로그 비활성화 -->
     <logger name="jdbc" level="OFF"/>
     <logger name="jdbc.sqlonly" level="OFF"/>
-    <logger name="jdbc.sqltiming" level="DEBUG"/>
+    <logger name="jdbc.sqltiming" level="ON"/>
     <logger name="jdbc.audit" level="OFF"/>
     <logger name="jdbc.resultset" level="OFF"/>
-    <logger name="jdbc.resultsettable" level="DEBUG"/>
+    <logger name="jdbc.resultsettable" level="ON"/>
     <logger name="jdbc.connection" level="OFF"/>
+
+    <!-- MyBatis, Spring JDBC 로그 최소화 -->
+    <logger name="org.apache.ibatis" level="WARN"/>
+    <logger name="org.mybatis" level="WARN"/>
+    <logger name="org.springframework.jdbc" level="WARN"/>
+    <logger name="org.springframework.transaction" level="WARN"/>
+
+    <!-- 사용자 로그만 출력 -->
     <logger name="com.moadata.bdms" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>

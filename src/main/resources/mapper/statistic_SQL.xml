@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="statistic">
+    <select id="selectTotalUserAmount" parameterType="java.util.Map" resultType="String">
+        SELECT COUNT(*)
+        FROM t_wlk_my
+        WHERE regist_dt <![CDATA[<=]]> #{startDt}
+        AND (wd_dt IS NULL OR wd_dt > #{startDt})
+    </select>
+
+    <select id="selectUserAmountSummary" parameterType="java.util.Map" resultType="statisticVO">
+        SELECT
+            *
+        FROM (
+                 SELECT DATE_FORMAT(left(my.regist_dt,16), '%Y-%m-%d %H:%i') AS `timestamp`, 1 AS `in_out`
+                 FROM t_wlk_my my
+                 WHERE my.regist_dt between #{startDt} AND #{endDt}
+
+                 UNION ALL
+
+                 SELECT DATE_FORMAT(left(wd_dt,16), '%Y-%m-%d %H:%i') AS `timestamp`, -1 AS `in_out`
+                 FROM t_wlk_my
+                 WHERE wd_dt BETWEEN #{startDt} AND #{endDt}
+             ) AS changes
+        GROUP BY timestamp
+        ORDER BY timestamp
+    </select>
+
+	<select id="selectServiceRequestSummary" parameterType="java.util.Map" resultType="statisticVO">
+        SELECT
+            DATE_FORMAT(req_dt, '%Y-%m-%d %H:%i:%s') AS timestamp,
+            SUM(CASE WHEN req_tp = 'N' THEN 1 ELSE 0 END) AS nursing,
+            SUM(CASE WHEN req_tp = 'A' THEN 1 ELSE 0 END) AS ambulance,
+            SUM(CASE WHEN req_tp = 'T' THEN 1 ELSE 0 END) AS consultation
+        FROM t_wlk_mng_req
+        WHERE req_dt BETWEEN #{startDt} AND #{endDt}
+        GROUP BY timestamp
+        ORDER BY timestamp
+    </select>
+
+    <select id="selectHealthAlertSummary" parameterType="java.util.Map" resultType="statisticVO">
+        SELECT
+            DATE_FORMAT(dct_dt, '%Y-%m-%d %H:%i:%s') AS timestamp,
+            SUM(CASE WHEN alt_tp = 'A' THEN 1 ELSE 0 END) AS activity,
+            SUM(CASE WHEN alt_tp = 'F' THEN 1 ELSE 0 END) AS falls,
+            SUM(CASE WHEN alt_tp = 'H' THEN 1 ELSE 0 END) AS heartRate,
+            SUM(CASE WHEN alt_tp = 'SL' THEN 1 ELSE 0 END) AS sleep,
+            SUM(CASE WHEN alt_tp = 'B' THEN 1 ELSE 0 END) AS bloodOxygen,
+            SUM(CASE WHEN alt_tp = 'T' THEN 1 ELSE 0 END) AS temperature,
+            SUM(CASE WHEN alt_tp = 'ST' THEN 1 ELSE 0 END) AS stress
+        FROM t_wlk_mng_alt
+        WHERE dct_dt BETWEEN #{startDt} AND #{endDt}
+        GROUP BY timestamp
+        ORDER BY timestamp
+    </select>
+</mapper>
