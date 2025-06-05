@@ -1,40 +1,33 @@
 package com.moadata.bdms.user.controller;
 
-import java.time.LocalDate;
-import java.io.*;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.moadata.bdms.common.base.controller.BaseController;
 import com.moadata.bdms.common.grpc.service.GrpcService;
-import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.common.util.StringUtil;
+import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.group.service.GroupService;
 import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.*;
 import com.moadata.bdms.nutri.service.NutriService;
+import com.moadata.bdms.support.code.service.CodeService;
+import com.moadata.bdms.support.menu.service.MenuService;
+import com.moadata.bdms.user.service.UserService;
+import com.moadata.bdms.userGroup.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-
-import com.moadata.bdms.common.base.controller.BaseController;
-import com.moadata.bdms.support.code.service.CodeService;
-import com.moadata.bdms.support.menu.service.MenuService;
-import com.moadata.bdms.user.service.UserService;
-import com.moadata.bdms.userGroup.service.UserGroupService;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * User
@@ -83,21 +76,10 @@ public class UserController extends BaseController {
 		String grpId = adminVO.getGrpId();
 		String grpLv = adminVO.getGrpLv();
 
-		System.out.println("grpId : " + grpId);
-		System.out.println("grpLv : " + grpLv);
-
 		if (grpLv != null && grpLv.equals("1")) {
 			// 최상위 관리자인 경우
 			List<GroupVO> groupList = groupService.selectLowLevelGroups(grpId);
 			List<UserSearchDTO> inChargeNmList = userService.selectLowLevelAdmins(grpId);
-
-			if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
-				for (UserSearchDTO inChargeNm : inChargeNmList) {
-					System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
-					System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
-				}
-			}
-
 			model.addAttribute("grpLv", grpLv);  // 원래 코드
 			model.addAttribute("inChargeNmList", inChargeNmList);
 			model.addAttribute("groupList", groupList);
@@ -223,9 +205,6 @@ public class UserController extends BaseController {
 		String grpId = adminVO.getGrpId();
 		String grpLv = adminVO.getGrpLv();
 
-		System.out.println("grpId : " + grpId);
-		System.out.println("grpLv : " + grpLv);
-
 		Map<String, Object> response = new HashMap<>();
 		try {
 			Map<String, Object> param = new HashMap<>();
@@ -267,9 +246,6 @@ public class UserController extends BaseController {
 
 		String grpId = user.getGrpId();
 		String grpLv = user.getGrpLv();
-
-		System.out.println("grpId : " + grpId);
-		System.out.println("grpLv : " + grpLv);
 
 		Map<String, Object> response = new HashMap<>();
 		try {
@@ -376,9 +352,6 @@ public class UserController extends BaseController {
 		String grpId = adminVO.getGrpId();
 		String grpLv = adminVO.getGrpLv();
 
-		System.out.println("grpId : " + grpId);
-		System.out.println("grpLv : " + grpLv);
-
 		Map<String, Object> response = new HashMap<>();
 		try {
 			Map<String, Object> param = new HashMap<>();
@@ -420,9 +393,6 @@ public class UserController extends BaseController {
 
 		String grpId = user.getGrpId();
 		String grpLv = user.getGrpLv();
-
-		System.out.println("grpId : " + grpId);
-		System.out.println("grpLv : " + grpLv);
 
 		Map<String, Object> response = new HashMap<>();
 		try {
@@ -498,11 +468,7 @@ public class UserController extends BaseController {
 		String grpId = adminVO.getGrpId();
 		String grpLv = adminVO.getGrpLv();
 
-		System.out.println("grpId : " + grpId);
-		System.out.println("grpLv : " + grpLv);
-
 		UserDtlGeneralDTO userDtlGeneralDTO = userService.selectUserDtlGeneral(userId);  // 사용자 조회
-		System.out.println(userDtlGeneralDTO.getUserId());
 
 //		model.addAttribute("grpLv", "2");  // 테스트용
 		model.addAttribute("grpLv", grpLv);  // 원래 코드
@@ -683,7 +649,7 @@ public class UserController extends BaseController {
 
 		String grpId = adminVO.getGrpId();
 
-		System.out.println("grpId : " + grpId);
+		//System.out.println("grpId : " + grpId);
 
 		if (inChargeNm != null && !inChargeNm.trim().isEmpty()) {
 			Map<String, Object> param = new HashMap<>();
@@ -703,16 +669,14 @@ public class UserController extends BaseController {
 
 		String grpId = adminVO.getGrpId();
 
-		System.out.println("grpId : " + grpId);
-
 		List<UserSearchDTO> inChargeNmList = userService.selectLowLevelAdmins(grpId);
 
-		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
-			for (UserSearchDTO inChargeNm : inChargeNmList) {
-				System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
-				System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
-			}
-		}
+//		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
+//			for (UserSearchDTO inChargeNm : inChargeNmList) {
+//				System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
+//				System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
+//			}
+//		}
 
 		model.addAttribute("inChargeNmList", inChargeNmList);
 
@@ -726,16 +690,14 @@ public class UserController extends BaseController {
 
 		String grpId = adminVO.getGrpId();
 
-		System.out.println("grpId : " + grpId);
-
 		List<UserSearchDTO> inChargeNmList = userService.selectLowLevelAdmins(grpId);
 
-		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
-			for (UserSearchDTO inChargeNm : inChargeNmList) {
-				System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
-				System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
-			}
-		}
+//		if (inChargeNmList != null && !inChargeNmList.isEmpty()) {
+//			for (UserSearchDTO inChargeNm : inChargeNmList) {
+//				System.out.println("IN_CHARGE_ID : " + inChargeNm.getInChargeId());
+//				System.out.println("IN_CHARGE_NM : " + inChargeNm.getInChargeNm());
+//			}
+//		}
 
 		model.addAttribute("inChargeNmList", inChargeNmList);
 
@@ -1322,7 +1284,9 @@ public class UserController extends BaseController {
 		try {
 			checkup.setAdminId(vo.getUserId());
 			userService.insertCheckUp(checkup);
-
+			
+			// 하기 프로세스는 BDMSScheduler 로 이관
+			/*
 			// 사용자 등록
 			userInfo = userService.selectUserInfoForGrpc(checkup.getUserId());
 			if (userInfo == null) {
@@ -1389,7 +1353,7 @@ public class UserController extends BaseController {
 
 			//historyInfoService.commInsertHistory(param,"");
 			message = "Added.";
-
+			*/
 		} catch(Exception e) {
 			LOGGER.error(e.toString());
 			isError = true;
@@ -1520,4 +1484,38 @@ public class UserController extends BaseController {
 		return "userDtlCheckUpResult";
 	}
 
+	@RequestMapping(value="/uploadStatus", method = RequestMethod.GET)
+	public String uploadStatus() {
+		return "checkup/uploadStatus";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/selectUploadList", method = RequestMethod.POST)
+	public Map<String, Object> selectUploadList(@ModelAttribute CheckupVO checkupVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isError = false;
+		String message = "";
+		List<CheckupVO> resultList;
+
+		try {
+			checkupVO.setSortColumn(checkupVO.getSidx());
+			checkupVO.setPageIndex(Integer.parseInt(checkupVO.getPage()) -1);
+			checkupVO.setRowNo(checkupVO.getPageIndex() * checkupVO.getRows());
+
+			resultList = userService.selectCheckUpStatus(checkupVO);
+			int records = resultList.size() == 0 ? 0 : resultList.get(0).getCnt();
+			map.put("page", checkupVO.getPageIndex() + 1);
+			map.put("records", records);
+			map.put("total", records == 0 ? 1 : Math.ceil(records / (double) checkupVO.getRows()));
+			map.put("rows", resultList);
+		} catch(Exception e) {
+			e.printStackTrace();
+			isError = true;
+			message = e.getMessage();
+		}
+		map.put("isError", isError);
+		map.put("message", message);
+
+		return map;
+	}
 }

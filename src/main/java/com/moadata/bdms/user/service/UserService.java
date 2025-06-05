@@ -1,11 +1,11 @@
 package com.moadata.bdms.user.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * User Service Interface
@@ -155,9 +155,16 @@ public interface UserService {
 
 	public ReportVO getOneLatestReportByUserId(String userId) ;
 
+	public ReportVO selectOneLatestReport();
+
 	public List<HealthInfoVO> getHealthInfoByReportId(String reportId) ;
 
 	public void updateCheckupKey(UserInfoVO userInfo) ;
 
 	public void insertAnlyData(HealthInfoVO healthInfo) ;
+
+	public void updateGRPCFlag(String reportId);
+
+	/** Checkup Management - Upload Status */
+	public List<CheckupVO> selectCheckUpStatus(CheckupVO checkup);
 }

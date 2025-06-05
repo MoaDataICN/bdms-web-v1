@@ -802,8 +802,8 @@
 	<!-- CheckUp Report 데이타 등록 -->
 	<insert id="insertChckReport" parameterType="checkupVO">
 		INSERT INTO t_wlk_report
-		(report_id, user_id, chck_date, report_item_group, chck_kind, chck_hspt, chck_doctor, chck_judge, regist_dt, regist_id, upt_dt, upt_id)
-		VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckCt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId})
+		(report_id, user_id, chck_date, report_item_group, chck_kind, chck_hspt, chck_doctor, chck_judge, regist_dt, regist_id, upt_dt, upt_id, grpc_yn)
+		VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckCt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId}, 'N')
 	</insert>
 
 	<!-- CheckUp 정보로 my데이타 수정 -->
@@ -901,6 +901,88 @@
 		LIMIT 1
 	</select>
 
+    <select id="selectOneLatestReport" resultType="ReportVO">
+        SELECT * FROM T_WLK_REPORT WHERE GRPC_YN = 'N' ORDER BY REGIST_DT DESC LIMIT 1
+    </select>
+
+    <!-- Checkup Management - Upload Status -->
+    <select id="selectCheckUpStatus" parameterType="checkupVO" resultType="checkupVO">
+        select SQL_CALC_FOUND_ROWS
+               report.USER_ID, report.REPORT_ID, report.CHCK_KIND AS 'CHCK_TYPE', report.CHCK_HSPT AS 'CHCK_CT', report.CHCK_JUDGE AS 'CHCK_RESULT',
+               report.CHCK_DATE as 'CHCK_DT', my.user_nm, my.sx as 'gender', my.brth_dt,
+               case when report.regist_id = report.user_id then 'by user' else admin.user_nm end as 'ENTERED_BY',
+               report.GRPC_YN, report.REGIST_DT, report.REGIST_ID, report.UPT_DT, report.UPT_ID
+        from t_wlk_report report
+            inner join t_wlk_my my on my.USER_ID = report.user_id
+            left outer join t_wlk_mng_user admin on admin.USER_ID = report.regist_id
+        where 1=1
+            <if test="userNm != null and userNm != ''">
+                and my.USER_NM = #{userNm}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND my.USER_ID LIKE CONCAT('%',#{userId},'%')
+            </if>
+            <if test="enteredBy != null and enteredBy != ''">
+                AND report.REGIST_ID LIKE CONCAT('%',#{enteredBy},'%')
+            </if>
+            <if test="gender != null and gender != ''">
+                and my.SX = #{gender}
+            </if>
+            <if test="brthDt != null and brthDt != ''">
+                and my.BRTH_DT = #{brthDt}
+            </if>
+            <if test="chckCt != null and chckCt != ''">
+                AND report.CHCK_HSPT LIKE CONCAT('%',#{chckCt},'%')
+            </if>
+            <if test="searchBgnDe != null and searchBgnDe != ''">
+                AND report.CHCK_DATE <![CDATA[>=]]> #{searchBgnDe}
+            </if>
+            <if test="searchEndDe != null and searchEndDe != ''">
+                AND report.CHCK_DATE <![CDATA[<=]]> #{searchEndDe}
+            </if>
+        ORDER BY
+        <choose>
+            <when test='sortColumn == "userId"'>
+                report.USER_ID
+            </when>
+            <when test='sortColumn == "userNm"'>
+                my.USER_NM
+            </when>
+            <when test='sortColumn == "gender"'>
+                my.SX
+            </when>
+            <when test='sortColumn == "chckDt"'>
+                report.CHCK_DATE
+            </when>
+            <when test='sortColumn == "chckHspt"'>
+                report.CHCK_HSPT
+            </when>
+            <when test='sortColumn == "enteredBy"'>
+                report.REGIST_ID
+            </when>
+            <when test='sortColumn == "grpcYn"'>
+                report.GRPC_YN
+            </when>
+            <otherwise>
+                report.CHCK_DATE
+            </otherwise>
+        </choose>
+        <choose>
+            <when test='sord == "DESC" or sord == "desc"'>
+                DESC
+            </when>
+            <otherwise>
+                ASC
+            </otherwise>
+        </choose>
+        LIMIT #{rowNo}, #{rows}
+    </select>
+
+    <select id="selectCheckUpStatusCnt" parameterType="checkupVO" resultType="int">
+        SELECT FOUND_ROWS()
+    </select>
+
+
 	<!-- 사용자 검진 정보 -->
 	<select id="selectHealthInfoByReportId" parameterType="String" resultType="HealthInfoVO">
 		SELECT *
@@ -923,4 +1005,12 @@
 				   #{userId}, NOW(), #{badVal}, #{baaVal}, #{caaVal}, #{paaVal}, #{reaVal},  #{heaVal}, TIMESTAMPDIFF(WEEK, '1970-01-05', CURRENT_DATE), #{uptYn}, NOW(), #{userId}, NOW(), #{userId}
 			   )
 	</insert>
+
+    <update id="updateGRPCFlag" parameterType="String">
+        UPDATE T_WLK_REPORT
+        SET GRPC_YN = 'Y',
+            UPT_DT = SYSDATE(),
+            UPT_ID = 'system'
+        WHERE REPORT_ID = #{reportId}
+    </update>
 </mapper>

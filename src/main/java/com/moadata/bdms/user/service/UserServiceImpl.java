@@ -1,30 +1,22 @@
 package com.moadata.bdms.user.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.moadata.bdms.common.util.encrypt.EncryptUtil;
+import com.moadata.bdms.model.dto.*;
+import com.moadata.bdms.model.vo.*;
+import com.moadata.bdms.support.idgen.service.IdGenService;
+import com.moadata.bdms.support.menu.service.MenuService;
+import com.moadata.bdms.user.repository.UserDao;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.*;
-import javax.annotation.Resource;
-
-import com.moadata.bdms.common.util.encrypt.EncryptUtil;
-import com.moadata.bdms.model.dto.*;
-import com.moadata.bdms.model.vo.*;
-
-import com.moadata.bdms.model.vo.CheckupVO;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-//import com.moadata.hsmng.common.annotation.PrivacySrch;
-//import com.moadata.hsmng.dash.repository.DashDao;
-//import com.moadata.hsmng.history.service.HistoryInfoService;
-import com.moadata.bdms.support.idgen.service.IdGenService;
-import com.moadata.bdms.support.menu.service.MenuService;
-import com.moadata.bdms.user.repository.UserDao;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * User Service 구현
@@ -498,6 +490,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public ReportVO selectOneLatestReport() {
+		return userDao.selectOneLatestReport();
+	}
+
+	@Override
 	public List<HealthInfoVO> getHealthInfoByReportId(String reportId) {
 		return userDao.selectHealthInfoByReportId(reportId);
 	}
@@ -513,4 +510,30 @@ public class UserServiceImpl implements UserService {
 		userDao.insertAnlyData(healthInfo);
 	}
 
+	@Override
+	public void updateGRPCFlag(String reportId) {
+		userDao.updateGRPCFlag(reportId);
+	}
+
+	@Override
+	/** Checkup Management - Upload Status */
+	public List<CheckupVO> selectCheckUpStatus(CheckupVO checkup) {
+		try {
+			if(checkup.getUserNm() != null && !checkup.getUserNm().isEmpty()) {
+				checkup.setUserNm(EncryptUtil.encryptText(checkup.getUserNm()));
+			}
+
+			if(checkup.getBrthDt() != null && !checkup.getBrthDt().isEmpty()) {
+				checkup.setBrthDt(EncryptUtil.encryptText(checkup.getBrthDt()));
+			}
+
+			List<CheckupVO> list = userDao.selectCheckUpStatus(checkup);
+
+			return list;
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

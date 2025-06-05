@@ -1,16 +1,8 @@
 package com.moadata.bdms.model.vo;
 
-import java.util.List;
-import java.util.Map;
-
 import com.moadata.bdms.common.base.vo.BaseSearchObject;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * User
@@ -59,4 +51,14 @@ public class CheckupVO extends BaseSearchObject {
     private String   comment;                     // Comment
     private String   locale;                      // 언어 locale
     private String   brthYear;                    // 출생년
+
+	private String   registDt;
+	private String   registId;
+	private String   uptDt;
+	private String   uptId;
+
+	/** Upload Status 목록 조회용 */
+	private String   enteredBy;                   // 기재자                        BDMS APP : by user / BDMS WEB : adminNm
+	private String   userNm;                      // 환자명
+	private String   grpcYn;                      // GRPC 연동 상태                BDMS APP : NULL / BDMS WEB : N or Y
 }

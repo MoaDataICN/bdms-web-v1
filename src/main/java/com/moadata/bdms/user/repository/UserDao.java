@@ -1,17 +1,15 @@
 package com.moadata.bdms.user.repository;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.moadata.bdms.common.base.dao.BaseAbstractDao;
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
 import com.moadata.bdms.model.dto.*;
 import com.moadata.bdms.model.vo.*;
 import org.springframework.stereotype.Repository;
 
-//import com.moadata.hsmng.common.annotation.PrivacySrch;
-import com.moadata.bdms.common.base.dao.BaseAbstractDao;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.pow;
 
@@ -399,6 +397,10 @@ public class UserDao extends BaseAbstractDao {
 		return (ReportVO)selectOne("user.selectOneLatestReportByUserId", userId);
 	}
 
+	public ReportVO selectOneLatestReport() {
+		return (ReportVO)selectOne("user.selectOneLatestReport");
+	}
+
 	public List<HealthInfoVO> selectHealthInfoByReportId(String reportId) {
 		return selectList("user.selectHealthInfoByReportId", reportId);
 	}
@@ -415,5 +417,29 @@ public class UserDao extends BaseAbstractDao {
 	/** 생체나이 저장 S */
 	public void insertAnlyData(HealthInfoVO healthInfo) {
 		insert("user.insertAnlyData",healthInfo);
+	}
+
+	public void updateGRPCFlag(String reportId) {
+		update("user.updateGRPCFlag", reportId);
+	}
+
+	/** Checkup Management - Upload Status */
+	public List<CheckupVO> selectCheckUpStatus(CheckupVO checkup) {
+		try {
+			List<CheckupVO> checkupList = selectList("user.selectCheckUpStatus", checkup);
+			if(checkupList.size() > 0) {
+				checkupList.get(0).setCnt((Integer)selectOne("user.selectCheckUpStatusCnt", checkup));
+
+				for(CheckupVO item : checkupList) {
+					item.setBrthDt(EncryptUtil.decryptText(item.getBrthDt()));
+					item.setUserNm(EncryptUtil.decryptText(item.getUserNm()));
+				}
+			}
+
+			return checkupList;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
