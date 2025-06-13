@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="checkup">
+    <!-- 사용자 목록 -->
+    <select id="selectUserName" parameterType="String" resultType="String">
+        SELECT USER_NM
+        FROM T_WLK_MY
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <!-- CheckUp 정보로 my데이타 수정 -->
+    <update id="updateWlkMyMulti" parameterType="Map">
+        UPDATE t_wlk_my
+        SET SX          = #{gender}
+          , BRTH_DT     = #{brthDt}
+          , BIRTH_YEAR  = #{brthYear}
+          , UPT_DT      = now()
+          , UPT_ID      = #{adminId}
+        WHERE USER_ID   = #{userId}
+    </update>
+
+    <!-- CheckUp Report 데이타 등록 -->
+    <insert id="insertChckReportMulti" parameterType="Map">
+        INSERT INTO t_wlk_report
+        (report_id, user_id, chck_date, report_item_group, chck_kind, chck_hspt, chck_doctor, chck_judge, regist_dt, regist_id, upt_dt, upt_id, grpc_yn)
+        VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckCt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId}, 'N')
+    </insert>
+
+    <!-- 허리둘레, 키, 몸무게 Body에 저장 -->
+    <insert id="insertMyBodyMulti" parameterType="Map">
+        INSERT INTO t_walk.t_wlk_td_body
+        (USER_ID, CR_DT, WEIGHT, HEIGHT, WAISTLINE_INCH, WAISTLINE_CM, MEMO, PUBLIC_YN, REGIST_DT, REGIST_ID, UPT_DT, UPT_ID)
+        VALUES(#{userId}, now(), #{wght}, #{hght} , cast((cast(#{wst} as unsigned) / 2.54) as  varchar(10)), #{wst},'checkup','Y', now(), #{adminId}, now(), #{adminId})
+    </insert>
+
+    <!-- CheckUp 데이타 등록 -->
+    <insert id="insertCheckUpMulti" parameterType="java.util.List">
+
+        INSERT INTO T_WLK_REPORT_Item (report_id, meta_data_code, value, text, regist_dt, regist_id, upt_dt, upt_id) VALUES
+        <foreach collection="list" item="item" open="" close="" separator=",">
+            (#{item.reportId}, #{item.metaDataCode}, #{item.msmt}, #{item.cmmt}, now(), #{item.adminId}, now(), #{item.adminId})
+        </foreach>
+    </insert>
+
+</mapper>

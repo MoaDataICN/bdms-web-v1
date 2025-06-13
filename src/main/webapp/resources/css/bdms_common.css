@@ -1437,3 +1437,45 @@ textarea:focus {
 .hidden {
   display: none !important;
 }
+
+.tooltip {
+    opacity: 1 !important;
+}
+.tooltip_list {
+    cursor: pointer;
+    position: inherit;
+    text-align: center;
+}
+.tooltip-text {
+    display: none;
+    position: absolute;
+    max-width: 200px;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 5px;
+    color: black;
+    background: #3cdbff;
+    z-index: 1030;
+    font-family: "Open Sans",Arial,Helvetica,Sans-Serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-break: auto;
+    line-height: 1.42857143;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    white-space: normal;
+    word-break: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+    font-size: 12px;
+    top:30px;
+    right:30px;
+}
+
+.tooltip_list:hover .tooltip-text {
+    display: block !important;
+}

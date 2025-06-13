@@ -2455,6 +2455,14 @@ textarea {
     border: unset !important;
 }
 
+.point-chart-08{
+    color: #f79194 !important;
+}
+
+.point-chart-09{
+    color: #515253 !important;
+}
+
 @media (max-width: 1300px) {
 
     .tracking02-grid {

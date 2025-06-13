@@ -4,6 +4,9 @@ import com.moadata.bdms.common.base.vo.BaseSearchObject;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * User
  */
@@ -20,6 +23,7 @@ public class CheckupVO extends BaseSearchObject {
     private String   userId;                      // 사용자 Id
     private String   adminId;                     // 관리자 Id
     private String   reportItemGroup;             // report Item Group
+    private String   valid;                       // valid 형태 (passed, failed)
     private String   chckType;                    // 검진 종류
     private String   chckCt;                      // 검진병원
     private String   chckDctr;                    // 검진 담당의사
@@ -61,4 +65,10 @@ public class CheckupVO extends BaseSearchObject {
 	private String   enteredBy;                   // 기재자                        BDMS APP : by user / BDMS WEB : adminNm
 	private String   userNm;                      // 환자명
 	private String   grpcYn;                      // GRPC 연동 상태                BDMS APP : NULL / BDMS WEB : N or Y
+
+    private String   mct;                         // Medical Checkup Type
+    private String   cr;                          // Checkup result
+    private String   cc;                          // Checkup center
+
+    private List<Map> paramList;
 }
