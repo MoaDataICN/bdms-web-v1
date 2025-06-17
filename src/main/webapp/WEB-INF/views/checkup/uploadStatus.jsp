@@ -313,17 +313,42 @@
                             return '<img src="/resources/images/girl-icon.svg" class="icon24 img-c">';
                         }
                     }},
-                { label: 'Date Of Birth', name: 'brthDt', width:130, sortable : false},
-                { label: 'Checkup Date', name: 'chckDt', width:130, sortable : true},
-                { label: 'Checkup Center', name: 'chckCt', width:130, sortable : true},
-                { label: 'Entered By', name: 'enteredBy', width:80, sortable : false},
-                { label: 'Interfaced', name: 'grpcYn', width:100, sortable : true, formatter: function(cellValue, options, rowObject) {
+                { label: 'Date Of Birth', 	name: 'brthDt', 	width:130, sortable : false},
+                { label: 'Checkup Date', 	name: 'chckDt', 	width:130, sortable : true},
+                { label: 'Checkup Center', 	name: 'chckCt', 	width:130, sortable : true},
+                { label: 'Entered By', 		name: 'enteredBy',  width:80,  sortable : false},
+                { label: 'Interfaced', 		name: 'grpcYn', 	width:100, sortable : true, formatter: function(cellValue, options, rowObject) {
                         if(cellValue == null || cellValue === 'Y') {
                             return 'Y'
                         } else {
                             return 'N';
                         }
-                    }},
+                    }
+				},
+				{ label: 'Height(cm)',                    name: 'hght',     width:100},
+				{ label: 'Weight(kg)',                    name: 'wght',     width:100},
+				{ label: 'Waist circumference(cm)',       name: 'wst',      width:100},
+				{ label: 'Systolic Blood Pressure(mmHg)', name: 'sbp',      width:100},
+				{ label: 'Diastolic Blood Pressure(mmHg)',name: 'dbp',      width:100},
+				{ label: 'Fasting Blood Sugar(mg/dL)',    name: 'fbs',      width:100},
+				{ label: 'HbA1C(%)',                      name: 'hba1c',    width:100},
+				{ label: 'Total Cholesterol(mg/dL)',      name: 'tc',       width:100},
+				{ label: 'HDL(mg/dL)',                    name: 'hdl',      width:100},
+				{ label: 'LDL(mg/dL)',                    name: 'ldl',      width:100},
+				{ label: 'Triglyceride(mg/dL)',           name: 'trgly',    width:100},
+				{ label: 'Serum Creatinine(mg/dL)',       name: 'sc',       width:100},
+				{ label: 'GFR',                           name: 'gfr',      width:100},
+				{ label: 'Uric Acid(mg/dL)',              name: 'urAcd',    width:100},
+				{ label: 'BUN(mg/dL)',                    name: 'bun',      width:100},
+				{ label: 'ALT(IU/L)',                     name: 'alt',      width:100},
+				{ label: 'ast: AST(IU/L)',                name: 'ast',      width:100},
+				{ label: 'γ-GTP(IU/L)',                   name: 'gtp',      width:100},
+				{ label: 'Total Protein(g/dL)',           name: 'tprtn',    width:100},
+				{ label: 'Bilirubin(g/dL)',               name: 'blrbn',    width:100},
+				{ label: 'ALP(IU/L)',                     name: 'alp',      width:100},
+				{ label: 'comment',                       name: 'comment',  width:250},
+				{ label: 'Medical Checkup Type',          name: 'mct',      width:100, hidden : true},
+				{ label: 'Checkup result',                name: 'cr',       width:100, hidden : true}
             ],
             page: 1,
             autowidth: true,
@@ -331,8 +356,8 @@
             rowNum : rowNumsVal,
             rowList:[10,50,100],
             jsonReader: {
-                root: "rows",          // 데이터 리스트
-                page: "page",          // 현재 페이지
+                root: "rows",             // 데이터 리스트
+                page: "page",             // 현재 페이지
                 total: "total",
                 records: "records"        // 전체 개수
             },
@@ -356,7 +381,6 @@
                 $(this).jqGrid('setLabel', 'rn', 'No.');
             },
             onSortCol: function (index, columnIndex, sortOrder) {
-                //alert(index);
                 $("#sortColumn").val(index);
                 $("#sord").val(sortOrder);
             }

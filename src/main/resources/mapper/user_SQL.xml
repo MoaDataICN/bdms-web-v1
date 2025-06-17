@@ -907,15 +907,39 @@
 
     <!-- Checkup Management - Upload Status -->
     <select id="selectCheckUpStatus" parameterType="checkupVO" resultType="checkupVO">
-        select SQL_CALC_FOUND_ROWS
-               report.USER_ID, report.REPORT_ID, report.CHCK_KIND AS 'CHCK_TYPE', report.CHCK_HSPT AS 'CHCK_CT', report.CHCK_JUDGE AS 'CHCK_RESULT',
-               report.CHCK_DATE as 'CHCK_DT', my.user_nm, my.sx as 'gender', my.brth_dt,
-               case when report.regist_id = report.user_id then 'by user' else admin.user_nm end as 'ENTERED_BY',
-               report.GRPC_YN, report.REGIST_DT, report.REGIST_ID, report.UPT_DT, report.UPT_ID
-        from t_wlk_report report
-            inner join t_wlk_my my on my.USER_ID = report.user_id
-            left outer join t_wlk_mng_user admin on admin.USER_ID = report.regist_id
-        where 1=1
+		select SQL_CALC_FOUND_ROWS
+		report.user_id, report.report_id, report.CHCK_KIND AS chck_type,
+		report.CHCK_HSPT AS chck_hspt, report.CHCK_JUDGE AS chck_result,
+		report.CHCK_DATE as chck_dt, my.user_nm, my.sx as gender, my.brth_dt,
+		case when length(report.regist_id) >= 30 then 'by user' else report.regist_id  end as entered_by,
+		report.GRPC_YN, report.REGIST_DT, report.REGIST_ID, report.UPT_DT, report.UPT_ID,
+		MAX(CASE WHEN item.meta_data_code = '11000000' THEN item.value end) AS 'hght',
+		MAX(CASE WHEN item.meta_data_code = '12000000' THEN item.value end) AS 'wght',
+		MAX(CASE WHEN item.meta_data_code = '13000000' THEN item.value end) AS 'wst',
+		MAX(CASE WHEN item.meta_data_code = '17100000' THEN item.value end) AS 'sbp',
+		MAX(CASE WHEN item.meta_data_code = '17200000' THEN item.value end) AS 'dbp',
+		MAX(CASE WHEN item.meta_data_code = '52000000' THEN item.value end) AS 'fbs',
+		MAX(CASE WHEN item.meta_data_code = '53000000' THEN item.value end) AS 'hba1c',
+		MAX(CASE WHEN item.meta_data_code = '41000000' THEN item.value end) AS 'tc',
+		MAX(CASE WHEN item.meta_data_code = '42000000' THEN item.value end) AS 'hdl',
+		MAX(CASE WHEN item.meta_data_code = '43000000' THEN item.value end) AS 'ldl',
+		MAX(CASE WHEN item.meta_data_code = '44000000' THEN item.value end) AS 'trgly',
+		MAX(CASE WHEN item.meta_data_code = '22000000' THEN item.value end) AS 'sc',
+		MAX(CASE WHEN item.meta_data_code = '23000000' THEN item.value end) AS 'gfr',
+		MAX(CASE WHEN item.meta_data_code = '24000000' THEN item.value end) AS 'urAcd',
+		MAX(CASE WHEN item.meta_data_code = '25000000' THEN item.value end) AS 'bun',
+		MAX(CASE WHEN item.meta_data_code = '32000000' THEN item.value end) AS 'alt',
+		MAX(CASE WHEN item.meta_data_code = '31000000' THEN item.value end) AS 'ast',
+		MAX(CASE WHEN item.meta_data_code = '33000000' THEN item.value end) AS 'gtp',
+		MAX(CASE WHEN item.meta_data_code = '34000000' THEN item.value end) AS 'tprtn',
+		MAX(CASE WHEN item.meta_data_code = '35000000' THEN item.value end) AS 'blrbn',
+		MAX(CASE WHEN item.meta_data_code = '36000000' THEN item.value end) AS 'alp',
+		MAX(CASE WHEN item.meta_data_code = '14000000' THEN item.value end) AS 'bmi',
+		CONCAT(MAX(CASE WHEN item.meta_data_code = '91000001' THEN item.value end), MAX(CASE WHEN item.meta_data_code = '91000001' THEN item.value end)) AS 'comment'
+		from t_wlk_report report
+		inner join t_wlk_report_item item on report.report_id = item.report_id
+		left outer join t_wlk_my my on report.user_id = my.user_id
+		where 1=1
             <if test="userNm != null and userNm != ''">
                 and my.USER_NM = #{userNm}
             </if>
@@ -940,6 +964,7 @@
             <if test="searchEndDe != null and searchEndDe != ''">
                 AND report.CHCK_DATE <![CDATA[<=]]> #{searchEndDe}
             </if>
+		GROUP BY report.report_id
         ORDER BY
         <choose>
             <when test='sortColumn == "userId"'>
