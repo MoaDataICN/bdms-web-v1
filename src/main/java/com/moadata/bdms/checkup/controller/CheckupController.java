@@ -106,11 +106,11 @@ public class CheckupController extends BaseController {
                 path = linuxPreOpenFilePath;
             }
 
-            File dFile = new File(path, "twalk_downData.csv");
+            File dFile = new File(path, "twalk_MultiDownData.csv");
             int fSize = (int)dFile.length();
 
             if (fSize > 0) {
-                String encodedFilename = URLEncoder.encode("twalk_downData.csv", "UTF-8");
+                String encodedFilename = URLEncoder.encode("twalk_MultiDownData.csv", "UTF-8");
                 response.setContentType("text/csv; charset=utf-8");
                 response.setHeader("filename", encodedFilename);
                 response.setContentLength(fSize);
@@ -166,7 +166,7 @@ public class CheckupController extends BaseController {
                 checkupVO.setParamList(tempList);
             }
             checkupService.insertCheckupDataList(checkupVO);
-            message = "The data has been modified.";
+            message = "The data has been saved.";
 
         } catch (Exception e) {
             LOGGER.error(e.toString());

@@ -30,7 +30,7 @@
 	<properties>
 		<java.version>8</java.version>
 		<org.aspectj-version>1.8.5</org.aspectj-version>
-		<grpc.version>1.45.1</grpc.version>
+		<grpc.version>1.56.1</grpc.version>
 		<protobuf.version>3.19.6</protobuf.version>
 		<grpc.springboot.version>2.15.0.RELEASE</grpc.springboot.version>
 	</properties>
@@ -172,22 +172,22 @@
 
 		<!-- Excel S -->
 		<dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.4.0</version>
-        </dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.4.0</version>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>5.4.0</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.4.0</version>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-full</artifactId>
-            <version>5.4.0</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-full</artifactId>
+			<version>5.4.0</version>
+		</dependency>
 		<!-- Excel E -->
 
 		<!-- JSON S -->
@@ -230,11 +230,6 @@
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>
-			<artifactId>grpc-netty</artifactId>
-			<version>1.56.1</version>
-		</dependency>
-		<dependency>
-			<groupId>io.grpc</groupId>
 			<artifactId>grpc-protobuf</artifactId>
 			<version>${grpc.version}</version>
 		</dependency>
@@ -258,17 +253,6 @@
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java-util</artifactId>
 			<version>${protobuf.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-all</artifactId>
-			<version>4.1.107.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>4.31.0</version>
 		</dependency>
 	</dependencies>
 
@@ -307,5 +291,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

@@ -122,7 +122,7 @@
                 <img src="/resources/images/del-line-icon.svg" class="icon22">
                 <span><spring:message code="common.btn.delete"/></span>
             </button>
-            <button type="button" class="gray-submit-btn" id="saveall" onclick="return; fnSaveAll()">
+            <button type="button" class="gray-submit-btn" id="saveall" onclick="fnSaveAll()">
                 <img src="/resources/images/add-line-icon.svg" class="icon22">
                 <span><spring:message code="common.btn.saveall"/></span>
             </button>
@@ -248,9 +248,12 @@
                                 $.alert(data.message);
                             }else{
                                 $.alert('<spring:message code="common.confirm.save"/>');
+                                //grid 초기화
+                                $("#checkupList").jqGrid('clearGridData', true);
+                                //drag & drop 초기화
+                                Dropzone.forElement("#dropzone-file").removeAllFiles(true);
                             }
                             $("#checkupList").jqGrid("resetSelection");
-                            fnInitImportFile();
                         }
                     }
                 });
@@ -277,7 +280,7 @@
                 let _blob = new Blob([_data], {type : 'text/csv'});
                 let link = document.createElement('a');
                 link.href = window.URL.createObjectURL(_blob);
-                link.download = 'twalk_downData.csv';
+                link.download = 'twalk_MultiDownData.csv';
                 link.click();
             };
         };
@@ -360,13 +363,14 @@
             jsonReader : {repeatitems: false},
             postData: '',
             colModel : [
-                { label: 'UID',                           name: 'userId',   width:250, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
-                { label: 'User Name',                     name: 'userNm',   width:150, sortable : true,  cellattr:tmemo, editable: true, edittype: "text"},
-                { label: 'Validation',                    name: 'valid',    width:80,  sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
+                { label: 'UID',                           name: 'userId',   width:250, sortable : false, cellattr:tmemo, edittype: "text"},
+                { label: 'User Name',                     name: 'userNm',   width:150, sortable : true,  cellattr:tmemo, edittype: "text"},
+                { label: 'Validation',                    name: 'valid',    width:80,  sortable : false, cellattr:tmemo, edittype: "text"},
                 { label: 'Date of Birth',                 name: 'brthDt',   width:120, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Checkup Date',                  name: 'chckDt',   width:150, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Checkup Center',                name: 'cc',       width:150, sortable : true,  cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Doctor',                        name: 'chckDctr', width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
+                { label: 'Gender',                        name: 'gender',   width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Height(cm)',                    name: 'hght',     width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Weight(kg)',                    name: 'wght',     width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Waist circumference(cm)',       name: 'wst',      width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
@@ -388,7 +392,7 @@
                 { label: 'Total Protein(g/dL)',           name: 'tprtn',    width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Bilirubin(g/dL)',               name: 'blrbn',    width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'ALP(IU/L)',                     name: 'alp',      width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
-                { label: 'comment',                       name: 'comment',  width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
+                { label: 'comment',                       name: 'comment',  width:250, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Medical Checkup Type',          name: 'mct',      width:100, hidden : true,    cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Checkup result',                name: 'cr',       width:100, hidden : true,    cellattr:tmemo, editable: true, edittype: "text"}
             ],
@@ -400,19 +404,16 @@
             rownumbers: true,
             cellEdit: true,
             loadComplete: function(data) {
-            },
-            ondblClickRow: function (rowid, iRow, iCol,e) {
+            },ondblClickRow: function (rowid, iRow, iCol,e) {
                 $('.popup-title').html("Modify Admin Account");
                 const rowData = $("#checkupList").getRowData(rowid);
                 var usrId = rowData.userId;
                 //selectAdminRowId(usrId);
-            },
-            gridComplete : function(){ // 그리드가 완전히 모든 작업을 완료한 후 발생하는 이벤트
+            },gridComplete : function(){ // 그리드가 완전히 모든 작업을 완료한 후 발생하는 이벤트
                 $(this).jqGrid('setLabel', 'rn', 'No.');
-
                 console.log("loadComplete");
-                //전체 색상 초기화 필요!
 
+                //전체 색상 초기화 필요!
                 var ids = $("#checkupList").getDataIDs();
                 // Grid Data Get!
                 $.each(ids,function(idx, rowId){
@@ -420,11 +421,36 @@
 
                     var len = Object.keys(rowData).length;
                     for (var k = 0; k < len; k++) {
-                        let keyval = Object.keys(rowData)[k];
-                        let keynm  = Object.values(rowData)[k];
+                        let keynm = Object.keys(rowData)[k];
+                        let keyval  = Object.values(rowData)[k];
                         let gubun  = -1;
-                        if (keyval.trim().indexOf("brthDt") >= 0 || keyval.trim().indexOf("chckDt") >= 0) {gubun = 0;} else {gubun = 1;}
-                        validation(rowId, keyval, keynm, gubun);
+                        if (keynm.trim().indexOf("brthDt") >= 0 || keynm.trim().indexOf("chckDt") >= 0) {gubun = 0;} else {gubun = 1;}
+                        validation(rowId, keynm, keyval, gubun);
+                    }
+
+                    var chkstatus = false;
+                    for (var k = 0; k < len; k++) {
+                        let keynm = Object.keys(rowData)[k];
+                        let keyval  = Object.values(rowData)[k];
+                        if (keynm.trim().indexOf("valid") < 0) {
+                            let cell = $("#" + rowId + " td[aria-describedby='checkupList_" + keynm + "']");
+                            if (cell && cell.hasClass('point-chart-08')) {
+                                let validcell = $("#" + rowId + " td[aria-describedby='checkupList_valid']");
+                                validcell.attr("title", "failed");
+                                $('#checkupList').jqGrid('setCell', rowId, 'valid', 'failed');
+                                $('#checkupList').jqGrid('setCell', rowId, 'valid', '', 'point-chart-08');
+                                validcell.removeClass('point-chart-09');
+                                chkstatus = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (chkstatus == false) {
+                        let validcell = $("#" + rowId + " td[aria-describedby='checkupList_valid']");
+                        $('#checkupList').jqGrid('setCell', rowId, 'valid', 'passed');
+                        $('#checkupList').jqGrid('setCell', rowId, 'valid', '', 'point-chart-09');
+                        validcell.removeClass('point-chart-08');
                     }
                 });
             },afterSaveCell: function (rowId, cellName, value, indexRow, indexCol) {
@@ -435,21 +461,28 @@
                 var rowData = $("#checkupList").jqGrid("getRowData", rowId);
                 var len = Object.keys(rowData).length;
                 var chkstatus = false;
-
                 for (var k = 0; k < len; k++) {
                     let keynm = Object.keys(rowData)[k];
-                    let keyval  = Object.values(rowData)[k];
-                    let cell = $("#" + rowId + " td[aria-describedby='checkupList_" + keynm + "']");
-                    if (cell && cell.hasClass('point-chart-08')) {
-                        let validcell = $("#" + rowId + " td[aria-describedby='checkupList_valid']");
-                        validcell.attr("title", "failed");
-                        $('#checkupList').jqGrid('setCell', rowId, 'valid', 'failed');
-                        chkstatus = true;
-                        return;
+                    let keyval = Object.values(rowData)[k];
+                    if (keynm.trim().indexOf("valid") < 0) {
+                        let cell = $("#" + rowId + " td[aria-describedby='checkupList_" + keynm + "']");
+                        if (cell && cell.hasClass('point-chart-08')) {
+                            let validcell = $("#" + rowId + " td[aria-describedby='checkupList_valid']");
+                            validcell.attr("title", "failed");
+                            $('#checkupList').jqGrid('setCell', rowId, 'valid', 'failed');
+                            $('#checkupList').jqGrid('setCell', rowId, 'valid', '', 'point-chart-08');
+                            validcell.removeClass('point-chart-09');
+                            chkstatus = true;
+                            break;
+                        }
                     }
                 }
+
                 if (chkstatus == false) {
+                    let validcell = $("#" + rowId + " td[aria-describedby='checkupList_valid']");
                     $('#checkupList').jqGrid('setCell', rowId, 'valid', 'passed');
+                    $('#checkupList').jqGrid('setCell', rowId, 'valid', '', 'point-chart-09');
+                    validcell.removeClass('point-chart-08');
                 }
             }, beforeSaveCell: function (rowId, cellName, value, indexRow, indexCol) {
                 console.log("value : " + value);
@@ -513,6 +546,17 @@
             cell.removeClass('point-chart-09');
         } else if (nm == 'brthDt' && isValidDateDate(val)){
             $('#checkupList').jqGrid('setCell', rowId, 'brthDt', '', 'point-chart-09');
+            let cell = $("#" + rowId + " td[aria-describedby='checkupList_" + nm + "']");
+            cell.removeClass('point-chart-08');
+        }
+
+        // gender check
+        if (nm == 'gender' && (val == null || (val != 'F' && val != 'M'))){
+            $('#checkupList').jqGrid('setCell', rowId, 'gender', '', 'point-chart-08');
+            let cell = $("#" + rowId + " td[aria-describedby='checkupList_" + nm + "']");
+            cell.removeClass('point-chart-09');
+        } else if (nm == 'gender' && (val == 'F' || val == 'M')){
+            $('#checkupList').jqGrid('setCell', rowId, 'gender', '', 'point-chart-09');
             let cell = $("#" + rowId + " td[aria-describedby='checkupList_" + nm + "']");
             cell.removeClass('point-chart-08');
         }
@@ -829,6 +873,13 @@
 
         if (validData == null || validData.length == 0) {
             selectMainMaxValue();
+        }
+
+        if (cellObj.name == 'gender' && (cellvalue == null || (cellvalue != 'F' && cellvalue != 'M'))) {
+            str = "Fail! ";
+            str = str + "For Gender, Enter M for male and F for female.";
+        } else {
+            str = cellvalue;
         }
 
         //Health Checkup Date Format check

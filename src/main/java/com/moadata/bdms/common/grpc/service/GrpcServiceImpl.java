@@ -131,7 +131,7 @@ public class GrpcServiceImpl implements GrpcService {
 				
 				Fromage.AnalysisRequest.Data.Checkup.Builder checkupBuilder = Fromage.AnalysisRequest.Data.Checkup.newBuilder();
 				
-				String gender = "M".equals(userInfo.getSx()) ? "1" : ("F".equals(userInfo.getSx()) ? "2" : null);
+				String gender = "M".equals(userInfo.getSx()) ? "1" : ("F".equals(userInfo.getSx()) ? "2" : "");
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		        LocalDate birthData = LocalDate.parse(userInfo.getBrthDt(),formatter);
 		        LocalDate current = LocalDate.now();

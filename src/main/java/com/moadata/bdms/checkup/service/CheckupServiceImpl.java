@@ -1,10 +1,7 @@
 package com.moadata.bdms.checkup.service;
 
-import com.moadata.bdms.admin.service.AdminService;
 import com.moadata.bdms.checkup.repository.CheckupDao;
-import com.moadata.bdms.checkup.service.CheckupService;
 import com.moadata.bdms.common.util.encrypt.EncryptUtil;
-import com.moadata.bdms.model.dto.UserSearchDTO;
 import com.moadata.bdms.model.vo.CheckupVO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
