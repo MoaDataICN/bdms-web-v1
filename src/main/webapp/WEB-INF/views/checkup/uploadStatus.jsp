@@ -304,7 +304,7 @@
             jsonReader : {repeatitems: false},
             postData: setSearchParam(),
             colModel : [
-                { label: 'UID', name: 'userId', width:200, sortable : true},
+                { label: 'UID', name: 'userId', width:300, sortable : true},
                 { label: 'User Name', name: 'userNm', width:130, sortable : false},
                 { label: 'Sex', name: 'gender', width:60, sortable : true, formatter: function(cellValue, options, rowObject) {
                         if(cellValue === 'M') {
@@ -316,8 +316,8 @@
                 { label: 'Date Of Birth', 	name: 'brthDt', 	width:130, sortable : false},
                 { label: 'Checkup Date', 	name: 'chckDt', 	width:130, sortable : true},
                 { label: 'Checkup Center', 	name: 'chckCt', 	width:130, sortable : true},
-                { label: 'Entered By', 		name: 'enteredBy',  width:80,  sortable : false},
-                { label: 'Interfaced', 		name: 'grpcYn', 	width:100, sortable : true, formatter: function(cellValue, options, rowObject) {
+                { label: 'Entered By', 		name: 'enteredBy',  width:100, sortable : false},
+                { label: 'Interfaced', 		name: 'grpcYn', 	width:60,  sortable : true, formatter: function(cellValue, options, rowObject) {
                         if(cellValue == null || cellValue === 'Y') {
                             return 'Y'
                         } else {
@@ -348,7 +348,8 @@
 				{ label: 'ALP(IU/L)',                     name: 'alp',      width:100},
 				{ label: 'comment',                       name: 'comment',  width:250},
 				{ label: 'Medical Checkup Type',          name: 'mct',      width:100, hidden : true},
-				{ label: 'Checkup result',                name: 'cr',       width:100, hidden : true}
+				{ label: 'Checkup result',                name: 'cr',       width:100, hidden : true},
+				{ label: 'Regist Date',                   name: 'registDt', width:10,  hidden : true}
             ],
             page: 1,
             autowidth: true,
@@ -364,7 +365,7 @@
             sortable : true,
             sortname : 'registDt',
             sortorder : 'DESC',
-            shrinkToFit: true,
+            shrinkToFit: false,
             rownumbers: true,
             loadonce : false,
             pager : '#uploadStatusPager',

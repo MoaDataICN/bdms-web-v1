@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -352,7 +353,15 @@
             // https://bdms.moadata.ai:8088/mediwalk/report/summary.mdo?userId=229a5836-912e-4514-a8af-67bcf80fda6c&chckDate=2017-07-21&reportItemGroup=00001
             openPopupView(urlStr);
         } else if (dataType === 'analysis') {
-            var urlStr = 'https://bdms.moadata.ai:8912/'+$(obj)[0].dataset.checkupkey;
+            var locale = '<%=LocaleContextHolder.getLocale()%>';
+
+            console.log(locale);
+            var urlStr = '';
+            if (locale.indexOf('ko') >= 0) {
+                urlStr = 'https://bdms.moadata.ai:8912/ko/' + $(obj)[0].dataset.checkupkey;
+            } else {
+                urlStr = 'https://bdms.moadata.ai:8912/en/' + $(obj)[0].dataset.checkupkey;
+            }
             openPopupView(urlStr);
         }
     }
