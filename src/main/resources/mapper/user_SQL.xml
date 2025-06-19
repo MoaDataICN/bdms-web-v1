@@ -909,7 +909,7 @@
     <select id="selectCheckUpStatus" parameterType="checkupVO" resultType="checkupVO">
 		select SQL_CALC_FOUND_ROWS
 		report.user_id, report.report_id, report.CHCK_KIND AS chck_type,
-		report.CHCK_HSPT AS chck_hspt, report.CHCK_JUDGE AS chck_result,
+		report.CHCK_HSPT AS chckCt, report.CHCK_JUDGE AS chck_result,
 		report.CHCK_DATE as chck_dt, my.user_nm, my.sx as gender, my.brth_dt,
 		case when length(report.regist_id) >= 30 then 'by user' else report.regist_id  end as entered_by,
 		report.GRPC_YN, report.REGIST_DT, report.REGIST_ID, report.UPT_DT, report.UPT_ID,
@@ -935,7 +935,7 @@
 		MAX(CASE WHEN item.meta_data_code = '35000000' THEN item.value end) AS 'blrbn',
 		MAX(CASE WHEN item.meta_data_code = '36000000' THEN item.value end) AS 'alp',
 		MAX(CASE WHEN item.meta_data_code = '14000000' THEN item.value end) AS 'bmi',
-		CONCAT(MAX(CASE WHEN item.meta_data_code = '91000001' THEN item.value end), MAX(CASE WHEN item.meta_data_code = '91000001' THEN item.value end)) AS 'comment'
+		CONCAT(MAX(CASE WHEN item.meta_data_code = '91000001' THEN item.text else '' end), MAX(CASE WHEN item.meta_data_code = '91000002' THEN item.text else '' end)) AS 'comment'
 		from t_wlk_report report
 		inner join t_wlk_report_item item on report.report_id = item.report_id
 		left outer join t_wlk_my my on report.user_id = my.user_id
