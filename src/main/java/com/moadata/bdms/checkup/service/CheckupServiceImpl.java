@@ -92,6 +92,11 @@ public class CheckupServiceImpl implements CheckupService {
                 }
                 csvList.add(cvo);
             }
+            if (csvList.size() > 100) {
+                isError = true;
+                errorMessage = "Please register with less than 100 pieces of data.";
+                csvList = new ArrayList<CheckupVO>();
+            }
             map.put("isError", isError);
             map.put("resultList", csvList);
             map.put("errorMessage", errorMessage);

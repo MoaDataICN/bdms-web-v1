@@ -260,8 +260,8 @@
             gender : $('#gender').text() != "All" ? $('#gender').text().slice(0,1) : "",
             brthDt : $('#brthDt').val(),
 	        chckCt : $('#chckHspt').val(),
-            searchBgnDe : $('#searchBgnDe').val()+' 00:00:00',
-            searchEndDe : $('#searchEndDe').val()+' 23:59:59',
+            searchBgnDe : $('#searchBgnDe').val(),
+            searchEndDe : $('#searchEndDe').val(),
         };
     }
 

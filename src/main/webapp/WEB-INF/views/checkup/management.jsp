@@ -319,19 +319,27 @@
                 done();
             },
             init:function(){
-                this.on('success',function(file,responseText){
+                this.on('success',function(file,responseText) {
                     //제목의 길이 체크
                     console.log('responseText', responseText);
-                    let rsize = responseText.resultList.size;
-                    let tlen = responseText.resultList[0].length;
-                    var resultData = responseText.resultList;
+                    if (responseText.isError == true) {
+                        $.alert(responseText.errorMessage);
+                        if (this.getAcceptedFiles().length >= 1) {
+                            let files = this.getAcceptedFiles();
+                            this.removeFile(files[0]);
+                        }
+                    } else {
+                        let rsize = responseText.resultList.size;
+                        let tlen = responseText.resultList[0].length;
+                        var resultData = responseText.resultList;
 
-                    $('#checkupList').jqGrid("clearGridData");
-                    $("#checkupList")[0].addJSONData(resultData);
+                        $('#checkupList').jqGrid("clearGridData");
+                        $("#checkupList")[0].addJSONData(resultData);
 
-                    if($("#cb_checkupList").is(":checked")){
-                        //헤더 CheckBox에 체크가 되어 있으면 해제 후 다시 체크한다.
-                        $("#cb_checkupList").trigger("click");
+                        if ($("#cb_checkupList").is(":checked")) {
+                            //헤더 CheckBox에 체크가 되어 있으면 해제 후 다시 체크한다.
+                            $("#cb_checkupList").trigger("click");
+                        }
                     }
                 });
 
@@ -836,14 +844,23 @@
         return true;
     }
 
+    function isNum(value) {
+        var pattern = /^[0-9]+$/g;
+        return pattern.test(value);
+    }
+
     function isValidDateDate(yyyymmdd) {
         var r = true;
         try {
             var date = [];
             if (yyyymmdd.length == 8) {
-                date[0] = yyyymmdd.substring(0, 4);
-                date[1] = yyyymmdd.substring(4, 6);
-                date[2] = yyyymmdd.substring(6, 8);
+                if (isNum(yyyymmdd)) {
+                    date[0] = yyyymmdd.substring(0, 4);
+                    date[1] = yyyymmdd.substring(4, 6);
+                    date[2] = yyyymmdd.substring(6, 8);
+                } else {
+                    r = false;
+                }
             } else if (yyyymmdd.length > 8) {
                 date = yyyymmdd.split("-");
             }

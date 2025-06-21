@@ -613,7 +613,7 @@
 	<select id="selectUserInfoForGrpc" resultType="userInfoVO" parameterType="String">
 		select my.user_id, my.user_nm, my.email, my.brth_dt, BIRTH_YEAR, (YEAR(SYSDATE())-BIRTH_YEAR) as AGE, my.mobile,
 			   alrm.BNF_EVT_YN as MK_USE_YN, my.SX, my.GUNHYUP_YN, my.ADMIN_YN, my.CHECKUP_KEY, my.THEME
-		from T_WLK_MY my inner join T_WLK_cmm_alrm_stt alrm on alrm.USER_ID = my.USER_ID
+		from T_WLK_MY my left outer join T_WLK_cmm_alrm_stt alrm on alrm.USER_ID = my.USER_ID
 		where my.user_id = #{userId}
 	</select>
 
@@ -1006,7 +1006,6 @@
     <select id="selectCheckUpStatusCnt" parameterType="checkupVO" resultType="int">
         SELECT FOUND_ROWS()
     </select>
-
 
 	<!-- 사용자 검진 정보 -->
 	<select id="selectHealthInfoByReportId" parameterType="String" resultType="HealthInfoVO">
