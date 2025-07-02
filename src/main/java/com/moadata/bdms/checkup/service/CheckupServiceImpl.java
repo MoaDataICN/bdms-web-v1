@@ -42,26 +42,28 @@ public class CheckupServiceImpl implements CheckupService {
             BufferedReader br = new BufferedReader(new FileReader(nFile));
             String line;
             while ((line = br.readLine())!= null) {
-                if (line.contains("User ID")) {continue;}
-                StringTokenizer st = new StringTokenizer(line, ",");
-                String[] tValue;
-                tValue = new String[st.countTokens()];
+                if (line.contains("User ID")) continue;
 
-                int i = 0;
-                while (st.hasMoreTokens()) {
-                    String temp = st.nextToken();
-                    tValue[i] = temp;
-                    i++;
-                }
+                String[] tValue = line.split(",", -1);
+
+                if (Arrays.stream(tValue).allMatch(value -> value == null || value.trim().isEmpty())) continue;
+
                 CheckupVO cvo = new CheckupVO();
                 for (int j = 0; j < tValue.length; j++) {
-                    if (j == 0) {cvo.setUserId(tValue[j]);
-                        String userNm = checkupDao.selectUserName(tValue[j]);
-                        cvo.setUserNm(EncryptUtil.decryptText(userNm));
+                    if (j == 0) {
+                        if (tValue[j] == null || tValue[j].trim().isEmpty()) {
+                            String uuid = UUID.randomUUID().toString();
+                            cvo.setUserId(uuid);
+                            cvo.setUserNm(EncryptUtil.decryptText("Test userNm"));
+                        } else {
+                            cvo.setUserId(tValue[j].trim());
+                            String userNm = checkupDao.selectUserName(cvo.getUserId());
+                            cvo.setUserNm(EncryptUtil.decryptText(userNm));
+                        }
                     }
                     else if (j == 1) {cvo.setMct(tValue[j]);}
                     else if (j == 2) {cvo.setCr(tValue[j]);}
-                    else if (j == 3) {cvo.setCc(tValue[j]);}
+                    else if (j == 3) {cvo.setChckHspt(tValue[j]);}
                     else if (j == 4) {cvo.setChckDctr(tValue[j]);}
                     else if (j == 5) {cvo.setChckDt(tValue[j]);}
                     else if (j == 6) {cvo.setBrthDt(tValue[j]);} //{cvo.setBrthDt(tValue[j].substring(5)); cvo.setBrthYear(tValue[j].substring(0,4));}
