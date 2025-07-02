@@ -259,7 +259,7 @@
             enteredBy : $('#enteredBy').val(),
             gender : $('#gender').text() != "All" ? $('#gender').text().slice(0,1) : "",
             brthDt : $('#brthDt').val(),
-	        chckCt : $('#chckHspt').val(),
+			chckHspt : $('#chckHspt').val(),
             searchBgnDe : $('#searchBgnDe').val(),
             searchEndDe : $('#searchEndDe').val(),
         };
@@ -315,7 +315,7 @@
                     }},
                 { label: 'Date Of Birth', 	name: 'brthDt', 	width:130, sortable : false},
                 { label: 'Checkup Date', 	name: 'chckDt', 	width:130, sortable : true},
-                { label: 'Checkup Center', 	name: 'chckCt', 	width:130, sortable : true},
+                { label: 'Checkup Center', 	name: 'chckHspt', 	width:130, sortable : true},
                 { label: 'Entered By', 		name: 'enteredBy',  width:100, sortable : false},
                 { label: 'Interfaced', 		name: 'grpcYn', 	width:60,  sortable : true, formatter: function(cellValue, options, rowObject) {
                         if(cellValue == null || cellValue === 'Y') {

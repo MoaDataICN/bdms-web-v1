@@ -376,7 +376,7 @@
                 { label: 'Validation',                    name: 'valid',    width:80,  sortable : false, cellattr:tmemo, edittype: "text"},
                 { label: 'Date of Birth',                 name: 'brthDt',   width:120, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Checkup Date',                  name: 'chckDt',   width:150, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
-                { label: 'Checkup Center',                name: 'cc',       width:150, sortable : true,  cellattr:tmemo, editable: true, edittype: "text"},
+                { label: 'Checkup Center',                name: 'chckHspt',       width:150, sortable : true,  cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Doctor',                        name: 'chckDctr', width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Gender',                        name: 'gender',   width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Height(cm)',                    name: 'hght',     width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},

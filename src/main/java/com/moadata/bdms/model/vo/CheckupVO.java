@@ -25,7 +25,7 @@ public class CheckupVO extends BaseSearchObject {
     private String   reportItemGroup;             // report Item Group
     private String   valid;                       // valid 형태 (passed, failed)
     private String   chckType;                    // 검진 종류
-    private String   chckCt;                      // 검진병원
+    private String   chckHspt;                    // 검진병원
     private String   chckDctr;                    // 검진 담당의사
     private String   chckResult;                  // 검진 결과
     private String   chckDt;                      // CheckUp Date                 건강검진일
@@ -69,7 +69,6 @@ public class CheckupVO extends BaseSearchObject {
 
     private String   mct;                         // Medical Checkup Type
     private String   cr;                          // Checkup result
-    private String   cc;                          // Checkup center
 
     private List<Map> paramList;
 }
