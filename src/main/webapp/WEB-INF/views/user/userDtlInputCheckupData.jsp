@@ -133,7 +133,7 @@
                         </div>
                         <div class="input-img-wrap">
                             <input type="text" class="input-txt02" placeholder="Input Checkup center"
-                                   oninput="limitLength(this, 30);" id="inputCheckup_chckCt">
+                                   oninput="limitLength(this, 30);" id="inputCheckup_chckHspt">
                             <button type="button" class="input-text-del">
                                 <img src="/resources/images/text-del-icon.svg" class="icon20">
                             </button>
@@ -674,7 +674,7 @@
                             //기본정보
                             if (resval.trim().indexOf("Medical Checkup Type")>= 0){$("#inputCheckup_chckType").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Checkup result")>= 0){$("#inputCheckup_chckResult").val(responseText.resultList[1][k])}
-                            if (resval.trim().indexOf("Checkup center")>= 0){$("#inputCheckup_chckCt").val(responseText.resultList[1][k])}
+                            if (resval.trim().indexOf("Checkup center")>= 0){$("#inputCheckup_chckHspt").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Doctor")>= 0){$("#inputCheckup_chckDctr").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Health Checkup Date")>= 0){$("#inputCheckup_chckDt").val(responseText.resultList[1][k])}
                             if (resval.trim().indexOf("Date Of Birth")>= 0){$("#inputCheckup_brthDt").val(responseText.resultList[1][k])}
@@ -714,7 +714,7 @@
 
     function inputCheckup_fnClear() {
         $("#inputCheckup_chckType").val(''); $("#inputCheckup_chckResult").val(''); $("#inputCheckup_chckDt").val(''); $("#inputCheckup_chckDctr").val('');
-        $("#inputCheckup_brthDt").val('');   $("#inputCheckup_gender").val('');     $('#inputCheckup_chckDt').val(''); $('#inputCheckup_brthDt').val(''); $('#inputCheckup_chckCt').val('');
+        $("#inputCheckup_brthDt").val('');   $("#inputCheckup_gender").val('');     $('#inputCheckup_brthDt').val(''); $('#inputCheckup_chckHspt').val('');
         $('#inputCheckup_hght').val('');     $('#inputCheckup_wght').val('');       $('#inputCheckup_wst').val('');    $('#inputCheckup_sbp').val('');    $('#inputCheckup_dbp').val('');
         $('#inputCheckup_fbs').val('');      $('#inputCheckup_hba1c').val('');      $('#inputCheckup_tc').val('');     $('#inputCheckup_hdl').val('');    $('#inputCheckup_ldl').val('');
         $('#inputCheckup_trgly').val('');    $('#inputCheckup_sc').val('');         $('#inputCheckup_gfr').val('');    $('#inputCheckup_urAcd').val('');  $('#inputCheckup_bun').val('');
@@ -730,7 +730,7 @@
             userId : userDtlGeneral.userId,
             chckType : $("#inputCheckup_chckType").val(),
             chckResult : $("#inputCheckup_chckResult").val(),
-            chckCt : $("#inputCheckup_chckCt").val(),
+            chckHspt : $("#inputCheckup_chckHspt").val(),
             chckDctr : $("#inputCheckup_chckDctr").val(),
             chckDt : $("#inputCheckup_chckDt").val(),
             brthDt : $("#inputCheckup_brthDt").val(),

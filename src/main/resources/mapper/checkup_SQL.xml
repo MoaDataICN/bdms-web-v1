@@ -12,20 +12,23 @@
 
     <!-- CheckUp 정보로 my데이타 수정 -->
     <update id="updateWlkMyMulti" parameterType="Map">
-        UPDATE t_wlk_my
-        SET SX          = #{gender}
-          , BRTH_DT     = #{brthDt}
-          , BIRTH_YEAR  = #{brthYear}
-          , UPT_DT      = now()
-          , UPT_ID      = #{adminId}
-        WHERE USER_ID   = #{userId}
+        INSERT INTO t_wlk_my
+            (USER_ID, SX, BRTH_DT, BIRTH_YEAR, REGIST_DT, REGIST_ID)
+        VALUES
+            (#{userId}, #{gender}, #{brthDt}, #{brthYear}, NOW(), #{adminId})
+        ON DUPLICATE KEY UPDATE
+             SX          = VALUES(SX),
+             BRTH_DT     = VALUES(BRTH_DT),
+             BIRTH_YEAR  = VALUES(BIRTH_YEAR),
+             UPT_DT      = NOW(),
+             UPT_ID      = VALUES(REGIST_ID);
     </update>
 
     <!-- CheckUp Report 데이타 등록 -->
     <insert id="insertChckReportMulti" parameterType="Map">
         INSERT INTO t_wlk_report
         (report_id, user_id, chck_date, report_item_group, chck_kind, chck_hspt, chck_doctor, chck_judge, regist_dt, regist_id, upt_dt, upt_id, grpc_yn)
-        VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckCt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId}, 'N')
+        VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckHspt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId}, 'N')
     </insert>
 
     <!-- 허리둘레, 키, 몸무게 Body에 저장 -->

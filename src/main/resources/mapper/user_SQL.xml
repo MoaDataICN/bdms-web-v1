@@ -803,7 +803,7 @@
 	<insert id="insertChckReport" parameterType="checkupVO">
 		INSERT INTO t_wlk_report
 		(report_id, user_id, chck_date, report_item_group, chck_kind, chck_hspt, chck_doctor, chck_judge, regist_dt, regist_id, upt_dt, upt_id, grpc_yn)
-		VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckCt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId}, 'N')
+		VALUES(#{reportId}, #{userId}, #{chckDt}, '00001', #{chckType}, #{chckHspt}, #{chckDctr}, #{chckResult}, now(), #{adminId}, now(), #{adminId}, 'N')
 	</insert>
 
 	<!-- CheckUp 정보로 my데이타 수정 -->
@@ -909,7 +909,7 @@
     <select id="selectCheckUpStatus" parameterType="checkupVO" resultType="checkupVO">
 		select SQL_CALC_FOUND_ROWS
 		report.user_id, report.report_id, report.CHCK_KIND AS chck_type,
-		report.CHCK_HSPT AS chckCt, report.CHCK_JUDGE AS chck_result,
+		report.CHCK_HSPT AS chck_hspt, report.CHCK_JUDGE AS chck_result,
 		report.CHCK_DATE as chck_dt, my.user_nm, my.sx as gender, my.brth_dt,
 		case when length(report.regist_id) >= 30 then 'by user' else report.regist_id  end as entered_by,
 		report.GRPC_YN, report.REGIST_DT, report.REGIST_ID, report.UPT_DT, report.UPT_ID,
@@ -955,8 +955,8 @@
             <if test="brthDt != null and brthDt != ''">
                 and my.BRTH_DT = #{brthDt}
             </if>
-            <if test="chckCt != null and chckCt != ''">
-                AND report.CHCK_HSPT LIKE CONCAT('%',#{chckCt},'%')
+            <if test="chckHspt != null and chckHspt != ''">
+                AND report.CHCK_HSPT LIKE CONCAT('%',#{chckHspt},'%')
             </if>
             <if test="searchBgnDe != null and searchBgnDe != ''">
                 AND report.CHCK_DATE <![CDATA[>=]]> #{searchBgnDe}
