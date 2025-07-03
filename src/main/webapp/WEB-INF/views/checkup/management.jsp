@@ -376,7 +376,7 @@
                 { label: 'Validation',                    name: 'valid',    width:80,  sortable : false, cellattr:tmemo, edittype: "text"},
                 { label: 'Date of Birth',                 name: 'brthDt',   width:120, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Checkup Date',                  name: 'chckDt',   width:150, sortable : false, cellattr:tmemo, editable: true, edittype: "text"},
-                { label: 'Checkup Center',                name: 'chckHspt',       width:150, sortable : true,  cellattr:tmemo, editable: true, edittype: "text"},
+                { label: 'Checkup Center',                name: 'chckHspt', width:150, sortable : true,  cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Doctor',                        name: 'chckDctr', width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Gender',                        name: 'gender',   width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
                 { label: 'Height(cm)',                    name: 'hght',     width:100, hidden : false,   cellattr:tmemo, editable: true, edittype: "text"},
@@ -492,6 +492,17 @@
                     $('#checkupList').jqGrid('setCell', rowId, 'valid', '', 'point-chart-09');
                     validcell.removeClass('point-chart-08');
                 }
+
+                var cellObj = new Object();
+                cellObj.name = cellName;
+                var $input = $("#" + rowId + " td[aria-describedby='checkupList_" + cellName + "']");
+
+                var tstr = '';
+                tstr = tmemo(rowId, value, null, cellObj);
+                tstr = tstr.replace("title=\"", "");
+                tstr = tstr.replace("\"", "");
+                ($input).attr("title", tstr);
+
             }, beforeSaveCell: function (rowId, cellName, value, indexRow, indexCol) {
                 console.log("value : " + value);
             }, onCellSelect: function(rowId, iCol, value, e) {
@@ -505,7 +516,8 @@
                     // 현재 선택된 cell 값에 대한 tooltip 변경
                     var cellObj = new Object();
                     cellObj.name = colName;
-                    var tstr = tmemo(rowId, value, null, cellObj);
+                    var tstr = '';
+                    tstr = tmemo(rowId, value, null, cellObj);
                     tstr = tstr.replace("title=\"", "");
                     tstr = tstr.replace("\"", "");
                     ($input).attr("title", tstr);
@@ -878,18 +890,8 @@
         return r;
     }
 
-    function tooltipCellFormat(row, cell, value, columnDef, dataContext){
-        var valueJSONObj = {
-            text : value,
-            toolTip : value + "- Good Day!"
-        }
-
-        return valueJSONObj;
-    }
-
     function tmemo(row_id, cellvalue, options, cellObj){
-        var str     =  "";
-        console.log("row_id", row_id);
+        var str     =  '';
 
         if (validData == null || validData.length == 0) {
             selectMainMaxValue();
@@ -897,25 +899,19 @@
 
         if (cellObj.name == 'gender' && (cellvalue == null || (cellvalue != 'F' && cellvalue != 'M'))) {
             str = "Fail! ";
-            str = str + "For Gender, Enter M for male and F for female.";
-        } else {
-            str = cellvalue;
+            str += "For Gender, Enter M for male and F for female.";
         }
 
         //Health Checkup Date Format check
-        if (cellObj.name == 'chckDt' && !isValidDateDate(cellvalue)){
+        if (cellObj.name == 'chckDt' && !isValidDateDate(cellvalue)) {
             str = "Fail! ";
             str = str + "Health Checkup Date is invalid. Please input a valid date.(YYYY-MM-DD)";
-        } else {
-            str = cellvalue;
         }
 
         //Date Of Birth Format check
-        if (cellObj.name == 'brthDt' && !isValidDateDate(cellvalue)){
+        if (cellObj.name == 'brthDt' && !isValidDateDate(cellvalue)) {
             str = "Fail! ";
             str = str + "Date Of Birth is invalid. Please input a valid date.(YYYY-MM-DD)";
-        } else {
-            str = cellvalue;
         }
 
         //Height validation
@@ -924,7 +920,7 @@
                 Number(cellvalue) > Number(validData[0].valid_max)) {
                 str = memohtml('Fail', 'Height must be between', validData[0].valid_min, validData[0].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -934,7 +930,7 @@
                 Number(cellvalue) > Number(validData[1].valid_max)) {
                 str = memohtml('Fail', 'Weight must be between', validData[1].valid_min, validData[1].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -944,7 +940,7 @@
                 Number(cellvalue) > Number(validData[2].valid_max)) {
                 str = memohtml('Fail', 'Waist Circumference must be between', validData[2].valid_min, validData[2].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -954,7 +950,7 @@
                 Number(cellvalue) > Number(validData[3].valid_max)) {
                 str = memohtml('Fail', 'Systolic Blood Pressure must be between', validData[3].valid_min, validData[3].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -964,7 +960,7 @@
                 Number(cellvalue) > Number(validData[4].valid_max)) {
                 str = memohtml('Fail', 'Diastolic Blood Pressure must be between', validData[4].valid_min, validData[4].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -974,7 +970,7 @@
                 Number(cellvalue) > Number(validData[19].valid_max)) {
                 str = memohtml('Fail', 'Fasting Blood Sugar must be between', validData[19].valid_min, validData[19].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -984,7 +980,7 @@
                 Number(cellvalue) > Number(validData[20].valid_max)) {
                 str = memohtml('Fail', 'HbA1C must be between', validData[20].valid_min, validData[20].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -994,7 +990,7 @@
                 Number(cellvalue) > Number(validData[15].valid_max)) {
                 str = memohtml('Fail', 'Total Cholesterol must be between', validData[15].valid_min, validData[15].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1004,7 +1000,7 @@
                 Number(cellvalue) > Number(validData[16].valid_max)) {
                 str = memohtml('Fail', 'HDL-C must be between', validData[16].valid_min, validData[16].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1014,7 +1010,7 @@
                 Number(cellvalue) > Number(validData[17].valid_max)) {
                 str = memohtml('Fail', 'LDL-C must be between', validData[17].valid_min, validData[17].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1024,7 +1020,7 @@
                 Number(cellvalue) > Number(validData[18].valid_max)) {
                 str = memohtml('Fail', 'Triglyceride must be between', validData[18].valid_min, validData[18].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1034,7 +1030,7 @@
                 Number(cellvalue) > Number(validData[5].valid_max)) {
                 str = memohtml('Fail', 'Serum Creatinine must be between', validData[5].valid_min, validData[5].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1044,7 +1040,7 @@
                 Number(cellvalue) > Number(validData[6].valid_max)) {
                 str = memohtml('Fail', 'GFR must be between', validData[6].valid_min, validData[6].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1054,7 +1050,7 @@
                 Number(cellvalue) > Number(validData[7].valid_max)) {
                 str = memohtml('Fail', 'Uric Acid must be between', validData[7].valid_min, validData[7].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1064,7 +1060,7 @@
                 Number(cellvalue) > Number(validData[8].valid_max)) {
                 str = memohtml('Fail', 'BUN must be between', validData[8].valid_min, validData[8].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1074,7 +1070,7 @@
                 Number(cellvalue) > Number(validData[10].valid_max)) {
                 str = memohtml('Fail', 'ALT must be between', validData[10].valid_min, validData[10].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1084,7 +1080,7 @@
                 Number(cellvalue) > Number(validData[9].valid_max)) {
                 str = memohtml('Fail', 'AST must be between', validData[9].valid_min, validData[9].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1094,7 +1090,7 @@
                 Number(cellvalue) > Number(validData[11].valid_max)) {
                 str = memohtml('Fail', 'γ-GTP must be between', validData[11].valid_min, validData[11].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1104,7 +1100,7 @@
                 Number(cellvalue) > Number(validData[12].valid_max)) {
                 str = memohtml('Fail', 'Total Protein must be between', validData[12].valid_min, validData[12].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1114,7 +1110,7 @@
                 Number(cellvalue) > Number(validData[13].valid_max)) {
                 str = memohtml('Fail', 'Bilirubin must be between', validData[13].valid_min, validData[13].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
@@ -1124,7 +1120,7 @@
                 Number(cellvalue) > Number(validData[14].valid_max)) {
                 str = memohtml('Fail', 'ALP must be between', validData[14].valid_min, validData[14].valid_max);
             } else {
-                str = cellvalue;
+                //str = cellvalue;
             }
         }
 
